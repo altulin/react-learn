@@ -30,7 +30,7 @@ const TabBlock = () => {
 	const [current, setCurrent] = React.useState('one')
 
   return (
-    <div style={{ display: 'flex' }} className={styles.tabs}>
+    <div style={{ display: 'flex' }} className={`${styles.tabs} ${styles.ingredients_tabs} mb-10`}>
       <Tab value="one" active={current === 'one'} onClick={setCurrent}>
 				{translate(getTitleList()[0])}
       </Tab>
@@ -53,8 +53,8 @@ class BurgerBlock extends React.Component<{type: string}> {
 	render() {
 		return (
 			<div className={styles.ingredients_block}>
-				<h3 className={`{styles.ingredients_subtitle} text text_type_main-medium`}>{translate(this.props.type)}</h3>
-				<ul className={`${styles.products} ${styles.burger_list}`}>
+				<h3 className={`{styles.ingredients_subtitle} text text_type_main-medium mb-4`}>{translate(this.props.type)}</h3>
+				<ul className={`${styles.burger_list}`}>
 					{this.getBurgerList().map((item, index)=>
 						<BurgerCard key={index} image={item.image} image_mobile={item.image_mobile} price={item.price} name={item.name}/>
 					)}
@@ -74,14 +74,11 @@ interface BurgerCardProps {
 
 
 class BurgerCard extends React.Component<BurgerCardProps> {
-	test = () => {
-		console.log(data.filter(item => item.type === "bun"))
-	}
 
 	render() {
 		return (
 			<li className={`${styles.burger_item} ${styles.card}`}>
-				<a href="/#" className={styles.card_link} onClick={this.test}>
+				<a href="/#" className={styles.card_link}>
 					<figure className={styles.card_img_wrap}>
 						<img  srcSet={`${this.props.image_mobile} 600w, ${this.props.image}`} src={this.props.image} alt="" width={240} height={120}/>
 					</figure>
@@ -101,7 +98,7 @@ class BurgerIngredients extends React.Component {
 	render() {
 		return (
 			<section className={styles.ingredients_section}>
-				<h2 className={styles.ingredients_title}>Соберите бургер</h2>
+				<h2 className={`${styles.ingredients_title} text text_type_main-large mb-5`}>Соберите бургер</h2>
 				<TabBlock/>
 				{
 					getTitleList().map((item,index) =>

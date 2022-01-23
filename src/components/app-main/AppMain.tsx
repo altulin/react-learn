@@ -11,7 +11,7 @@ class AppMain extends React.Component {
 
 	render() {
 		return (
-			<main className={`${styles.main} container`}>
+			<main className={`${styles.main} container pt-10`}>
 				<h1 className={styles.title}>Бургроная</h1>
 				<BurgerIngredients/>
 			</main>
