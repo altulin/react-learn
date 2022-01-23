@@ -16,8 +16,15 @@
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: space-between;
+	padding-left: 0;
 }
 
 .burger_item {
 	width: calc(50% - 12px);
+	border: 1px dashed #4C4CFF;
+	list-style: none;
+}
+
+.ingredients_subtitle {
+	border: 1px dashed #4C4CFF;
 }

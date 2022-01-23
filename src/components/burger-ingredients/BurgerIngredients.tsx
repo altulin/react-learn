@@ -30,7 +30,7 @@ const TabBlock = () => {
 	const [current, setCurrent] = React.useState('one')
 
   return (
-    <div style={{ display: 'flex' }} className={`${styles.tabs} ${styles.ingredients_tabs} mb-10`}>
+    <div style={{ display: 'flex' }} className={`${styles.tabs} ${styles.ingredients_tabs}`}>
       <Tab value="one" active={current === 'one'} onClick={setCurrent}>
 				{translate(getTitleList()[0])}
       </Tab>
@@ -53,7 +53,7 @@ class BurgerBlock extends React.Component<{type: string}> {
 	render() {
 		return (
 			<div className={styles.ingredients_block}>
-				<h3 className={`{styles.ingredients_subtitle} text text_type_main-medium mb-4`}>{translate(this.props.type)}</h3>
+				<h3 className={`{styles.ingredients_subtitle} text text_type_main-medium mb-4 mt-10`}>{translate(this.props.type)}</h3>
 				<ul className={`${styles.burger_list}`}>
 					{this.getBurgerList().map((item, index)=>
 						<BurgerCard key={index} image={item.image} image_mobile={item.image_mobile} price={item.price} name={item.name}/>
