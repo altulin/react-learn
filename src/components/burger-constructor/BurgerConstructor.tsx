@@ -1,6 +1,6 @@
 import React from 'react';
 import styles from './BurgerConstructor.module.css';
-import { CurrencyIcon, LockIcon, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components'
+import { CurrencyIcon, LockIcon, DragIcon, DeleteIcon } from '@ya.praktikum/react-developer-burger-ui-components'
 import data  from '../../utils/data';
 
 type ButtonConstructorProps = {
@@ -15,6 +15,21 @@ const ButtonConstructor = ({position}:ButtonConstructorProps) => {
 			<DragIcon type="primary" />
 		</button>
 	)
+}
+
+type StatusConstructorProps = {
+	position?: boolean
+}
+
+const StatusConstructor = ({position}: StatusConstructorProps) => {
+	const lock = (<span className={styles.constructor_status}>
+		<LockIcon type="secondary"/>
+	</span>)
+	const del = (<span className={styles.constructor_status}>
+		<DeleteIcon type="primary" />
+	</span>)
+	return position?lock:del
+
 }
 
 interface BoxConstructorProps {
@@ -42,13 +57,9 @@ class BoxConstructor extends React.Component<BoxConstructorProps> {
 							<span className={`${styles.constructor_price} text text_type_digits-default mr-2`}>30</span>
 							<CurrencyIcon type="primary" />
 						</p>
-						<span className={styles.constructor_status}>
-							<LockIcon type="secondary"/>
-						</span>
-
+						<StatusConstructor position={this.props.position_top || this.props.position_bottom ?true:false}/>
 					</div>
 				</>
-
 		)
 	}
 }
@@ -58,6 +69,11 @@ class BoxConstructor extends React.Component<BoxConstructorProps> {
 
 
 class BurgerConstructor extends React.Component {
+
+	getBunList = () => {
+		return  data.filter(item => item.type !== 'bun')
+	}
+
 	render() {
 		return (
 			<section className={styles.constructor_section}>
@@ -66,19 +82,26 @@ class BurgerConstructor extends React.Component {
 				</div>
 
 				<ul className={styles.constructor_list}>
-					<li className={`${styles.constructor_item} ${styles.constructor_box}`}>
-						<BoxConstructor image={data[0].image_mobile}/>
-					</li>
-					<li className={`${styles.constructor_item} ${styles.constructor_box}`}>
-						<BoxConstructor image={data[0].image_mobile}/>
-					</li>
-					<li className={`${styles.constructor_item} ${styles.constructor_box}`}>
-						<BoxConstructor image={data[0].image_mobile}/>
-					</li>
+					{this.getBunList().map((item, index)=>
+
+						<li key={index} className={`${styles.constructor_item} ${styles.constructor_box}`}>
+							<BoxConstructor image={item.image_mobile}/>
+						</li>
+					)}
+
+
 				</ul>
 
 				<div className={`${styles.constructor_footer} ${styles.constructor_box}`}>
 					<BoxConstructor image={data[0].image_mobile} position_bottom/>
+				</div>
+
+				<div className={styles.constructor_number}>
+					<p className={`${styles.constructor_price_box} ${styles.constructor_number_box} mr-5`}>
+						<span className={`${styles.constructor_price} text text_type_digits-medium`}>6100</span>
+						<CurrencyIcon type="primary" />
+					</p>
+					<button className={`${styles.constructor_number_btn} text text_type_main-default`}>Оформить заказ</button>
 				</div>
 
 			</section>
