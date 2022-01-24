@@ -53,7 +53,7 @@ class AppHeader extends React.Component<{}, AppHeaderState> {
 
 	render() {
 		return (
-			<header className={`ml-10 mr-10 pt-4 pb-4 mt-10 ${styles.header}`}>
+			<header className={`ml-10 mr-10 pt-4 pb-4 ${styles.header}`}>
 				<div className={`${styles.header_inner} container`}>
 					<nav className={styles.header_nav}>
 

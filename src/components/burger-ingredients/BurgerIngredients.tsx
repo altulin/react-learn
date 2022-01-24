@@ -3,6 +3,7 @@ import styles from './BurgerIngredients.module.css';
 import { Tab, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components'
 import data  from '../../utils/data';
 
+
 const translate = (type: string) => {
 	let action;
 	switch (type) {
@@ -30,7 +31,7 @@ const TabBlock = () => {
 	const [current, setCurrent] = React.useState('one')
 
   return (
-    <div style={{ display: 'flex' }} className={`${styles.tabs} ${styles.ingredients_tabs}`}>
+    <div style={{ display: 'flex' }} className={`${styles.ingredients_tabs} mb-8`}>
       <Tab value="one" active={current === 'one'} onClick={setCurrent}>
 				{translate(getTitleList()[0])}
       </Tab>
@@ -53,7 +54,7 @@ class BurgerBlock extends React.Component<{type: string}> {
 	render() {
 		return (
 			<div className={styles.ingredients_block}>
-				<h3 className={`{styles.ingredients_subtitle} text text_type_main-medium mb-4 mt-10`}>{translate(this.props.type)}</h3>
+				<h3 className={`{styles.ingredients_subtitle} text text_type_main-medium mb-4`}>{translate(this.props.type)}</h3>
 				<ul className={`${styles.burger_list}`}>
 					{this.getBurgerList().map((item, index)=>
 						<BurgerCard key={index} image={item.image} image_mobile={item.image_mobile} price={item.price} name={item.name}/>
@@ -80,13 +81,13 @@ class BurgerCard extends React.Component<BurgerCardProps> {
 			<li className={`${styles.burger_item} ${styles.card}`}>
 				<a href="/#" className={styles.card_link}>
 					<figure className={styles.card_img_wrap}>
-						<img  srcSet={`${this.props.image_mobile} 600w, ${this.props.image}`} src={this.props.image} alt="" width={240} height={120}/>
+						<img className={styles.card_img}  srcSet={`${this.props.image_mobile} 600w, ${this.props.image}`} src={this.props.image} alt="" width={240} height={120}/>
 					</figure>
 					<p className={styles.card_price_box}>
-						<span className={`{styles.card_price} text text_type_digits-default`}>{this.props.price}</span>
+						<span className={`${styles.card_price} text text_type_digits-default mr-2`}>{this.props.price}</span>
 						<CurrencyIcon type="primary" />
 					</p>
-					<h3 className={`{styles.card_title} text text_type_main-default`}>{this.props.name}</h3>
+					<h3 className={`${styles.card_title} text text_type_main-default`}>{this.props.name}</h3>
 				</a>
 			</li>
 		)
@@ -98,13 +99,15 @@ class BurgerIngredients extends React.Component {
 	render() {
 		return (
 			<section className={styles.ingredients_section}>
-				<h2 className={`${styles.ingredients_title} text text_type_main-large mb-5`}>Соберите бургер</h2>
-				<TabBlock/>
-				{
-					getTitleList().map((item,index) =>
-						<BurgerBlock key={index}  type={item}/>
-					)
-				}
+					<h2 className={`${styles.ingredients_title} text text_type_main-large mb-5`}>Соберите бургер</h2>
+					<TabBlock/>
+					<div className={styles.ingredients_inner}>
+						{
+							getTitleList().map((item,index) =>
+								<BurgerBlock key={index}  type={item}/>
+							)
+						}
+					</div>
 			</section>
 		);
 	}
