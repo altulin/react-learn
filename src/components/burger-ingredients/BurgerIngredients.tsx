@@ -56,8 +56,8 @@ class BurgerBlock extends React.Component<{type: string}> {
 			<div className={styles.ingredients_block}>
 				<h3 className={`{styles.ingredients_subtitle} text text_type_main-medium mb-4`}>{translate(this.props.type)}</h3>
 				<ul className={`${styles.burger_list}`}>
-					{this.getBurgerList().map((item, index)=>
-						<BurgerCard key={index} image={item.image} image_mobile={item.image_mobile} price={item.price} name={item.name}/>
+					{this.getBurgerList().map((item)=>
+						<BurgerCard key={item._id} image={item.image} image_mobile={item.image_mobile} price={item.price} name={item.name}/>
 					)}
 				</ul>
 			</div>

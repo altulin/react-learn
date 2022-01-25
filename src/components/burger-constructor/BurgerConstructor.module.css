@@ -51,6 +51,9 @@
 .constructor_img_wrap {
 	margin: 0;
 	margin-right: 20px;
+	width: 80px;
+	height: 40px;
+	flex-shrink: 0;
 }
 
 .constructor_img {
@@ -83,7 +86,6 @@
 .constructor_price_box {
 	display: flex;
 	align-items: center;
-	margin-right: 20px;
 	margin-left: auto;
 	margin-top: 0;
 	margin-bottom: 0;

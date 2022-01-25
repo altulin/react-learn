@@ -33,6 +33,6 @@ html body {
 	flex-direction: column;
 }
 
-* {
-	outline: 1px solid tomato;
-}
+/* * { */
+	/* outline: 1px solid tomato; */
+/* } */

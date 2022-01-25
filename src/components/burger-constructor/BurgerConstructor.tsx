@@ -32,13 +32,16 @@ const StatusConstructor = ({position}: StatusConstructorProps) => {
 
 }
 
-interface BoxConstructorProps {
-	image: string,
-	position_top?: boolean,
-	position_bottom?: boolean,
-}
+
 
 class BoxConstructor extends React.Component<BoxConstructorProps> {
+	constructor(props :BoxConstructorProps) {
+		super(props);
+		this.state = {
+			top: false,
+			bottom: false
+		}
+	}
 
 	top_style = styles.constructor_content_top;
 	bottom_style = styles.constructor_content_bottom;
@@ -52,7 +55,7 @@ class BoxConstructor extends React.Component<BoxConstructorProps> {
 						<figure className={styles.constructor_img_wrap}>
 							<img className={styles.constructor_img} src={this.props.image} alt="" width={80} height={40}/>
 						</figure>
-						<h3 className={`${styles.constructor_title} text text_type_main-default`}>Соус традиционный галактический</h3>
+						<h3 className={`${styles.constructor_title} text text_type_main-default`}>{this.props.name} {this.props.position_top ? '(верх)':''} {this.props.position_bottom ? '(низ)':''}</h3>
 						<p className={styles.constructor_price_box}>
 							<span className={`${styles.constructor_price} text text_type_digits-default mr-2`}>30</span>
 							<CurrencyIcon type="primary" />
@@ -64,13 +67,16 @@ class BoxConstructor extends React.Component<BoxConstructorProps> {
 	}
 }
 
-
-
-
+interface BoxConstructorProps {
+	image: string,
+	position_top?: boolean,
+	position_bottom?: boolean,
+	name: string,
+}
 
 class BurgerConstructor extends React.Component {
 
-	getBunList = () => {
+	getList = () => {
 		return  data.filter(item => item.type !== 'bun')
 	}
 
@@ -78,14 +84,14 @@ class BurgerConstructor extends React.Component {
 		return (
 			<section className={styles.constructor_section}>
 				<div className={`${styles.constructor_header} ${styles.constructor_box}`}>
-					<BoxConstructor image={data[0].image_mobile} position_top/>
+					<BoxConstructor image={data[0].image_mobile} name={data[0].name} position_top/>
 				</div>
 
 				<ul className={styles.constructor_list}>
-					{this.getBunList().map((item, index)=>
+					{this.getList().map((item)=>
 
-						<li key={index} className={`${styles.constructor_item} ${styles.constructor_box}`}>
-							<BoxConstructor image={item.image_mobile}/>
+						<li key={item._id} className={`${styles.constructor_item} ${styles.constructor_box}`}>
+							<BoxConstructor image={item.image_mobile} name={item.name}/>
 						</li>
 					)}
 
@@ -93,11 +99,11 @@ class BurgerConstructor extends React.Component {
 				</ul>
 
 				<div className={`${styles.constructor_footer} ${styles.constructor_box}`}>
-					<BoxConstructor image={data[0].image_mobile} position_bottom/>
+					<BoxConstructor image={data[0].image_mobile} name={data[0].name} position_bottom/>
 				</div>
 
 				<div className={styles.constructor_number}>
-					<p className={`${styles.constructor_price_box} ${styles.constructor_number_box} mr-5`}>
+					<p className={`${styles.constructor_price_box} ${styles.constructor_number_box} mr-10`}>
 						<span className={`${styles.constructor_price} text text_type_digits-medium`}>6100</span>
 						<CurrencyIcon type="primary" />
 					</p>
