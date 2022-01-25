@@ -33,6 +33,11 @@ html body {
 	flex-direction: column;
 }
 
+.constructor_section .constructor-element {
+	max-width: 536px;
+	flex-grow: 1;
+}
+
 /* * { */
 	/* outline: 1px solid tomato; */
 /* } */

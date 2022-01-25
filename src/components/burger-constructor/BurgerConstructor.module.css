@@ -107,6 +107,7 @@
 
 .constructor_number {
 	margin-top: 40px;
+	margin-right: 16px;
 	margin-bottom: 52px;
 	display: flex;
 	align-items: center;

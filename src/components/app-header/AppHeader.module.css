@@ -21,7 +21,6 @@
 }
 
 .link {
-	border: 1px dashed #4C4CFF;
 	border-radius: 40px;
 	display: flex;
 	align-items: center;
@@ -46,12 +45,10 @@
 }
 
 .link svg {
-	border: 1px dashed #4C4CFF;
 	transition: 0.3s;
 }
 
 .link_text {
-	border: 1px dashed #4C4CFF;
 	line-height: 24px;
 	color: #F2F2F3;
 	transition: 0.3s;
