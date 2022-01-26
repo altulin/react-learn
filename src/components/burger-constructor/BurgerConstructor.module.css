@@ -1,0 +1,130 @@
+.constructor_section {
+	width: calc(50% - 1.5%);
+	display: flex;
+	flex-direction: column;
+	padding-top: 60px;
+}
+
+.constructor_box {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.constructor_box + .constructor_box {
+	margin-top: 16px;
+}
+
+.constructor_button {
+	border: none;
+	padding: 0;
+	font-size: 0;
+	background-color: transparent;
+	margin-right: 8px;
+}
+
+.constructor_button_hidden {
+	pointer-events: none;
+	opacity: 0;
+}
+
+.constructor_content {
+	flex-grow: 1;
+	display: flex;
+	align-items: center;
+	padding: 16px 32px;
+	background: #1C1C21;
+	border-radius: 40px;
+}
+
+
+.constructor_content_top {
+	border-top-left-radius: 88px;
+	border-top-right-radius: 88px;
+}
+
+.constructor_content_bottom {
+	border-bottom-left-radius: 88px;
+	border-bottom-right-radius: 88px;
+}
+
+.constructor_img_wrap {
+	margin: 0;
+	margin-right: 20px;
+	width: 80px;
+	height: 40px;
+	flex-shrink: 0;
+}
+
+.constructor_img {
+	display: block;
+	max-width: 100%;
+	height: auto;
+}
+
+.constructor_list {
+	padding-left: 16px;
+	padding-right: 8px;
+	margin-top: 16px;
+	margin-bottom: 16px;
+	flex-grow: 1;
+	overflow-y: scroll;
+}
+
+.constructor_list::-webkit-scrollbar {
+  width: 8px;
+}
+
+.constructor_list::-webkit-scrollbar-track {
+	background-color: #2F2F37;
+}
+
+.constructor_list::-webkit-scrollbar-thumb {
+  background-color: #8585AD;
+}
+
+.constructor_price_box {
+	display: flex;
+	align-items: center;
+	margin-left: auto;
+	margin-top: 0;
+	margin-bottom: 0;
+}
+
+.constructor_title {
+	margin-right: 20px;
+}
+
+.constructor_header {
+	padding-left: 16px;
+	padding-right: 16px;
+}
+
+.constructor_footer{
+	padding-left: 16px;
+	padding-right: 16px;
+}
+
+.constructor_number {
+	margin-top: 40px;
+	margin-right: 16px;
+	margin-bottom: 52px;
+	display: flex;
+	align-items: center;
+}
+
+.constructor_number_btn {
+	text-align: center;
+	background-color: transparent;
+	padding: 20px 40px;
+	border: none;
+	color: #F2F2F3;
+	background: linear-gradient(63.18deg, #801AB3 0%, #4C4CFF 100%);
+	border-radius: 64px;
+
+}
+
+.constructor_number_box svg {
+	transform: scale(1.5);
+	margin-left: 9px;
+}
