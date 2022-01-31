@@ -3,22 +3,38 @@ import styles from './AppMain.module.css';
 import BurgerIngredients from '../burger-ingredients/BurgerIngredients'
 import BurgerConstructor from '../burger-constructor/BurgerConstructor'
 
+const url = "https://norma.nomoreparties.space/api/ingredients";
 
 
 
-class AppMain extends React.Component {
+
+function AppMain()  {
+
+		const [state, setState] = React.useState({
+			productData: null,
+
+		})
+
+		React.useEffect(() => {
+			const getProductData = async () => {
+				const res = await fetch(url);
+				const data = await res.json();
+				setState({ productData: data });
+			}
+			getProductData();
+			console.log(state)
+		}, [])
 
 
 
-	render() {
-		return (
-			<main className={`${styles.main} container pt-10`}>
-				<h1 className={styles.title}>Бургерная</h1>
-				<BurgerIngredients/>
-				<BurgerConstructor/>
-			</main>
-		);
-	}
+
+	return (
+		<main className={`${styles.main} container pt-10`}>
+			<h1 className={styles.title}>Бургерная</h1>
+			<BurgerIngredients/>
+			<BurgerConstructor/>
+		</main>
+	);
 }
 
 export default AppMain;
