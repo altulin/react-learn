@@ -1,7 +1,8 @@
 import React from 'react';
 import styles from './BurgerConstructor.module.css';
 import { CurrencyIcon, ConstructorElement, Button, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components'
-import data  from '../../utils/data';
+// import data  from '../../utils/data';
+let data: Array<any> = [];
 
 type ButtonConstructorProps = {
 	position?: boolean,
@@ -17,17 +18,25 @@ const ButtonConstructor = ({position}:ButtonConstructorProps) => {
 	)
 }
 
-class BurgerConstructor extends React.Component {
+interface BurgerConstructorProps{
+	products: Array<any> | null
+};
 
-	getList = () => {
+function BurgerConstructor({products}: BurgerConstructorProps) {
+	// console.log(`${data[0].name} (верх)`)
+
+	if (products !== null) {
+		data = products
+	}
+
+	const getList = () => {
 		return  data.filter(item => item.type !== 'bun')
 	}
 
-	render() {
+
 		return (
 			<section className={`constructor_section ${styles.constructor_section}`}>
 				<div className={`${styles.constructor_header} ${styles.constructor_box}`}>
-					{/* <BoxConstructor image={data[0].image_mobile} name={data[0].name} position_top/> */}
 					<ButtonConstructor position/>
 					<ConstructorElement
 						text={`${data[0].name} (верх)`}
@@ -39,7 +48,7 @@ class BurgerConstructor extends React.Component {
 				</div>
 
 				<ul className={styles.constructor_list}>
-					{this.getList().map((item)=>
+					{getList().map((item)=>
 
 						<li key={item._id} className={`constructor_item ${styles.constructor_box}`}>
 							<ButtonConstructor/>
@@ -79,6 +88,6 @@ class BurgerConstructor extends React.Component {
 			</section>
 		);
 	}
-}
+
 
 export default BurgerConstructor;

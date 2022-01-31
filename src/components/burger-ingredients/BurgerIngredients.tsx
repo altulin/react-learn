@@ -1,7 +1,8 @@
 import React from 'react';
 import styles from './BurgerIngredients.module.css';
 import { Tab, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components'
-import data  from '../../utils/data';
+
+let data: Array<any> = [];
 
 
 const translate = (type: string) => {
@@ -24,6 +25,7 @@ const translate = (type: string) => {
 }
 
 const getTitleList = () => {
+
 	return Array.from(new Set(data.map(item => item.type)))
 }
 
@@ -94,23 +96,33 @@ class BurgerCard extends React.Component<BurgerCardProps> {
 	}
 }
 
+interface BurgerIngredientsProps{
+	products: Array<any> | null
+};
 
-class BurgerIngredients extends React.Component {
-	render() {
-		return (
-			<section className={styles.ingredients_section}>
-					<h2 className={`${styles.ingredients_title} text text_type_main-large mb-5`}>Соберите бургер</h2>
-					<TabBlock/>
-					<div className={styles.ingredients_inner}>
-						{
-							getTitleList().map((item,index) =>
-								<BurgerBlock key={index}  type={item}/>
-							)
-						}
-					</div>
-			</section>
-		);
+
+
+
+function BurgerIngredients({products}: BurgerIngredientsProps)  {
+	if (products !== null) {
+		data = products
 	}
+
+	return (
+		<section className={styles.ingredients_section}>
+				<h2 className={`${styles.ingredients_title} text text_type_main-large mb-5`}>Соберите бургер</h2>
+				<TabBlock/>
+				<div className={styles.ingredients_inner}>
+
+					{
+
+						getTitleList().map((item,index) =>
+							<BurgerBlock key={index}  type={item}/>
+						)
+					}
+				</div>
+		</section>
+	);
 }
 
 export default BurgerIngredients;
