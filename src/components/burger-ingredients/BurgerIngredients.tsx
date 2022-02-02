@@ -1,7 +1,7 @@
 import React from 'react';
 import styles from './BurgerIngredients.module.css';
-import Modal from '../modal/Modal'
 import { Tab, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components'
+import IngredientDetails from '../ingredient-details/IngredientDetails'
 
 let data: Array<any> = [];
 
@@ -26,7 +26,6 @@ const translate = (type: string) => {
 }
 
 const getTitleList = () => {
-
 	return Array.from(new Set(data.map(item => item.type)))
 }
 
@@ -49,25 +48,28 @@ const TabBlock = () => {
 }
 
 
-class BurgerBlock extends React.Component<{type: string}> {
-	getBurgerList = () => {
-		return data.filter(item => item.type === this.props.type)
-	}
-
-	render() {
-		return (
-			<div className={styles.ingredients_block}>
-				<h3 className={`{styles.ingredients_subtitle} text text_type_main-medium mb-4`}>{translate(this.props.type)}</h3>
-				<ul className={`${styles.burger_list}`}>
-					{this.getBurgerList().map((item)=>
-						<BurgerCard key={item._id} image={item.image} image_mobile={item.image_mobile} price={item.price} name={item.name} data_key={item._id}/>
-					)}
-				</ul>
-			</div>
-		)
-	}
+interface BurgerBlockProps {
+	type: string,
+	open_modal: (e: React.MouseEvent) => void,
 }
 
+function BurgerBlock({type, open_modal}: BurgerBlockProps) {
+
+	const getBurgerList = () => {
+		return data.filter(item => item.type === type)
+	}
+
+	return (
+		<div className={styles.ingredients_block}>
+			<h3 className={`{styles.ingredients_subtitle} text text_type_main-medium mb-4`}>{translate(type)}</h3>
+			<ul className={`${styles.burger_list}`}>
+				{getBurgerList().map((item)=>
+					<BurgerCard open_modal={open_modal} key={item._id} image={item.image} image_mobile={item.image_mobile} price={item.price} name={item.name} data_key={item._id}/>
+				)}
+			</ul>
+		</div>
+	)
+}
 
 interface BurgerCardProps {
 	image: string,
@@ -75,10 +77,35 @@ interface BurgerCardProps {
 	price: number,
 	name: string,
 	data_key: number
+	open_modal: (e: React.MouseEvent) => void,
 }
 
 
-function BurgerCard({image, image_mobile, price, name, data_key}: BurgerCardProps) {
+function BurgerCard({image, image_mobile, price, name, data_key, open_modal}: BurgerCardProps) {
+
+	return (
+		<li className={`${styles.burger_item} ${styles.card}`}>
+			<a href="/#" className={styles.card_link} onClick={open_modal} data-id={data_key}>
+				<figure className={styles.card_img_wrap}>
+					<img className={styles.card_img}  srcSet={`${image_mobile} 600w, ${image}`} src={image} alt="" width={240} height={120}/>
+				</figure>
+				<p className={styles.card_price_box}>
+					<span className={`${styles.card_price} text text_type_digits-default mr-2`}>{price}</span>
+					<CurrencyIcon type="primary" />
+				</p>
+				<h3 className={`${styles.card_title} text text_type_main-default`}>{name}</h3>
+			</a>
+
+		</li>
+	)
+}
+
+interface BurgerIngredientsProps{
+	products: Array<any> | null
+};
+
+
+function BurgerIngredients({products}: BurgerIngredientsProps)  {
 
 	const [state, setState] = React.useState(
 		{
@@ -94,8 +121,6 @@ function BurgerCard({image, image_mobile, price, name, data_key}: BurgerCardProp
 	const handleOpenModal = (e: React.MouseEvent) => {
 		let id = (e.currentTarget as HTMLElement).dataset.id;
 		const element = data.filter((item)=> item._id === id)[0]
-
-		e.preventDefault();
 
 		setState(
 			{
@@ -117,65 +142,18 @@ function BurgerCard({image, image_mobile, price, name, data_key}: BurgerCardProp
 			})
 	}
 
-	const modal = (
-		<Modal onClose={handleCloseModal}>
-			<h2 className="text text_type_main-large">Детали ингредиента</h2>
+	const GetData = () => {
+		if (products !== null) {
+			data = products
+		}
+	};
 
-			<figure className={`mb-4 ${styles.modal_img_wrap}`}>
-				<img className={styles.modal_img}  src={state.image_large} alt="" width={480} height={240}/>
-			</figure>
-
-			<h3 className={`${styles.modal_title} text text_type_main-medium mb-8`}>{state.name}</h3>
-
-			<ul className={styles.modal_list}>
-				<li className={styles.modal_text}>
-					<span className={`text text_type_main-default text_color_inactive mb-2`}>Калории,ккал</span>
-					<span className={`text text_type_main-default text_color_inactive`}>{state.calories}</span>
-				</li>
-				<li className={styles.modal_text}>
-					<span className={`text text_type_main-default text_color_inactive mb-2`}>Белки, г</span>
-					<span className={`text text_type_main-default text_color_inactive`}>{state.proteins}</span>
-				</li>
-				<li className={styles.modal_text}>
-					<span className={`text text_type_main-default text_color_inactive mb-2`}>Жиры, г</span>
-					<span className={`text text_type_main-default text_color_inactive`}>{state.fat}</span>
-				</li>
-				<li className={styles.modal_text}>
-					<span className={`text text_type_main-default text_color_inactive mb-2`}>Углеводы, г</span>
-					<span className={`text text_type_main-default text_color_inactive`}>{state.carbohydrates}</span>
-				</li>
-			</ul>
-		</Modal>
-	)
-
-	return (
-		<li className={`${styles.burger_item} ${styles.card}`}>
-			<a href="/#" className={styles.card_link} onClick={handleOpenModal} data-id={data_key}>
-				<figure className={styles.card_img_wrap}>
-					<img className={styles.card_img}  srcSet={`${image_mobile} 600w, ${image}`} src={image} alt="" width={240} height={120}/>
-				</figure>
-				<p className={styles.card_price_box}>
-					<span className={`${styles.card_price} text text_type_digits-default mr-2`}>{price}</span>
-					<CurrencyIcon type="primary" />
-				</p>
-				<h3 className={`${styles.card_title} text text_type_main-default`}>{name}</h3>
-			</a>
-			{state.visible && modal}
-		</li>
-	)
-}
-
-interface BurgerIngredientsProps{
-	products: Array<any> | null
-};
-
-
-
-
-function BurgerIngredients({products}: BurgerIngredientsProps)  {
-	if (products !== null) {
-		data = products
+	const handlekeyPress = ({key} : KeyboardEvent) => {
+		key === 'Escape' && handleCloseModal();
+		return
 	}
+
+	GetData();
 
 	return (
 		<section className={styles.ingredients_section}>
@@ -184,12 +162,12 @@ function BurgerIngredients({products}: BurgerIngredientsProps)  {
 				<div className={styles.ingredients_inner}>
 
 					{
-
 						getTitleList().map((item,index) =>
-							<BurgerBlock key={index}  type={item}/>
+							<BurgerBlock open_modal={handleOpenModal} key={index}  type={item}/>
 						)
 					}
 				</div>
+				{state.visible && <IngredientDetails calories={state.calories} proteins={state.proteins} fat={state.fat} carbohydrates={state.carbohydrates} name={state.name} image_large={state.image_large} close={handleCloseModal} press_close={handlekeyPress}/>}
 		</section>
 	);
 }

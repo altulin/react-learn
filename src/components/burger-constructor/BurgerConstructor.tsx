@@ -1,7 +1,8 @@
 import React from 'react';
 import styles from './BurgerConstructor.module.css';
 import { CurrencyIcon, ConstructorElement, Button, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components'
-// import data  from '../../utils/data';
+import OrderDetails from '../order-details/OrderDetails'
+
 let data: Array<any> = [];
 
 type ButtonConstructorProps = {
@@ -23,11 +24,33 @@ interface BurgerConstructorProps{
 };
 
 function BurgerConstructor({products}: BurgerConstructorProps) {
-	// console.log(`${data[0].name} (верх)`)
 
-	if (products !== null) {
-		data = products
+	const [state, setState] = React.useState({visible: false,})
+
+	const handleOpenModal = () => {
+		setState({visible: true,})
 	}
+
+	const GetData = () => {
+		if (products !== null) {
+			data = products
+		}
+	};
+
+	const handleCloseModal = () => {
+		setState(
+			{
+				...state,
+				visible: false
+			})
+	}
+
+	const handlekeyPress = ({key} : KeyboardEvent) => {
+		key === 'Escape' && handleCloseModal();
+		return
+	}
+
+	GetData();
 
 	const getList = () => {
 		return  data.filter(item => item.type !== 'bun')
@@ -81,10 +104,11 @@ function BurgerConstructor({products}: BurgerConstructorProps) {
 						<CurrencyIcon type="primary" />
 					</p>
 
-					<Button type="primary" size="large">
+					<Button type="primary" size="large" onClick={handleOpenModal}>
 						Оформить заказ
 					</Button>
 				</div>
+				{state.visible && <OrderDetails close={handleCloseModal} press_close={handlekeyPress}/>}
 			</section>
 		);
 	}

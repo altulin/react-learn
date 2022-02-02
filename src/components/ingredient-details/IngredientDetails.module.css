@@ -1,0 +1,34 @@
+.modal_img_wrap {
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 0;
+	width: 480px;
+	height: 240px;
+}
+
+.modal_img_wrap img {
+	height: auto;
+	width: 100%;
+}
+
+.modal_title {
+	text-align: center;
+}
+
+.modal_list {
+	display: flex;
+	max-width: 520px;
+	margin-left: auto;
+	margin-right: auto;
+	margin-top: 0;
+	margin-bottom: 0;
+	padding-left: 0;
+}
+
+.modal_text {
+	list-style: none;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	width: 25%;
+}

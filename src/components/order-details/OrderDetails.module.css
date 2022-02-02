@@ -1,0 +1,28 @@
+.title {
+	text-align: center;
+}
+
+.id {
+	text-align: center;
+	margin-bottom: 60px;
+}
+
+.img_wrap {
+	width: 120px;
+	height: 120px;
+	margin-bottom: 60px;
+	margin-left: auto;
+	margin-right: auto;
+	background-image: url('../../images/done.gif');
+	background-size: cover;
+	background-position: center;
+}
+
+.info {
+	text-align: center;
+	margin-bottom: 8px;
+}
+
+.whait {
+	text-align: center;
+}

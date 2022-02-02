@@ -5,22 +5,24 @@ import styles from './Modal.module.css';
 const modalRoot = document.querySelector(".modal-root") as HTMLElement
 
 interface ModalProps {
-	children?: React.ReactNode,
-	onClose?: (e: React.MouseEvent) => void
+	children: React.ReactNode,
+	onClose?: (e: React.MouseEvent) => void,
+	onPressClose: ({key} : KeyboardEvent) => void,
 }
 
-function Modal({children, onClose}: ModalProps) {
+function Modal({children, onClose, onPressClose}: ModalProps) {
 
-	React.useEffect(()=>{
+	 React.useEffect(()=>{
     // Устанавливаем слушатель события при монтировании
-    // document.addEventListener("mousemove", trackMousePos);
-		console.log(1)
+    document.addEventListener("keydown", onPressClose);
+
     // Сбрасываем слушатель события при удалении компонента из DOM
     return () => {
-      // document.removeEventListener("mousemove", trackMousePos);
-			console.log(2)
+      document.removeEventListener("keydown", onPressClose);
     }
   }, [])
+
+
 
 
 
