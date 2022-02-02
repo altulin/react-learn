@@ -21,6 +21,7 @@ function AppMain()  {
 			.then(res => res.json())
 			.then(data => setState({ ...state, productData: data.data, isLoading: true }))
 			.catch(e => setState({ ...state, isLoading: false, hasError: true }))
+			// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
 	return (

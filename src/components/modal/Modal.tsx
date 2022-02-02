@@ -1,6 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 import styles from './Modal.module.css';
+import ModalOverlay from '../modal-overlay/ModalOverlay'
 
 const modalRoot = document.querySelector(".modal-root") as HTMLElement
 
@@ -13,18 +14,13 @@ interface ModalProps {
 function Modal({children, onClose, onPressClose}: ModalProps) {
 
 	 React.useEffect(()=>{
-    // Устанавливаем слушатель события при монтировании
     document.addEventListener("keydown", onPressClose);
 
-    // Сбрасываем слушатель события при удалении компонента из DOM
     return () => {
       document.removeEventListener("keydown", onPressClose);
     }
+		// eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
-
-
-
-
 
 	return ReactDOM.createPortal(
 		<>
@@ -32,7 +28,7 @@ function Modal({children, onClose, onPressClose}: ModalProps) {
 				<button className={styles.close} onClick={onClose}></button>
 				{children}
 			</div>
-			<div className={styles.modal_cover} onClick={onClose}></div>
+			<ModalOverlay onClose={onClose}/ >
 		</>,
 		modalRoot
 	)
