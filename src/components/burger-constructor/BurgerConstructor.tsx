@@ -3,8 +3,6 @@ import styles from './BurgerConstructor.module.css';
 import { CurrencyIcon, ConstructorElement, Button, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components'
 import OrderDetails from '../order-details/OrderDetails'
 
-let data: Array<any> = [];
-
 type ButtonConstructorProps = {
 	position?: boolean,
 }
@@ -20,7 +18,13 @@ const ButtonConstructor = ({position}:ButtonConstructorProps) => {
 }
 
 interface BurgerConstructorProps{
-	products: Array<any> | null
+	products: {
+		image_mobile: string,
+		name: string,
+		price: number,
+		type: string,
+		_id: string,
+	}[]
 };
 
 function BurgerConstructor({products}: BurgerConstructorProps) {
@@ -31,18 +35,13 @@ function BurgerConstructor({products}: BurgerConstructorProps) {
 		setState({visible: true,})
 	}
 
-	const GetData = () => {
-		if (products !== null) {
-			data = products
-		}
-	};
-
 	const handleCloseModal = () => {
 		setState(
 			{
 				...state,
 				visible: false
-			})
+			}
+		)
 	}
 
 	const handlekeyPress = ({key} : KeyboardEvent) => {
@@ -50,10 +49,8 @@ function BurgerConstructor({products}: BurgerConstructorProps) {
 		return
 	}
 
-	GetData();
-
 	const getList = () => {
-		return  data.filter(item => item.type !== 'bun')
+		return  products.filter(item => item.type !== 'bun')
 	}
 
 
@@ -62,9 +59,9 @@ function BurgerConstructor({products}: BurgerConstructorProps) {
 				<div className={`${styles.constructor_header} ${styles.constructor_box}`}>
 					<ButtonConstructor position/>
 					<ConstructorElement
-						text={`${data[0].name} (верх)`}
-						price={data[0].price}
-						thumbnail={data[0].image_mobile}
+						text={`${products[0].name} (верх)`}
+						price={products[0].price}
+						thumbnail={products[0].image_mobile}
 						type="top"
 						isLocked={true}
 					/>
@@ -90,9 +87,9 @@ function BurgerConstructor({products}: BurgerConstructorProps) {
 				<div className={`${styles.constructor_footer} ${styles.constructor_box}`}>
 					<ButtonConstructor position/>
 					<ConstructorElement
-						text={`${data[0].name} (низ)`}
-						price={data[0].price}
-						thumbnail={data[0].image_mobile}
+						text={`${products[0].name} (низ)`}
+						price={products[0].price}
+						thumbnail={products[0].image_mobile}
 						type="bottom"
 						isLocked={true}
 					/>

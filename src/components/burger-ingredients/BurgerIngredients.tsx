@@ -3,8 +3,6 @@ import styles from './BurgerIngredients.module.css';
 import { Tab, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components'
 import IngredientDetails from '../ingredient-details/IngredientDetails'
 
-let data: Array<any> = [];
-
 
 const translate = (type: string) => {
 	let action;
@@ -25,23 +23,45 @@ const translate = (type: string) => {
 	return action;
 }
 
-const getTitleList = () => {
-	return Array.from(new Set(data.map(item => item.type)))
+
+
+const getTitleList = (list: {
+	image: string,
+	image_mobile: string,
+	name: string,
+	price: number,
+	type: string,
+	_id: string,
+	}[]) => {
+	return Array.from(new Set(list.map(item => item.type)))
 }
 
-const TabBlock = () => {
+interface TabBlockProps {
+	products: {
+		image: string,
+		image_mobile: string,
+		name: string,
+		price: number,
+		type: string,
+		_id: string,
+	}[],
+}
+
+
+
+const TabBlock = ({products}: TabBlockProps) => {
 	const [current, setCurrent] = React.useState('one')
 
   return (
     <div style={{ display: 'flex' }} className={`${styles.ingredients_tabs} mb-8`}>
       <Tab value="one" active={current === 'one'} onClick={setCurrent}>
-				{translate(getTitleList()[0])}
+				{translate(getTitleList(products)[0])}
       </Tab>
       <Tab value="two" active={current === 'two'} onClick={setCurrent}>
-			{translate(getTitleList()[1])}
+			{translate(getTitleList(products)[1])}
       </Tab>
       <Tab value="three" active={current === 'three'} onClick={setCurrent}>
-			{translate(getTitleList()[2])}
+			{translate(getTitleList(products)[2])}
       </Tab>
     </div>
   )
@@ -51,12 +71,20 @@ const TabBlock = () => {
 interface BurgerBlockProps {
 	type: string,
 	open_modal: (e: React.MouseEvent) => void,
+	products: {
+		image: string,
+		image_mobile: string,
+		name: string,
+		price: number,
+		type: string,
+		_id: string,
+	}[],
 }
 
-function BurgerBlock({type, open_modal}: BurgerBlockProps) {
+function BurgerBlock({type, open_modal, products}: BurgerBlockProps) {
 
 	const getBurgerList = () => {
-		return data.filter(item => item.type === type)
+		return products.filter(item => item.type === type)
 	}
 
 	return (
@@ -64,7 +92,7 @@ function BurgerBlock({type, open_modal}: BurgerBlockProps) {
 			<h3 className={`{styles.ingredients_subtitle} text text_type_main-medium mb-4`}>{translate(type)}</h3>
 			<ul className={`${styles.burger_list}`}>
 				{getBurgerList().map((item)=>
-					<BurgerCard open_modal={open_modal} key={item._id} image={item.image} image_mobile={item.image_mobile} price={item.price} name={item.name} data_key={item._id}/>
+					<BurgerCard open_modal={open_modal} key={item._id} image={item.image} image_mobile={item.image_mobile} price={item.price} name={item.name} dataKey={item._id}/>
 				)}
 			</ul>
 		</div>
@@ -76,16 +104,16 @@ interface BurgerCardProps {
 	image_mobile: string,
 	price: number,
 	name: string,
-	data_key: number
+	dataKey: string
 	open_modal: (e: React.MouseEvent) => void,
 }
 
 
-function BurgerCard({image, image_mobile, price, name, data_key, open_modal}: BurgerCardProps) {
+function BurgerCard({image, image_mobile, price, name, dataKey, open_modal}: BurgerCardProps) {
 
 	return (
 		<li className={`${styles.burger_item} ${styles.card}`}>
-			<a href="/#" className={styles.card_link} onClick={open_modal} data-id={data_key}>
+			<a href="/#" className={styles.card_link} onClick={open_modal} data-id={dataKey}>
 				<figure className={styles.card_img_wrap}>
 					<img className={styles.card_img}  srcSet={`${image_mobile} 600w, ${image}`} src={image} alt="" width={240} height={120}/>
 				</figure>
@@ -101,7 +129,19 @@ function BurgerCard({image, image_mobile, price, name, data_key, open_modal}: Bu
 }
 
 interface BurgerIngredientsProps{
-	products: Array<any> | null
+	products: {
+		image_large: string,
+		name: string,
+		carbohydrates: number,
+		fat: number,
+		proteins: number,
+		calories: number,
+		_id: string,
+		image: string,
+		image_mobile: string,
+		price: number,
+		type: string,
+	}[]
 };
 
 
@@ -120,7 +160,7 @@ function BurgerIngredients({products}: BurgerIngredientsProps)  {
 
 	const handleOpenModal = (e: React.MouseEvent) => {
 		let id = (e.currentTarget as HTMLElement).dataset.id;
-		const element = data.filter((item)=> item._id === id)[0]
+		const element = products.filter((item)=> item._id === id)[0]
 
 		setState(
 			{
@@ -142,28 +182,21 @@ function BurgerIngredients({products}: BurgerIngredientsProps)  {
 			})
 	}
 
-	const GetData = () => {
-		if (products !== null) {
-			data = products
-		}
-	};
-
 	const handlekeyPress = ({key} : KeyboardEvent) => {
 		key === 'Escape' && handleCloseModal();
 		return
 	}
 
-	GetData();
 
 	return (
 		<section className={styles.ingredients_section}>
 				<h2 className={`${styles.ingredients_title} text text_type_main-large mb-5`}>Соберите бургер</h2>
-				<TabBlock/>
+				<TabBlock products={products}/>
 				<div className={styles.ingredients_inner}>
 
 					{
-						getTitleList().map((item,index) =>
-							<BurgerBlock open_modal={handleOpenModal} key={index}  type={item}/>
+						getTitleList(products).map((item,index) =>
+							<BurgerBlock products={products} open_modal={handleOpenModal} key={index}  type={item}/>
 						)
 					}
 				</div>
