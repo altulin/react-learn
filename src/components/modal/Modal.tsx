@@ -19,8 +19,7 @@ function Modal({children, onClose, onPressClose}: ModalProps) {
     return () => {
       document.removeEventListener("keydown", onPressClose);
     }
-		// eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  }, [onPressClose])
 
 	return ReactDOM.createPortal(
 		<>

@@ -37,40 +37,31 @@ const getTitleList = (list: {
 }
 
 interface TabBlockProps {
-	products: {
-		image: string,
-		image_mobile: string,
-		name: string,
-		price: number,
-		type: string,
-		_id: string,
-	}[],
+	titleList: string[],
 }
 
 
 
-const TabBlock = ({products}: TabBlockProps) => {
+const TabBlock = ({titleList}: TabBlockProps) => {
 	const [current, setCurrent] = React.useState('one')
 
   return (
-    <div style={{ display: 'flex' }} className={`${styles.ingredients_tabs} mb-8`}>
-      <Tab value="one" active={current === 'one'} onClick={setCurrent}>
-				{translate(getTitleList(products)[0])}
-      </Tab>
-      <Tab value="two" active={current === 'two'} onClick={setCurrent}>
-			{translate(getTitleList(products)[1])}
-      </Tab>
-      <Tab value="three" active={current === 'three'} onClick={setCurrent}>
-			{translate(getTitleList(products)[2])}
-      </Tab>
-    </div>
+		<div style={{ display: 'flex' }} className={`${styles.ingredients_tabs} mb-8`}>
+			{
+				titleList.map((item, index) =>
+					<Tab value={item} active={current === item} onClick={setCurrent} key={index}>
+						{translate(item)}
+					</Tab>
+				)
+			}
+		</div>
   )
 }
 
 
 interface BurgerBlockProps {
 	type: string,
-	open_modal: (e: React.MouseEvent) => void,
+	openModal: (e: React.MouseEvent) => void,
 	products: {
 		image: string,
 		image_mobile: string,
@@ -81,7 +72,7 @@ interface BurgerBlockProps {
 	}[],
 }
 
-function BurgerBlock({type, open_modal, products}: BurgerBlockProps) {
+function BurgerBlock({type, openModal, products}: BurgerBlockProps) {
 
 	const getBurgerList = () => {
 		return products.filter(item => item.type === type)
@@ -92,7 +83,7 @@ function BurgerBlock({type, open_modal, products}: BurgerBlockProps) {
 			<h3 className={`{styles.ingredients_subtitle} text text_type_main-medium mb-4`}>{translate(type)}</h3>
 			<ul className={`${styles.burger_list}`}>
 				{getBurgerList().map((item)=>
-					<BurgerCard open_modal={open_modal} key={item._id} image={item.image} image_mobile={item.image_mobile} price={item.price} name={item.name} dataKey={item._id}/>
+					<BurgerCard open_modal={openModal} key={item._id} image={item.image} image_mobile={item.image_mobile} price={item.price} name={item.name} dataKey={item._id}/>
 				)}
 			</ul>
 		</div>
@@ -188,15 +179,16 @@ function BurgerIngredients({products}: BurgerIngredientsProps)  {
 	}
 
 
+
 	return (
 		<section className={styles.ingredients_section}>
 				<h2 className={`${styles.ingredients_title} text text_type_main-large mb-5`}>Соберите бургер</h2>
-				<TabBlock products={products}/>
+				<TabBlock titleList={getTitleList(products)}/>
 				<div className={styles.ingredients_inner}>
 
 					{
 						getTitleList(products).map((item,index) =>
-							<BurgerBlock products={products} open_modal={handleOpenModal} key={index}  type={item}/>
+							<BurgerBlock products={products} openModal={handleOpenModal} key={index}  type={item}/>
 						)
 					}
 				</div>
