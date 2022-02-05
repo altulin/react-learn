@@ -1,7 +1,6 @@
 import React from 'react';
 import styles from './BurgerIngredients.module.css';
 import { Tab, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components'
-import IngredientDetails from '../ingredient-details/IngredientDetails'
 
 
 const translate = (type: string) => {
@@ -83,7 +82,7 @@ function BurgerBlock({type, openModal, products}: BurgerBlockProps) {
 			<h3 className={`{styles.ingredients_subtitle} text text_type_main-medium mb-4`}>{translate(type)}</h3>
 			<ul className={`${styles.burger_list}`}>
 				{getBurgerList().map((item)=>
-					<BurgerCard open_modal={openModal} key={item._id} image={item.image} image_mobile={item.image_mobile} price={item.price} name={item.name} dataKey={item._id}/>
+					<BurgerCard openModal={openModal} key={item._id} image={item.image} image_mobile={item.image_mobile} price={item.price} name={item.name} dataKey={item._id}/>
 				)}
 			</ul>
 		</div>
@@ -96,15 +95,15 @@ interface BurgerCardProps {
 	price: number,
 	name: string,
 	dataKey: string
-	open_modal: (e: React.MouseEvent) => void,
+	openModal: (e: React.MouseEvent) => void,
 }
 
 
-function BurgerCard({image, image_mobile, price, name, dataKey, open_modal}: BurgerCardProps) {
+function BurgerCard({image, image_mobile, price, name, dataKey, openModal}: BurgerCardProps) {
 
 	return (
 		<li className={`${styles.burger_item} ${styles.card}`}>
-			<a href="/#" className={styles.card_link} onClick={open_modal} data-id={dataKey}>
+			<a href="/#" className={styles.card_link} onClick={openModal} data-id={dataKey}>
 				<figure className={styles.card_img_wrap}>
 					<img className={styles.card_img}  srcSet={`${image_mobile} 600w, ${image}`} src={image} alt="" width={240} height={120}/>
 				</figure>
@@ -132,54 +131,12 @@ interface BurgerIngredientsProps{
 		image_mobile: string,
 		price: number,
 		type: string,
-	}[]
+	}[],
+	openModal : (e: React.MouseEvent)=>void
 };
 
 
-function BurgerIngredients({products}: BurgerIngredientsProps)  {
-
-	const [state, setState] = React.useState(
-		{
-			visible: false,
-			calories: 0,
-			proteins: 0,
-			fat: 0,
-			carbohydrates: 0,
-			name: '',
-			image_large: ''
-		})
-
-	const handleOpenModal = (e: React.MouseEvent) => {
-		let id = (e.currentTarget as HTMLElement).dataset.id;
-		const element = products.filter((item)=> item._id === id)[0]
-
-		setState(
-			{
-				visible: true,
-				calories: element.calories,
-				proteins: element.proteins,
-				fat: element.fat,
-				carbohydrates: element.carbohydrates,
-				name: element.name,
-				image_large: element.image_large,
-			})
-	}
-
-	const handleCloseModal = () => {
-		setState(
-			{
-				...state,
-				visible: false
-			})
-	}
-
-	const handlekeyPress = ({key} : KeyboardEvent) => {
-		key === 'Escape' && handleCloseModal();
-		return
-	}
-
-
-
+function BurgerIngredients({products, openModal}: BurgerIngredientsProps)  {
 	return (
 		<section className={styles.ingredients_section}>
 				<h2 className={`${styles.ingredients_title} text text_type_main-large mb-5`}>Соберите бургер</h2>
@@ -188,11 +145,10 @@ function BurgerIngredients({products}: BurgerIngredientsProps)  {
 
 					{
 						getTitleList(products).map((item,index) =>
-							<BurgerBlock products={products} openModal={handleOpenModal} key={index}  type={item}/>
+							<BurgerBlock products={products} openModal={openModal} key={index}  type={item}/>
 						)
 					}
 				</div>
-				{state.visible && <IngredientDetails calories={state.calories} proteins={state.proteins} fat={state.fat} carbohydrates={state.carbohydrates} name={state.name} image_large={state.image_large} close={handleCloseModal} press_close={handlekeyPress}/>}
 		</section>
 	);
 }

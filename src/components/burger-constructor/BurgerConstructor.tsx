@@ -1,7 +1,6 @@
 import React from 'react';
 import styles from './BurgerConstructor.module.css';
 import { CurrencyIcon, ConstructorElement, Button, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components'
-import OrderDetails from '../order-details/OrderDetails'
 
 type ButtonConstructorProps = {
 	position?: boolean,
@@ -18,41 +17,27 @@ const ButtonConstructor = ({position}:ButtonConstructorProps) => {
 }
 
 interface BurgerConstructorProps{
+	openModal: () => void,
 	products: {
-		image_mobile: string,
+		image_large: string,
 		name: string,
+		carbohydrates: number,
+		fat: number,
+		proteins: number,
+		calories: number,
+		_id: string,
+		image: string,
+		image_mobile: string,
 		price: number,
 		type: string,
-		_id: string,
 	}[]
 };
 
-function BurgerConstructor({products}: BurgerConstructorProps) {
-
-	const [state, setState] = React.useState({visible: false,})
-
-	const handleOpenModal = () => {
-		setState({visible: true,})
-	}
-
-	const handleCloseModal = () => {
-		setState(
-			{
-				...state,
-				visible: false
-			}
-		)
-	}
-
-	const handlekeyPress = ({key} : KeyboardEvent) => {
-		key === 'Escape' && handleCloseModal();
-		return
-	}
+function BurgerConstructor({products, openModal}: BurgerConstructorProps) {
 
 	const getList = () => {
 		return  products.filter(item => item.type !== 'bun')
 	}
-
 
 		return (
 			<section className={`constructor_section ${styles.constructor_section}`}>
@@ -80,8 +65,6 @@ function BurgerConstructor({products}: BurgerConstructorProps) {
 							/>
 						</li>
 					)}
-
-
 				</ul>
 
 				<div className={`${styles.constructor_footer} ${styles.constructor_box}`}>
@@ -101,11 +84,10 @@ function BurgerConstructor({products}: BurgerConstructorProps) {
 						<CurrencyIcon type="primary" />
 					</p>
 
-					<Button type="primary" size="large" onClick={handleOpenModal}>
+					<Button type="primary" size="large" onClick={openModal}>
 						Оформить заказ
 					</Button>
 				</div>
-				{state.visible && <OrderDetails close={handleCloseModal} press_close={handlekeyPress}/>}
 			</section>
 		);
 	}
