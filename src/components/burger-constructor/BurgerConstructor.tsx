@@ -1,7 +1,6 @@
 import React from 'react';
 import styles from './BurgerConstructor.module.css';
 import { CurrencyIcon, ConstructorElement, Button, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components'
-import data  from '../../utils/data';
 
 type ButtonConstructorProps = {
 	position?: boolean,
@@ -17,29 +16,44 @@ const ButtonConstructor = ({position}:ButtonConstructorProps) => {
 	)
 }
 
-class BurgerConstructor extends React.Component {
+interface BurgerConstructorProps{
+	openModal: () => void,
+	products: {
+		image_large: string,
+		name: string,
+		carbohydrates: number,
+		fat: number,
+		proteins: number,
+		calories: number,
+		_id: string,
+		image: string,
+		image_mobile: string,
+		price: number,
+		type: string,
+	}[]
+};
 
-	getList = () => {
-		return  data.filter(item => item.type !== 'bun')
+function BurgerConstructor({products, openModal}: BurgerConstructorProps) {
+
+	const getList = () => {
+		return  products.filter(item => item.type !== 'bun')
 	}
 
-	render() {
 		return (
 			<section className={`constructor_section ${styles.constructor_section}`}>
 				<div className={`${styles.constructor_header} ${styles.constructor_box}`}>
-					{/* <BoxConstructor image={data[0].image_mobile} name={data[0].name} position_top/> */}
 					<ButtonConstructor position/>
 					<ConstructorElement
-						text={`${data[0].name} (верх)`}
-						price={data[0].price}
-						thumbnail={data[0].image_mobile}
+						text={`${products[0].name} (верх)`}
+						price={products[0].price}
+						thumbnail={products[0].image_mobile}
 						type="top"
 						isLocked={true}
 					/>
 				</div>
 
 				<ul className={styles.constructor_list}>
-					{this.getList().map((item)=>
+					{getList().map((item)=>
 
 						<li key={item._id} className={`constructor_item ${styles.constructor_box}`}>
 							<ButtonConstructor/>
@@ -51,16 +65,14 @@ class BurgerConstructor extends React.Component {
 							/>
 						</li>
 					)}
-
-
 				</ul>
 
 				<div className={`${styles.constructor_footer} ${styles.constructor_box}`}>
 					<ButtonConstructor position/>
 					<ConstructorElement
-						text={`${data[0].name} (низ)`}
-						price={data[0].price}
-						thumbnail={data[0].image_mobile}
+						text={`${products[0].name} (низ)`}
+						price={products[0].price}
+						thumbnail={products[0].image_mobile}
 						type="bottom"
 						isLocked={true}
 					/>
@@ -72,13 +84,13 @@ class BurgerConstructor extends React.Component {
 						<CurrencyIcon type="primary" />
 					</p>
 
-					<Button type="primary" size="large">
+					<Button type="primary" size="large" onClick={openModal}>
 						Оформить заказ
 					</Button>
 				</div>
 			</section>
 		);
 	}
-}
+
 
 export default BurgerConstructor;
