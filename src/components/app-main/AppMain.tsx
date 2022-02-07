@@ -27,7 +27,7 @@ function AppMain({openModalIngridients, openModalConstructor, products}: AppMain
 		<main className={`${styles.main} container pt-10`}>
 			<h1 className={styles.title}>Бургерная</h1>
 			{products.length !== 0 &&	<BurgerIngredients openModal={openModalIngridients} products={products}/>}
-			{products.length !== 0 &&<BurgerConstructor openModal={openModalConstructor} products={products}/>}
+			{products.length !== 0 &&<BurgerConstructor openModal={openModalConstructor}/>}
 		</main>
 	);
 }

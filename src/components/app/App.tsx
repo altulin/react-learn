@@ -4,6 +4,7 @@ import AppHeader from '../app-header/AppHeader';
 import AppMain from '../app-main/AppMain'
 import IngredientDetails from '../ingredient-details/IngredientDetails'
 import OrderDetails from '../order-details/OrderDetails'
+import { ProductsContext } from '../../services/productsContext';
 
 const URL = "https://norma.nomoreparties.space/api/ingredients";
 
@@ -82,7 +83,10 @@ function App() {
       <AppHeader/>
 
       {/* AppMain */}
-      {state.products !== null &&<AppMain products={state.products} openModalIngridients={handleOpenModalIngridients} openModalConstructor ={handleOpenModalConstructor}/>}
+      <ProductsContext.Provider value={state.products}>
+        {state.products !== null &&<AppMain products={state.products} openModalIngridients={handleOpenModalIngridients} openModalConstructor ={handleOpenModalConstructor}/>}
+      </ProductsContext.Provider>
+
 
       {/* modal */}
       {state.modalIngredient && <IngredientDetails calories={state.calories} proteins={state.proteins} fat={state.fat} carbohydrates={state.carbohydrates} name={state.name} image_large={state.image_large} close={handleCloseModal} press_close={handlekeyPress}/>}

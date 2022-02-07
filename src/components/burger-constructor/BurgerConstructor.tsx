@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from './BurgerConstructor.module.css';
 import { CurrencyIcon, ConstructorElement, Button, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components'
+import { ProductsContext } from '../../services/productsContext';
 
 type ButtonConstructorProps = {
 	position?: boolean,
@@ -18,22 +19,11 @@ const ButtonConstructor = ({position}:ButtonConstructorProps) => {
 
 interface BurgerConstructorProps{
 	openModal: () => void,
-	products: {
-		image_large: string,
-		name: string,
-		carbohydrates: number,
-		fat: number,
-		proteins: number,
-		calories: number,
-		_id: string,
-		image: string,
-		image_mobile: string,
-		price: number,
-		type: string,
-	}[]
 };
 
-function BurgerConstructor({products, openModal}: BurgerConstructorProps) {
+function BurgerConstructor({openModal}: BurgerConstructorProps) {
+
+	const products = React.useContext(ProductsContext);
 
 	const getList = () => {
 		return  products.filter(item => item.type !== 'bun')
