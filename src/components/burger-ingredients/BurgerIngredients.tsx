@@ -1,6 +1,7 @@
 import React from 'react';
 import styles from './BurgerIngredients.module.css';
 import { Tab, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components'
+import { ProductsContext } from '../../services/productsContext';
 
 
 const translate = (type: string) => {
@@ -61,20 +62,13 @@ const TabBlock = ({titleList}: TabBlockProps) => {
 interface BurgerBlockProps {
 	type: string,
 	openModal: (e: React.MouseEvent) => void,
-	products: {
-		image: string,
-		image_mobile: string,
-		name: string,
-		price: number,
-		type: string,
-		_id: string,
-	}[],
 }
 
-function BurgerBlock({type, openModal, products}: BurgerBlockProps) {
+function BurgerBlock({type, openModal}: BurgerBlockProps) {
+	const productsIngredients = React.useContext(ProductsContext);
 
 	const getBurgerList = () => {
-		return products.filter(item => item.type === type)
+		return productsIngredients.filter(item => item.type === type)
 	}
 
 	return (
@@ -119,33 +113,21 @@ function BurgerCard({image, image_mobile, price, name, dataKey, openModal}: Burg
 }
 
 interface BurgerIngredientsProps{
-	products: {
-		image_large: string,
-		name: string,
-		carbohydrates: number,
-		fat: number,
-		proteins: number,
-		calories: number,
-		_id: string,
-		image: string,
-		image_mobile: string,
-		price: number,
-		type: string,
-	}[],
 	openModal : (e: React.MouseEvent)=>void
 };
 
 
-function BurgerIngredients({products, openModal}: BurgerIngredientsProps)  {
+function BurgerIngredients({openModal}: BurgerIngredientsProps)  {
+	const productsIngredients = React.useContext(ProductsContext);
 	return (
 		<section className={styles.ingredients_section}>
 				<h2 className={`${styles.ingredients_title} text text_type_main-large mb-5`}>Соберите бургер</h2>
-				<TabBlock titleList={getTitleList(products)}/>
+				<TabBlock titleList={getTitleList(productsIngredients)}/>
 				<div className={styles.ingredients_inner}>
 
 					{
-						getTitleList(products).map((item,index) =>
-							<BurgerBlock products={products} openModal={openModal} key={index}  type={item}/>
+						getTitleList(productsIngredients).map((item,index) =>
+							<BurgerBlock openModal={openModal} key={index}  type={item}/>
 						)
 					}
 				</div>

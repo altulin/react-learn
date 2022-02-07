@@ -23,10 +23,10 @@ interface BurgerConstructorProps{
 
 function BurgerConstructor({openModal}: BurgerConstructorProps) {
 
-	const products = React.useContext(ProductsContext);
+	const productsConstructor = React.useContext(ProductsContext);
 
 	const getList = () => {
-		return  products.filter(item => item.type !== 'bun')
+		return  productsConstructor.filter(item => item.type !== 'bun')
 	}
 
 		return (
@@ -34,9 +34,9 @@ function BurgerConstructor({openModal}: BurgerConstructorProps) {
 				<div className={`${styles.constructor_header} ${styles.constructor_box}`}>
 					<ButtonConstructor position/>
 					<ConstructorElement
-						text={`${products[0].name} (верх)`}
-						price={products[0].price}
-						thumbnail={products[0].image_mobile}
+						text={`${productsConstructor[0].name} (верх)`}
+						price={productsConstructor[0].price}
+						thumbnail={productsConstructor[0].image_mobile}
 						type="top"
 						isLocked={true}
 					/>
@@ -60,9 +60,9 @@ function BurgerConstructor({openModal}: BurgerConstructorProps) {
 				<div className={`${styles.constructor_footer} ${styles.constructor_box}`}>
 					<ButtonConstructor position/>
 					<ConstructorElement
-						text={`${products[0].name} (низ)`}
-						price={products[0].price}
-						thumbnail={products[0].image_mobile}
+						text={`${productsConstructor[0].name} (низ)`}
+						price={productsConstructor[0].price}
+						thumbnail={productsConstructor[0].image_mobile}
 						type="bottom"
 						isLocked={true}
 					/>

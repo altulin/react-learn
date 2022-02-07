@@ -12,9 +12,12 @@ const URL = "https://norma.nomoreparties.space/api/ingredients";
 
 
 function App() {
+  const getStartConstructorList = () => {
 
+  }
   const [state, setState] = React.useState({
 		products:  null || [],
+    constructorList: getStartConstructorList(),
 		isLoading: false,
 		hasError: false,
     modalIngredient: false,
@@ -27,13 +30,17 @@ function App() {
     image_large: ''
 	})
 
+
+
 	React.useEffect(() => {
 		fetch(URL)
 			.then(res => res.json())
-			.then(data => setState({ ...state, products: data.data, isLoading: true }))
-			.catch(e => setState({ ...state, isLoading: false, hasError: true }))
+			.then(data => {setState({ ...state, products: data.data, isLoading: true })})
+			.catch(() => setState({ ...state, isLoading: false, hasError: true }))
 			// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
+
+
 
 
   const handleOpenModalIngridients = (e: React.MouseEvent) => {
@@ -84,7 +91,7 @@ function App() {
 
       {/* AppMain */}
       <ProductsContext.Provider value={state.products}>
-        {state.products !== null &&<AppMain products={state.products} openModalIngridients={handleOpenModalIngridients} openModalConstructor ={handleOpenModalConstructor}/>}
+        {state.products !== null &&<AppMain openModalIngridients={handleOpenModalIngridients} openModalConstructor ={handleOpenModalConstructor}/>}
       </ProductsContext.Provider>
 
 
