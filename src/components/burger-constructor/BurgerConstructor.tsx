@@ -1,7 +1,6 @@
 import React from 'react';
 import styles from './BurgerConstructor.module.css';
 import { CurrencyIcon, ConstructorElement, Button, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components'
-import { ProductsContext } from '../../services/productsContext';
 import { СonstructorContext } from '../../services/constructorContext';
 
 type ButtonConstructorProps = {
@@ -24,12 +23,22 @@ interface BurgerConstructorProps{
 
 function BurgerConstructor({openModal}: BurgerConstructorProps) {
 
-	const productsConstructor = React.useContext(ProductsContext);
-	const constructorContext = React.useContext(СonstructorContext);
-	// console.log(constructorContext)
+	const productsConstructor = React.useContext(СonstructorContext);
 
 	const getList = () => {
 		return  productsConstructor.filter(item => item.type !== 'bun')
+	}
+
+	const getListBun = () => {
+		return  productsConstructor.filter(item => item.type === 'bun')
+	}
+
+	const totalPrice = ()=> {
+		let total = 0;
+		productsConstructor.map(item => {
+			return item.type === 'bun' ?  total += item.price * 2 :  total += item.price
+		})
+		return total
 	}
 
 		return (
@@ -37,9 +46,9 @@ function BurgerConstructor({openModal}: BurgerConstructorProps) {
 				<div className={`${styles.constructor_header} ${styles.constructor_box}`}>
 					<ButtonConstructor position/>
 					<ConstructorElement
-						text={`${productsConstructor[0].name} (верх)`}
-						price={productsConstructor[0].price}
-						thumbnail={productsConstructor[0].image_mobile}
+						text={`${getListBun()[0].name} (верх)`}
+						price={getListBun()[0].price}
+						thumbnail={getListBun()[0].image_mobile}
 						type="top"
 						isLocked={true}
 					/>
@@ -63,9 +72,9 @@ function BurgerConstructor({openModal}: BurgerConstructorProps) {
 				<div className={`${styles.constructor_footer} ${styles.constructor_box}`}>
 					<ButtonConstructor position/>
 					<ConstructorElement
-						text={`${productsConstructor[0].name} (низ)`}
-						price={productsConstructor[0].price}
-						thumbnail={productsConstructor[0].image_mobile}
+						text={`${getListBun()[0].name} (низ)`}
+						price={getListBun()[0].price}
+						thumbnail={getListBun()[0].image_mobile}
 						type="bottom"
 						isLocked={true}
 					/>
@@ -73,7 +82,7 @@ function BurgerConstructor({openModal}: BurgerConstructorProps) {
 
 				<div className={styles.constructor_number}>
 					<p className={`${styles.constructor_price_box} ${styles.constructor_number_box} mr-10`}>
-						<span className={`${styles.constructor_price} text text_type_digits-medium`}>6100</span>
+						<span className={`${styles.constructor_price} text text_type_digits-medium`}>{totalPrice()}</span>
 						<CurrencyIcon type="primary" />
 					</p>
 
