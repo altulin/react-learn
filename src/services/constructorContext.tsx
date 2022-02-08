@@ -13,4 +13,4 @@ type Products = {
 	price: number,
 	type: string,
 }[]
-export const constructorContext = React.createContext<Products>({} as Products);
+export const СonstructorContext = React.createContext<Products>({} as Products);

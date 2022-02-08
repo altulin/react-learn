@@ -2,6 +2,7 @@ import React from 'react';
 import styles from './BurgerConstructor.module.css';
 import { CurrencyIcon, ConstructorElement, Button, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components'
 import { ProductsContext } from '../../services/productsContext';
+import { СonstructorContext } from '../../services/constructorContext';
 
 type ButtonConstructorProps = {
 	position?: boolean,
@@ -24,6 +25,8 @@ interface BurgerConstructorProps{
 function BurgerConstructor({openModal}: BurgerConstructorProps) {
 
 	const productsConstructor = React.useContext(ProductsContext);
+	const constructorContext = React.useContext(СonstructorContext);
+	// console.log(constructorContext)
 
 	const getList = () => {
 		return  productsConstructor.filter(item => item.type !== 'bun')

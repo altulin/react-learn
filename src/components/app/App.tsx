@@ -5,6 +5,7 @@ import AppMain from '../app-main/AppMain'
 import IngredientDetails from '../ingredient-details/IngredientDetails'
 import OrderDetails from '../order-details/OrderDetails'
 import { ProductsContext } from '../../services/productsContext';
+import { СonstructorContext } from '../../services/constructorContext';
 
 const URL = "https://norma.nomoreparties.space/api/ingredients";
 
@@ -12,12 +13,12 @@ const URL = "https://norma.nomoreparties.space/api/ingredients";
 
 
 function App() {
-  const getStartConstructorList = () => {
 
-  }
+
+
   const [state, setState] = React.useState({
 		products:  null || [],
-    constructorList: getStartConstructorList(),
+    constructorList: [],
 		isLoading: false,
 		hasError: false,
     modalIngredient: false,
@@ -39,6 +40,36 @@ function App() {
 			.catch(() => setState({ ...state, isLoading: false, hasError: true }))
 			// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
+
+  // стартовый лист для конструктора как пример
+  React.useEffect(() => {
+    // let list = []
+    // list.push(state.products.filter((item: {type: string}) => item.type === 'bun').splice(1))
+    // list.push(state.products.filter((item: {type: string}) => item.type === 'main').splice(6))
+    // list.push(state.products.filter((item: {type: string}) => item.type === 'sauce'))
+
+    const fetchData = async () => {
+      let list = []
+      await list.push(state.products.filter((item: {type: string}) => item.type === 'bun').splice(1))
+      list.push(state.products.filter((item: {type: string}) => item.type === 'main').splice(6))
+      list.push(state.products.filter((item: {type: string}) => item.type === 'sauce'))
+      return list.flat();
+    }
+
+    console.log(fetchData())
+
+
+
+
+
+
+
+
+    // setState({...state, constructorList: list.flat()})
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [state.isLoading])
+
+
 
 
 
@@ -88,10 +119,12 @@ function App() {
   return (
     <>
       <AppHeader/>
-
+      {state.constructorList.length > 0 && <h1>fghfghfgh</h1>}
       {/* AppMain */}
       <ProductsContext.Provider value={state.products}>
-        {state.products !== null &&<AppMain openModalIngridients={handleOpenModalIngridients} openModalConstructor ={handleOpenModalConstructor}/>}
+        <СonstructorContext.Provider value={state.constructorList}>
+          {state.products !== null &&<AppMain openModalIngridients={handleOpenModalIngridients} openModalConstructor ={handleOpenModalConstructor}/>}
+        </СonstructorContext.Provider>
       </ProductsContext.Provider>
 
 
