@@ -43,10 +43,19 @@ interface TabBlockProps {
 
 
 const TabBlock = ({titleList}: TabBlockProps) => {
-	const [current, setCurrent] = React.useState('one')
+	const [current, setCurrent] = React.useState('bun')
+
+	React.useEffect(() => {
+		const element = document.querySelector(`.${current}`)
+		if (element !== null) {
+			element.scrollIntoView({behavior: "smooth"})
+		}
+
+	},[current])
+
 
   return (
-		<div style={{ display: 'flex' }} className={`${styles.ingredients_tabs} mb-8`}>
+		<div className={`${styles.ingredients_tabs} mb-8`} >
 			{
 				titleList.map((item, index) =>
 					<Tab value={item} active={current === item} onClick={setCurrent} key={index}>
@@ -62,9 +71,10 @@ const TabBlock = ({titleList}: TabBlockProps) => {
 interface BurgerBlockProps {
 	type: string,
 	openModal: (e: React.MouseEvent) => void,
+	myClass: string,
 }
 
-function BurgerBlock({type, openModal}: BurgerBlockProps) {
+function BurgerBlock({type, openModal, myClass}: BurgerBlockProps) {
 	const productsIngredients = React.useContext(ProductsContext);
 
 	const getBurgerList = () => {
@@ -72,7 +82,7 @@ function BurgerBlock({type, openModal}: BurgerBlockProps) {
 	}
 
 	return (
-		<div className={styles.ingredients_block}>
+		<div className={`${styles.ingredients_block} ${myClass}`}>
 			<h3 className={`{styles.ingredients_subtitle} text text_type_main-medium mb-4`}>{translate(type)}</h3>
 			<ul className={`${styles.burger_list}`}>
 				{getBurgerList().map((item)=>
@@ -127,7 +137,7 @@ function BurgerIngredients({openModal}: BurgerIngredientsProps)  {
 
 					{
 						getTitleList(productsIngredients).map((item,index) =>
-							<BurgerBlock openModal={openModal} key={index}  type={item}/>
+							<BurgerBlock myClass={item} openModal={openModal} key={index}  type={item}/>
 						)
 					}
 				</div>

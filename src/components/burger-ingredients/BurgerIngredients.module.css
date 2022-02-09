@@ -22,6 +22,7 @@
 
 .ingredients_tabs {
 	width: 100%;
+	display: flex;
 }
 
 .ingredients_tabs div {

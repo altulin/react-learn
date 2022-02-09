@@ -5,11 +5,11 @@ import AppMain from '../app-main/AppMain'
 import IngredientDetails from '../ingredient-details/IngredientDetails'
 import OrderDetails from '../order-details/OrderDetails'
 import { ProductsContext } from '../../services/productsContext';
-import { СonstructorContext } from '../../services/constructorContext';
 import { OrderContext } from '../../services/orderContext';
 
-const URL = "https://norma.nomoreparties.space/api/ingredients";
-const URL_ORDERS = "https://norma.nomoreparties.space/api/orders"
+const baseUrl = "https://norma.nomoreparties.space/api/"
+const URL = `${baseUrl}ingredients`;;
+const URL_ORDERS = `${baseUrl}orders`
 
 function App() {
   const [state, setState] = React.useState({
@@ -28,33 +28,22 @@ function App() {
     image_large: ''
 	})
 
+  const checkResponse = (res: Response) => {
+    if (res.ok) {
+      return res.json();
+    }
+    return Promise.reject(`Ошибка ${res.status}`);
+  }
+
 
 
 	React.useEffect(() => {
-    async function fetchProducts(url= '') {
-      const response = await fetch(url);
-      return await response.json();
-    }
-
-    fetchProducts(URL)
+    fetch(URL)
+      .then(checkResponse)
       .then(data => {setState({ ...state, products: data.data, isLoading: true })})
       .catch(() => setState({ ...state, isLoading: false, hasError: true }))
     // eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
-
-
-
-  // стартовый лист для конструктора как пример(временно)_
-  React.useEffect(() => {
-    let list = []
-    list.push(state.products.filter((item: {type: string}) => item.type === 'bun').splice(1))
-    list.push(state.products.filter((item: {type: string}) => item.type === 'main').splice(6))
-    list.push(state.products.filter((item: {type: string}) => item.type === 'sauce'))
-    setState({...state, constructorList: list.flat()})
-    //eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [state.isLoading])
-
-
 
   const handleOpenModalIngridients = (e: React.MouseEvent) => {
 
@@ -76,33 +65,26 @@ function App() {
   };
 
   const makePost = (data:string[]=[]) => {
-    async function fetchOrder(url= '') {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({
-          "ingredients": data
-        })
-
-      });
-      return await response.json();
-    };
-
-    fetchOrder(URL_ORDERS)
-      .then(data => {setState({ ...state, orderNumber: data.order.number, modalConstructor: true,})})
-      .catch(() => console.log('err'))
+    fetch(URL_ORDERS, {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        "ingredients": data
+      })
+    })
+    .then(checkResponse)
+    .then(data => {setState({ ...state, orderNumber: data.order.number, modalConstructor: true,})})
+    .catch((e) => console.log(e))
   }
 
-  const handleOpenModalConstructor = () => {
-    const dataOrder = state.constructorList.map((item:{_id:string})=>item._id)
+  const handleOpenModalConstructor = (list: {_id: string}[]) => {
+    const dataOrder: string[] = [];
+    list.forEach((item:{_id:string}) => {
+      dataOrder.push(item._id)
+    });
     makePost(dataOrder);
-	}
-
-  const handlekeyPress = ({key} : KeyboardEvent) => {
-		key === 'Escape' && handleCloseModal();
-		return
 	}
 
   const handleCloseModal = () => {
@@ -114,24 +96,19 @@ function App() {
 			})
 	}
 
-
-
   return (
     <>
       <AppHeader/>
-      {state.constructorList.length > 0 && <h1>fghfghfgh</h1>}
       {/* AppMain */}
       <ProductsContext.Provider value={state.products}>
-        {state.constructorList.length > 0 && <СonstructorContext.Provider value={state.constructorList}>
-          {state.products !== null &&<AppMain openModalIngridients={handleOpenModalIngridients} openModalConstructor ={handleOpenModalConstructor}/>}
-        </СonstructorContext.Provider>}
+        {state.products !== null &&<AppMain openModalIngridients={handleOpenModalIngridients} openModalConstructor ={handleOpenModalConstructor}/>}
       </ProductsContext.Provider>
 
 
       {/* modal */}
-      {state.modalIngredient && <IngredientDetails calories={state.calories} proteins={state.proteins} fat={state.fat} carbohydrates={state.carbohydrates} name={state.name} image_large={state.image_large} close={handleCloseModal} press_close={handlekeyPress}/>}
+      {state.modalIngredient && <IngredientDetails calories={state.calories} proteins={state.proteins} fat={state.fat} carbohydrates={state.carbohydrates} name={state.name} image_large={state.image_large} close={handleCloseModal} />}
       <OrderContext.Provider value={state.orderNumber}>
-        {state.modalConstructor && <OrderDetails close={handleCloseModal} press_close={handlekeyPress}/>}
+        {state.modalConstructor && <OrderDetails close={handleCloseModal} />}
       </OrderContext.Provider>
 
     </>

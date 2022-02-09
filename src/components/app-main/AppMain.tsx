@@ -6,7 +6,7 @@ import { ProductsContext } from '../../services/productsContext';
 
 interface AppMainProps {
 	openModalIngridients: (e: React.MouseEvent)=> void,
-	openModalConstructor: ()=> void,
+	openModalConstructor: (val : {_id: string}[])=> void,
 }
 
 function AppMain({openModalIngridients, openModalConstructor}: AppMainProps)  {
