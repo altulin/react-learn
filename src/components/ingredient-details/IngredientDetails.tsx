@@ -3,8 +3,7 @@ import styles from './IngredientDetails.module.css';
 import Modal from '../modal/Modal'
 
 interface IngredientDetailsProps {
-	close: (e: React.MouseEvent) => void,
-	press_close: ({key} : KeyboardEvent) => void,
+	close: () => void,
 	name: string,
 	calories: number,
 	proteins: number,
@@ -16,7 +15,7 @@ interface IngredientDetailsProps {
 
 function IngredientDetails(props:IngredientDetailsProps) {
 	return (
-		<Modal onClose={props.close} onPressClose={props.press_close}>
+		<Modal onClose={props.close}>
 	 		<h2 className="text text_type_main-large">Детали ингредиента</h2>
 
 	 		<figure className={`mb-4 ${styles.modal_img_wrap}`}>

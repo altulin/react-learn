@@ -7,19 +7,26 @@ const modalRoot = document.querySelector(".modal-root") as HTMLElement
 
 interface ModalProps {
 	children: React.ReactNode,
-	onClose?: (e: React.MouseEvent) => void,
-	onPressClose: ({key} : KeyboardEvent) => void,
+	onClose: () => void,
 }
 
-function Modal({children, onClose, onPressClose}: ModalProps) {
+function Modal({children, onClose}: ModalProps) {
 
 	 React.useEffect(()=>{
-    document.addEventListener("keydown", onPressClose);
+		const handlekeyPress = ({key} : KeyboardEvent) => {
+			if (key === 'Escape') {
+				onClose();
+			}
+			return
+		}
+
+    document.addEventListener("keydown", handlekeyPress);
 
     return () => {
-      document.removeEventListener("keydown", onPressClose);
+      document.removeEventListener("keydown", handlekeyPress);
     }
-  }, [onPressClose])
+		//eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
 	return ReactDOM.createPortal(
 		<>
