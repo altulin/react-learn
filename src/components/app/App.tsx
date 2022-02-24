@@ -1,4 +1,8 @@
 import React from 'react';
+import { Provider } from 'react-redux';
+import { createStore, compose, applyMiddleware  } from 'redux';
+import thunk from 'redux-thunk';
+import { rootReducer } from '../../services/reducers/rootReducer';
 import './App.module.css';
 import AppHeader from '../app-header/AppHeader';
 import AppMain from '../app-main/AppMain'
@@ -6,10 +10,22 @@ import IngredientDetails from '../ingredient-details/IngredientDetails'
 import OrderDetails from '../order-details/OrderDetails'
 import { ProductsContext } from '../../services/productsContext';
 import { OrderContext } from '../../services/orderContext';
+// import getFeed from '../../utils/getListIgredients';
+
+
+declare global {
+  interface Window {
+    __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: typeof compose;
+  }
+}
+
+const composeEnhancers = window['__REDUX_DEVTOOLS_EXTENSION_COMPOSE__'] as typeof compose || compose;
+const enhancer = composeEnhancers(applyMiddleware(thunk));
 
 const baseUrl = "https://norma.nomoreparties.space/api/"
-const URL = `${baseUrl}ingredients`;;
+const URL = `${baseUrl}ingredients`;
 const URL_ORDERS = `${baseUrl}orders`
+const store = createStore(rootReducer, enhancer);
 
 function App() {
   const [state, setState] = React.useState({
@@ -28,12 +44,17 @@ function App() {
     image_large: ''
 	})
 
+
+
+
   const checkResponse = (res: Response) => {
     if (res.ok) {
       return res.json();
     }
     return Promise.reject(`Ошибка ${res.status}`);
   }
+
+
 
 
 
@@ -97,21 +118,23 @@ function App() {
 	}
 
   return (
-    <>
-      <AppHeader/>
-      {/* AppMain */}
-      <ProductsContext.Provider value={state.products}>
-        {state.products !== null &&<AppMain openModalIngridients={handleOpenModalIngridients} openModalConstructor ={handleOpenModalConstructor}/>}
-      </ProductsContext.Provider>
+
+      <Provider store={store}>
+        <AppHeader/>
+        {/* AppMain */}
+        <ProductsContext.Provider value={state.products}>
+          {state.products !== null &&<AppMain openModalIngridients={handleOpenModalIngridients} openModalConstructor ={handleOpenModalConstructor}/>}
+        </ProductsContext.Provider>
 
 
-      {/* modal */}
-      {state.modalIngredient && <IngredientDetails calories={state.calories} proteins={state.proteins} fat={state.fat} carbohydrates={state.carbohydrates} name={state.name} image_large={state.image_large} close={handleCloseModal} />}
-      <OrderContext.Provider value={state.orderNumber}>
-        {state.modalConstructor && <OrderDetails close={handleCloseModal} />}
-      </OrderContext.Provider>
+        {/* modal */}
+        {state.modalIngredient && <IngredientDetails calories={state.calories} proteins={state.proteins} fat={state.fat} carbohydrates={state.carbohydrates} name={state.name} image_large={state.image_large} close={handleCloseModal} />}
+        <OrderContext.Provider value={state.orderNumber}>
+          {state.modalConstructor && <OrderDetails close={handleCloseModal} />}
+        </OrderContext.Provider>
+      </Provider>
 
-    </>
+
 
   );
 }

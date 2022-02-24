@@ -2,6 +2,9 @@ import React from 'react';
 import styles from './BurgerIngredients.module.css';
 import { Tab, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components'
 import { ProductsContext } from '../../services/productsContext';
+import { useDispatch, useSelector } from 'react-redux';
+import getFeed from '../../utils/getListIgredients';
+import { RootState } from '../../services/reducers/rootReducer';
 
 
 const translate = (type: string) => {
@@ -77,6 +80,7 @@ interface BurgerBlockProps {
 function BurgerBlock({type, openModal, myClass}: BurgerBlockProps) {
 	const productsIngredients = React.useContext(ProductsContext);
 
+
 	const getBurgerList = () => {
 		return productsIngredients.filter(item => item.type === type)
 	}
@@ -127,8 +131,18 @@ interface BurgerIngredientsProps{
 };
 
 
-function BurgerIngredients({openModal}: BurgerIngredientsProps)  {
-	const productsIngredients = React.useContext(ProductsContext);
+const BurgerIngredients = React.memo(function BurgerIngredients({openModal}: BurgerIngredientsProps)  {
+	const dispatch = useDispatch();
+
+	React.useEffect(() => {
+		dispatch(getFeed());
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [])
+
+	const { productsIngredients } = useSelector((store: RootState) => ({
+		productsIngredients: store.listIngredients,
+	}));
+
 	return (
 		<section className={styles.ingredients_section}>
 				<h2 className={`${styles.ingredients_title} text text_type_main-large mb-5`}>Соберите бургер</h2>
@@ -143,6 +157,6 @@ function BurgerIngredients({openModal}: BurgerIngredientsProps)  {
 				</div>
 		</section>
 	);
-}
+})
 
 export default BurgerIngredients;
