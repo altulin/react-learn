@@ -78,7 +78,7 @@ function BurgerConstructor({openModal}: BurgerConstructorProps) {
 			<section className={`constructor_section ${styles.constructor_section}`}>
 				<div className={`${styles.constructor_header} ${styles.constructor_box}`}>
 					<ButtonConstructor position/>
-					{state.constructorList.length > 0 &&<ConstructorElement
+					{state.constructorList.length > 0 && <ConstructorElement
 						text={`${getListBun()[0].name} (верх)`}
 						price={getListBun()[0].price}
 						thumbnail={getListBun()[0].image_mobile}
