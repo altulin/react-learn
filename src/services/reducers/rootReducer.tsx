@@ -3,7 +3,7 @@ import { GET_LIST_INGREDIENTS, GET_FEED, GET_FEED_FAILED, LIST_CURRENT_INGREDIEN
 
 const initialState = {
   listIngredients: [], //список всех полученных ингредиентов
-  listCurrentIngredients: [], //список всех ингредиентов в текущем конструкторе бургера
+  listConstructor: [], //список всех ингредиентов в текущем конструкторе бургера
   currentIngredient: {}, //объект текущего просматриваемого ингредиента
   createOrder: {}, // объект созданного заказа
   feed: false, // состояние загрузки с сервера для лоадера
@@ -32,6 +32,13 @@ export const rootReducer =(state = initialState, action: {type: string, feed: an
         ...state,
 				feed: false,
         feedError: true,
+      };
+    }
+
+    case LIST_CURRENT_INGREDIENTS: {
+      return {
+        ...state,
+        listConstructor: action.feed,
       };
     }
 

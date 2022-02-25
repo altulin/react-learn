@@ -1,10 +1,10 @@
 import React from 'react';
 import styles from './BurgerIngredients.module.css';
 import { Tab, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components'
-import { ProductsContext } from '../../services/productsContext';
 import { useDispatch, useSelector } from 'react-redux';
 import getFeed from '../../utils/getListIgredients';
 import { RootState } from '../../services/reducers/rootReducer';
+
 
 
 const translate = (type: string) => {
@@ -78,18 +78,20 @@ interface BurgerBlockProps {
 }
 
 function BurgerBlock({type, openModal, myClass}: BurgerBlockProps) {
-	const productsIngredients = React.useContext(ProductsContext);
+	const { productsIngredients } = useSelector((store: RootState) => ({
+		productsIngredients: store.listIngredients,
+	}));
 
 
 	const getBurgerList = () => {
-		return productsIngredients.filter(item => item.type === type)
+		return productsIngredients.filter((item:{type: string}) => item.type === type)
 	}
 
 	return (
 		<div className={`${styles.ingredients_block} ${myClass}`}>
 			<h3 className={`{styles.ingredients_subtitle} text text_type_main-medium mb-4`}>{translate(type)}</h3>
 			<ul className={`${styles.burger_list}`}>
-				{getBurgerList().map((item)=>
+				{getBurgerList().map((item:{_id: string, image: string, image_mobile: string, name: string, price: number})=>
 					<BurgerCard openModal={openModal} key={item._id} image={item.image} image_mobile={item.image_mobile} price={item.price} name={item.name} dataKey={item._id}/>
 				)}
 			</ul>

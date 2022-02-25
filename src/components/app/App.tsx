@@ -8,9 +8,8 @@ import AppHeader from '../app-header/AppHeader';
 import AppMain from '../app-main/AppMain'
 import IngredientDetails from '../ingredient-details/IngredientDetails'
 import OrderDetails from '../order-details/OrderDetails'
-import { ProductsContext } from '../../services/productsContext';
 import { OrderContext } from '../../services/orderContext';
-// import getFeed from '../../utils/getListIgredients';
+import { useDispatch, useSelector } from 'react-redux';
 
 
 declare global {
@@ -28,6 +27,7 @@ const URL_ORDERS = `${baseUrl}orders`
 const store = createStore(rootReducer, enhancer);
 
 function App() {
+  // const dispatch = useDispatch();
   const [state, setState] = React.useState({
     orderNumber: 0,
 		products:  null || [],
@@ -122,9 +122,9 @@ function App() {
       <Provider store={store}>
         <AppHeader/>
         {/* AppMain */}
-        <ProductsContext.Provider value={state.products}>
-          {state.products !== null &&<AppMain openModalIngridients={handleOpenModalIngridients} openModalConstructor ={handleOpenModalConstructor}/>}
-        </ProductsContext.Provider>
+
+          <AppMain openModalIngridients={handleOpenModalIngridients} openModalConstructor ={handleOpenModalConstructor}/>
+
 
 
         {/* modal */}
