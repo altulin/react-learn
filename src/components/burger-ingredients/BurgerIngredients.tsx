@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './BurgerIngredients.module.css';
 import { Tab, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components'
 import { useDispatch, useSelector } from 'react-redux';
-import getFeed from '../../utils/getListIgredients';
+import { getFeed } from '../../utils/response';
 import { RootState } from '../../services/reducers/rootReducer';
 
 

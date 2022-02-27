@@ -10,7 +10,7 @@ const checkResponse = (res: Response) => {
 	return Promise.reject(`Ошибка ${res.status}`);
 }
 
-const getFeed = () => {
+export const getFeed = () => {
 	return function(dispatch: Dispatch) {
 		dispatch({
       type: GET_FEED,
@@ -32,5 +32,3 @@ const getFeed = () => {
 			})
 		}
 };
-
-export default getFeed;

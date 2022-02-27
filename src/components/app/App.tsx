@@ -1,8 +1,4 @@
 import React from 'react';
-import { Provider } from 'react-redux';
-import { createStore, compose, applyMiddleware  } from 'redux';
-import thunk from 'redux-thunk';
-import { rootReducer } from '../../services/reducers/rootReducer';
 import './App.module.css';
 import AppHeader from '../app-header/AppHeader';
 import AppMain from '../app-main/AppMain'
@@ -10,38 +6,23 @@ import IngredientDetails from '../ingredient-details/IngredientDetails'
 import OrderDetails from '../order-details/OrderDetails'
 import { OrderContext } from '../../services/orderContext';
 import { useDispatch, useSelector } from 'react-redux';
+import { CURRENT_INGREDIENT } from '../../services/actions';
+import { RootState } from '../../services/reducers/rootReducer';
 
-
-declare global {
-  interface Window {
-    __REDUX_DEVTOOLS_EXTENSION_COMPOSE__?: typeof compose;
-  }
-}
-
-const composeEnhancers = window['__REDUX_DEVTOOLS_EXTENSION_COMPOSE__'] as typeof compose || compose;
-const enhancer = composeEnhancers(applyMiddleware(thunk));
 
 const baseUrl = "https://norma.nomoreparties.space/api/"
-const URL = `${baseUrl}ingredients`;
+// const URL = `${baseUrl}ingredients`;
 const URL_ORDERS = `${baseUrl}orders`
-const store = createStore(rootReducer, enhancer);
 
 function App() {
-  // const dispatch = useDispatch();
+  const dispatch = useDispatch();
   const [state, setState] = React.useState({
     orderNumber: 0,
-		products:  null || [],
     constructorList: [],
 		isLoading: false,
 		hasError: false,
     modalIngredient: false,
     modalConstructor: false,
-    calories: 0,
-    proteins: 0,
-    fat: 0,
-    carbohydrates: 0,
-    name: '',
-    image_large: ''
 	})
 
 
@@ -54,35 +35,23 @@ function App() {
     return Promise.reject(`Ошибка ${res.status}`);
   }
 
-
-
-
-
-	React.useEffect(() => {
-    fetch(URL)
-      .then(checkResponse)
-      .then(data => {setState({ ...state, products: data.data, isLoading: true })})
-      .catch(() => setState({ ...state, isLoading: false, hasError: true }))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [])
+  const { productsIngredients } = useSelector((store: RootState) => ({
+		productsIngredients: store.listIngredients,
+	}));
 
   const handleOpenModalIngridients = (e: React.MouseEvent) => {
+    const id = (e.currentTarget as HTMLElement).dataset.id;
+    const element = productsIngredients.filter((item: {_id: string})=> item._id === id)[0]
+    setState(
+    {
+      ...state,
+      modalIngredient: true,
+    })
 
-    if (state.products !== null) {
-      const id = (e.currentTarget as HTMLElement).dataset.id;
-      const element = state.products.filter((item: {_id: string})=> item._id === id)[0]
-      setState(
-			{
-        ...state,
-				modalIngredient: true,
-				calories: element['calories'],
-				proteins: element['proteins'],
-				fat: element['fat'],
-				carbohydrates: element['carbohydrates'],
-				name: element['name'],
-				image_large: element['image_large'],
-			})
-	  }
+    dispatch({
+      type: CURRENT_INGREDIENT,
+      feed: element,
+    })
   };
 
   const makePost = (data:string[]=[]) => {
@@ -115,27 +84,25 @@ function App() {
 				modalIngredient: false,
         modalConstructor: false,
 			})
+
+      dispatch({
+        type: CURRENT_INGREDIENT,
+        feed: {},
+      })
 	}
 
   return (
+    <>
+      <AppHeader/>
+      {/* AppMain */}
+        <AppMain openModalIngridients={handleOpenModalIngridients} openModalConstructor ={handleOpenModalConstructor}/>
 
-      <Provider store={store}>
-        <AppHeader/>
-        {/* AppMain */}
-
-          <AppMain openModalIngridients={handleOpenModalIngridients} openModalConstructor ={handleOpenModalConstructor}/>
-
-
-
-        {/* modal */}
-        {state.modalIngredient && <IngredientDetails calories={state.calories} proteins={state.proteins} fat={state.fat} carbohydrates={state.carbohydrates} name={state.name} image_large={state.image_large} close={handleCloseModal} />}
-        <OrderContext.Provider value={state.orderNumber}>
-          {state.modalConstructor && <OrderDetails close={handleCloseModal} />}
-        </OrderContext.Provider>
-      </Provider>
-
-
-
+      {/* modal */}
+      {state.modalIngredient && <IngredientDetails close={handleCloseModal} />}
+      <OrderContext.Provider value={state.orderNumber}>
+        {state.modalConstructor && <OrderDetails close={handleCloseModal} />}
+      </OrderContext.Provider>
+    </>
   );
 }
 

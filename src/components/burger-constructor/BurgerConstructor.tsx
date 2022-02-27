@@ -37,17 +37,22 @@ function BurgerConstructor({openModal}: BurgerConstructorProps) {
     list.push(productsIngredients.filter((item: {type: string}) => item.type === 'bun').splice(1));
     list.push(productsIngredients.filter((item: {type: string}) => item.type === 'main').splice(6));
     list.push(productsIngredients.filter((item: {type: string}) => item.type === 'sauce'));
+		console.log(list.flat().length)
+
 		dispatch({
 			type: LIST_CURRENT_INGREDIENTS,
 			feed: list.flat(),
 		})
-		// setState({constructorList: list.flat()})
+
+
     //eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [])
+	}, [productsIngredients])
 
 	const { constructorList } = useSelector((store: RootState) => ({
-		constructorList: store.listIngredients,
+		constructorList: store.listConstructor,
 	}));
+
+
 
 	const getList = () => {
 		return  constructorList.filter((item: {type: string}) => item.type !== 'bun')
