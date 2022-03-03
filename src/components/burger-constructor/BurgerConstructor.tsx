@@ -20,7 +20,8 @@ const ButtonConstructor = ({position}:ButtonConstructorProps) => {
 }
 
 interface BurgerConstructorProps{
-	openModal: (val : {_id: string}[]) => void,
+	// openModal: (val : {_id: string}[]) => void,
+	openModal: () => void,
 };
 
 function BurgerConstructor({openModal}: BurgerConstructorProps) {
@@ -37,7 +38,6 @@ function BurgerConstructor({openModal}: BurgerConstructorProps) {
     list.push(productsIngredients.filter((item: {type: string}) => item.type === 'bun').splice(1));
     list.push(productsIngredients.filter((item: {type: string}) => item.type === 'main').splice(6));
     list.push(productsIngredients.filter((item: {type: string}) => item.type === 'sauce'));
-		console.log(list.flat().length)
 
 		dispatch({
 			type: LIST_CURRENT_INGREDIENTS,
@@ -115,7 +115,7 @@ function BurgerConstructor({openModal}: BurgerConstructorProps) {
 						<CurrencyIcon type="primary" />
 					</p>
 
-					<Button type="primary" size="large" onClick={()=>openModal(constructorList)}>
+					<Button type="primary" size="large" onClick={()=>openModal()}>
 						Оформить заказ
 					</Button>
 				</div>

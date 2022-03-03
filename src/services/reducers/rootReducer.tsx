@@ -1,5 +1,5 @@
 // import { combineReducers } from 'redux';
-import { GET_LIST_INGREDIENTS, GET_FEED, GET_FEED_FAILED, LIST_CURRENT_INGREDIENTS, CURRENT_INGREDIENT } from "../actions";
+import { GET_LIST_INGREDIENTS, GET_FEED, GET_FEED_FAILED, LIST_CURRENT_INGREDIENTS, CURRENT_INGREDIENT, CREATED_ORDER } from "../actions";
 
 const initialState = {
   listIngredients: [], //список всех полученных ингредиентов
@@ -46,6 +46,13 @@ export const rootReducer =(state = initialState, action: {type: string, feed: an
       return {
         ...state,
         currentIngredient: action.feed,
+      };
+    }
+
+    case CREATED_ORDER: {
+      return {
+        ...state,
+        createOrder: action.feed,
       };
     }
 

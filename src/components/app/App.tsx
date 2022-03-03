@@ -8,6 +8,7 @@ import { OrderContext } from '../../services/orderContext';
 import { useDispatch, useSelector } from 'react-redux';
 import { CURRENT_INGREDIENT } from '../../services/actions';
 import { RootState } from '../../services/reducers/rootReducer';
+import { getFeedConstructor } from '../../utils/response';
 
 
 const baseUrl = "https://norma.nomoreparties.space/api/"
@@ -69,13 +70,23 @@ function App() {
     .catch((e) => console.log(e))
   }
 
-  const handleOpenModalConstructor = (list: {_id: string}[]) => {
-    const dataOrder: string[] = [];
-    list.forEach((item:{_id:string}) => {
-      dataOrder.push(item._id)
-    });
-    makePost(dataOrder);
+  const { listConstructor } = useSelector((store: RootState) => ({
+		listConstructor: store.listConstructor,
+	}));
+
+  const handleOpenModalConstructor = () => {
+    const listId = listConstructor.map((item:{_id:string}) => item._id);
+    getFeedConstructor();
 	}
+  // const handleOpenModalConstructor = (list: {_id: string}[]) => {
+  //   const dataOrder: string[] = [];
+  //   list.forEach((item:{_id:string}) => {
+  //     dataOrder.push(item._id)
+  //   });
+  //   makePost(dataOrder);
+	// }
+
+
 
   const handleCloseModal = () => {
 		setState(
@@ -83,18 +94,22 @@ function App() {
 				...state,
 				modalIngredient: false,
         modalConstructor: false,
-			})
+			}
+    )
 
-      dispatch({
+    dispatch(
+      {
         type: CURRENT_INGREDIENT,
         feed: {},
-      })
-	}
+      }
+    )
+	};
 
   return (
     <>
       <AppHeader/>
       {/* AppMain */}
+        {/* <AppMain openModalIngridients={handleOpenModalIngridients} openModalConstructor ={handleOpenModalConstructor}/> */}
         <AppMain openModalIngridients={handleOpenModalIngridients} openModalConstructor ={handleOpenModalConstructor}/>
 
       {/* modal */}

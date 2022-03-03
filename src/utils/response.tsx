@@ -1,7 +1,9 @@
 import { GET_LIST_INGREDIENTS, GET_FEED, GET_FEED_FAILED } from "../services/actions";
 import { Dispatch } from 'redux';
 
-const URL = 'https://norma.nomoreparties.space/api/ingredients';
+const baseUrl = "https://norma.nomoreparties.space/api/"
+const URL = `${baseUrl}ingredients`;
+const URL_ORDERS = `${baseUrl}orders`;
 
 const checkResponse = (res: Response) => {
 	if (res.ok) {
@@ -19,6 +21,7 @@ export const getFeed = () => {
 		fetch(URL)
 			.then(checkResponse)
 			.then(data => {
+				console.log(4444)
 				dispatch({
 					type: GET_LIST_INGREDIENTS,
 					feed: data.data,
@@ -26,9 +29,39 @@ export const getFeed = () => {
 			})
 
 			.catch(() => {
+
 				dispatch({
 					type: GET_FEED_FAILED
 				})
 			})
 		}
 };
+
+export const getFeedConstructor = () => {
+
+
+		return function(dispatch: Dispatch) {
+			dispatch({
+				type: GET_FEED,
+			});
+
+			fetch(URL)
+				.then(checkResponse)
+				.then(data => {
+					console.log(4444)
+					dispatch({
+						type: GET_LIST_INGREDIENTS,
+						feed: data.data,
+					})
+				})
+
+				.catch(() => {
+
+					dispatch({
+						type: GET_FEED_FAILED
+					})
+				})
+
+
+};
+}
