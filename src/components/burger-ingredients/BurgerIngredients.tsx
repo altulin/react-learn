@@ -89,7 +89,7 @@ function BurgerBlock({type, openModal, myClass}: BurgerBlockProps) {
 
 	return (
 		<div className={`${styles.ingredients_block} ${myClass}`}>
-			<h3 className={`{styles.ingredients_subtitle} text text_type_main-medium mb-4`}>{translate(type)}</h3>
+			<h3 className={`${styles.ingredients_subtitle} text text_type_main-medium mb-4`}>{translate(type)}</h3>
 			<ul className={`${styles.burger_list}`}>
 				{getBurgerList().map((item:{_id: string, image: string, image_mobile: string, name: string, price: number})=>
 					<BurgerCard openModal={openModal} key={item._id} image={item.image} image_mobile={item.image_mobile} price={item.price} name={item.name} dataKey={item._id}/>
@@ -149,7 +149,7 @@ const BurgerIngredients = React.memo(function BurgerIngredients({openModal}: Bur
 		<section className={styles.ingredients_section}>
 				<h2 className={`${styles.ingredients_title} text text_type_main-large mb-5`}>Соберите бургер</h2>
 				<TabBlock titleList={getTitleList(productsIngredients)}/>
-				<div className={styles.ingredients_inner}>
+				<div className={styles.ingredients_inner} onScroll={()=>{console.log(123)}}>
 
 					{
 						getTitleList(productsIngredients).map((item,index) =>

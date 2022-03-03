@@ -1,4 +1,4 @@
-import { GET_LIST_INGREDIENTS, GET_FEED, GET_FEED_FAILED } from "../services/actions";
+import { GET_LIST_INGREDIENTS, GET_FEED, GET_FEED_FAILED, CREATED_ORDER } from "../services/actions";
 import { Dispatch } from 'redux';
 
 const baseUrl = "https://norma.nomoreparties.space/api/"
@@ -21,7 +21,6 @@ export const getFeed = () => {
 		fetch(URL)
 			.then(checkResponse)
 			.then(data => {
-				console.log(4444)
 				dispatch({
 					type: GET_LIST_INGREDIENTS,
 					feed: data.data,
@@ -37,31 +36,25 @@ export const getFeed = () => {
 		}
 };
 
-export const getFeedConstructor = () => {
+export const getFeedConstructor = (list: []) => {
+	return function(dispatch: Dispatch) {
 
-
-		return function(dispatch: Dispatch) {
+		fetch(URL_ORDERS, {
+      method: 'POST',
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({
+        "ingredients": list
+      })
+    })
+    .then(checkResponse)
+    .then(data => {
 			dispatch({
-				type: GET_FEED,
-			});
-
-			fetch(URL)
-				.then(checkResponse)
-				.then(data => {
-					console.log(4444)
-					dispatch({
-						type: GET_LIST_INGREDIENTS,
-						feed: data.data,
-					})
-				})
-
-				.catch(() => {
-
-					dispatch({
-						type: GET_FEED_FAILED
-					})
-				})
-
-
+				type: CREATED_ORDER,
+				feed: data.order.number,
+			})
+		})
+    .catch((e) => console.log(e))
+	}
 };
-}

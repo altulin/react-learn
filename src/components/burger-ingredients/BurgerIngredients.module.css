@@ -45,10 +45,6 @@
 	margin-bottom: 32px;
 }
 
-.ingredients_subtitle {
-	border: 1px dashed #4C4CFF;
-}
-
 .card_link {
 	display: flex;
 	flex-direction: column;

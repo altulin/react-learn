@@ -5,7 +5,6 @@ import BurgerConstructor from '../burger-constructor/BurgerConstructor'
 
 interface AppMainProps {
 	openModalIngridients: (e: React.MouseEvent)=> void,
-	// openModalConstructor: (val : {_id: string}[])=> void,
 	openModalConstructor: () => void,
 }
 

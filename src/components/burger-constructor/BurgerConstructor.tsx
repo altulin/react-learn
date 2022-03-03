@@ -20,7 +20,6 @@ const ButtonConstructor = ({position}:ButtonConstructorProps) => {
 }
 
 interface BurgerConstructorProps{
-	// openModal: (val : {_id: string}[]) => void,
 	openModal: () => void,
 };
 

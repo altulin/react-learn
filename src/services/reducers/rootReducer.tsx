@@ -5,7 +5,7 @@ const initialState = {
   listIngredients: [], //список всех полученных ингредиентов
   listConstructor: [], //список всех ингредиентов в текущем конструкторе бургера
   currentIngredient: {}, //объект текущего просматриваемого ингредиента
-  createOrder: {}, // объект созданного заказа
+  orderNumber: '', // объект созданного заказа
   feed: false, // состояние загрузки с сервера для лоадера
   feedError: false, // ошибка прм загрузке с сервера
 };
@@ -52,7 +52,7 @@ export const rootReducer =(state = initialState, action: {type: string, feed: an
     case CREATED_ORDER: {
       return {
         ...state,
-        createOrder: action.feed,
+        orderNumber: action.feed,
       };
     }
 
