@@ -54,16 +54,27 @@ const TabBlock = ({titleList}: TabBlockProps) => {
 			element.scrollIntoView({behavior: "smooth"})
 		}
 
+
+
 	},[current])
+
+	React.useEffect(() => {
+
+
+
+
+	},[])
 
 
   return (
 		<div className={`${styles.ingredients_tabs} mb-8`} >
 			{
 				titleList.map((item, index) =>
-					<Tab value={item} active={current === item} onClick={setCurrent} key={index}>
-						{translate(item)}
-					</Tab>
+					<div key={index} data-tab={item}>
+						<Tab value={item} active={current === item} onClick={setCurrent} >
+							{translate(item)}
+						</Tab>
+					</div>
 				)
 			}
 		</div>
@@ -88,8 +99,8 @@ function BurgerBlock({type, openModal, myClass}: BurgerBlockProps) {
 	}
 
 	return (
-		<div className={`${styles.ingredients_block} ${myClass}`}>
-			<h3 className={`${styles.ingredients_subtitle} text text_type_main-medium mb-4`}>{translate(type)}</h3>
+		<div className={`${styles.ingredients_block} ${myClass}`} data-control data-class={`${myClass}`}>
+			<h3 className={'text text_type_main-medium mb-4'}>{translate(type)}</h3>
 			<ul className={`${styles.burger_list}`}>
 				{getBurgerList().map((item:{_id: string, image: string, image_mobile: string, name: string, price: number})=>
 					<BurgerCard openModal={openModal} key={item._id} image={item.image} image_mobile={item.image_mobile} price={item.price} name={item.name} dataKey={item._id}/>
@@ -139,17 +150,27 @@ const BurgerIngredients = React.memo(function BurgerIngredients({openModal}: Bur
 	React.useEffect(() => {
 		dispatch(getFeed());
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [])
+	}, []);
+
+
 
 	const { productsIngredients } = useSelector((store: RootState) => ({
 		productsIngredients: store.listIngredients,
 	}));
 
+	const handleScroll = ()=> {
+		const elem  = document.querySelector('[data-control]') as HTMLElement;
+		if (elem !==null) {
+			console.log(elem.offsetTop);
+		}
+
+	}
+
 	return (
 		<section className={styles.ingredients_section}>
 				<h2 className={`${styles.ingredients_title} text text_type_main-large mb-5`}>Соберите бургер</h2>
 				<TabBlock titleList={getTitleList(productsIngredients)}/>
-				<div className={styles.ingredients_inner} onScroll={()=>{console.log(123)}}>
+				<div className={styles.ingredients_inner} onScroll={handleScroll}>
 
 					{
 						getTitleList(productsIngredients).map((item,index) =>
