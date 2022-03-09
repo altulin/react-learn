@@ -158,19 +158,47 @@ const BurgerIngredients = React.memo(function BurgerIngredients({openModal}: Bur
 		productsIngredients: store.listIngredients,
 	}));
 
+	const elem  = document.querySelector('.ingredients__inner');
+
 	const handleScroll = ()=> {
-		const elem  = document.querySelector('[data-control]') as HTMLElement;
+		// const elem  = document.querySelector('.ingredients__inner');
+
+
+		const switches  = Array.from(document.querySelectorAll('[data-control="true"]'));
+
+		// const test = Math.min(...switches.map((item  => item.offsetTop))
 		if (elem !==null) {
-			console.log(elem.offsetTop);
+
+			// const test: Array<number> = switches.map(item => item !== null && (item as HTMLElement).offsetTop);
+			const test = switches.map((item) => {
+				if (item as HTMLElement !== null) {
+					return (item as HTMLElement).offsetTop;
+				}
+			});
+
+			test.forEach(elem => console.log(typeof elem))
+
+
+			// console.log(Math.min(10, 20, 30))
 		}
 
-	}
+
+
+		// .indexOf(min);
+
+		// if (switches !==null) {
+			// console.log((elem_menu as HTMLElement).offsetTop);
+		// }
+
+		// console.log((elem_menu as HTMLElement).offsetTop - (elem as HTMLElement).scrollTop)
+
+	};
 
 	return (
-		<section className={styles.ingredients_section}>
+		<section className={`${styles.ingredients_section} ingredients`}>
 				<h2 className={`${styles.ingredients_title} text text_type_main-large mb-5`}>Соберите бургер</h2>
 				<TabBlock titleList={getTitleList(productsIngredients)}/>
-				<div className={styles.ingredients_inner} onScroll={handleScroll}>
+				<div className={`${styles.ingredients_inner} ingredients__inner`} onScroll={handleScroll}>
 
 					{
 						getTitleList(productsIngredients).map((item,index) =>
