@@ -1,4 +1,5 @@
 import React from 'react';
+import { useDrop } from "react-dnd";
 import styles from './BurgerConstructor.module.css';
 import { CurrencyIcon, ConstructorElement, Button, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components'
 import { useDispatch, useSelector } from 'react-redux';
@@ -25,6 +26,17 @@ interface BurgerConstructorProps{
 
 function BurgerConstructor({openModal}: BurgerConstructorProps) {
 	const dispatch = useDispatch();
+
+	const [, headerTarget] = useDrop({
+		accept: "bun",
+		drop(itemId) {
+			onDropHandler(itemId);
+		},
+	});
+
+	const onDropHandler = (itemId: any) => {
+		console.log(itemId)
+	}
 
 	const { productsIngredients } = useSelector((store: RootState) => ({
 		productsIngredients: store.listIngredients,
@@ -71,7 +83,7 @@ function BurgerConstructor({openModal}: BurgerConstructorProps) {
 
 		return (
 			<section className={`constructor_section ${styles.constructor_section}`}>
-				<div className={`${styles.constructor_header} ${styles.constructor_box}`}>
+				<div className={`${styles.constructor_header} ${styles.constructor_box}`} ref={headerTarget}>
 					<ButtonConstructor position/>
 					{constructorList.length > 0 && <ConstructorElement
 						text={`${getListBun()[0].name} (верх)`}
