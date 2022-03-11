@@ -41,37 +41,32 @@ const getTitleList = (list: {
 
 interface TabBlockProps {
 	titleList: string[],
+	currentTab: string,
 }
 
 
 
-const TabBlock = ({titleList}: TabBlockProps) => {
-	const [current, setCurrent] = React.useState('bun')
+const TabBlock = ({titleList, currentTab}: TabBlockProps) => {
+	let [current, setCurrent] = React.useState(currentTab)
 
-	React.useEffect(() => {
-		const element = document.querySelector(`.${current}`)
+	React.useEffect(()=> {
+		setCurrent(currentTab)
+	},[currentTab])
+
+	const clickHandle = (elem: string)=> {
+		setCurrent(elem)
+		const element = document.querySelector(`.${elem}`)
 		if (element !== null) {
 			element.scrollIntoView({behavior: "smooth"})
 		}
-
-
-
-	},[current])
-
-	React.useEffect(() => {
-
-
-
-
-	},[])
-
+	}
 
   return (
 		<div className={`${styles.ingredients_tabs} mb-8`} >
 			{
 				titleList.map((item, index) =>
 					<div key={index} data-tab={item}>
-						<Tab value={item} active={current === item} onClick={setCurrent} >
+						<Tab value={item} active={current === item} onClick={()=>clickHandle(item)} >
 							{translate(item)}
 						</Tab>
 					</div>
@@ -147,6 +142,8 @@ interface BurgerIngredientsProps{
 const BurgerIngredients = React.memo(function BurgerIngredients({openModal}: BurgerIngredientsProps)  {
 	const dispatch = useDispatch();
 
+	const [currentTab, setCurrent] = React.useState('bun')
+
 	React.useEffect(() => {
 		dispatch(getFeed());
 		// eslint-disable-next-line react-hooks/exhaustive-deps
@@ -158,46 +155,34 @@ const BurgerIngredients = React.memo(function BurgerIngredients({openModal}: Bur
 		productsIngredients: store.listIngredients,
 	}));
 
-	const elem  = document.querySelector('.ingredients__inner');
 
 	const handleScroll = ()=> {
-		// const elem  = document.querySelector('.ingredients__inner');
-
-
-		const switches  = Array.from(document.querySelectorAll('[data-control="true"]'));
-
-		// const test = Math.min(...switches.map((item  => item.offsetTop))
-		if (elem !==null) {
-
-			// const test: Array<number> = switches.map(item => item !== null && (item as HTMLElement).offsetTop);
-			const test = switches.map((item) => {
-				if (item as HTMLElement !== null) {
-					return (item as HTMLElement).offsetTop;
-				}
-			});
-
-			test.forEach(elem => console.log(typeof elem))
-
-
-			// console.log(Math.min(10, 20, 30))
+		const options = {
+			root: document.querySelector('.ingredients__inner'),
+			rootMargin: '-100px',
+			threshold: 0
 		}
 
+		const observer = new IntersectionObserver((entries) => {
+			entries.forEach(entry => {
+				const {isIntersecting, boundingClientRect, intersectionRect, target} = entry;
+				if (isIntersecting) {
+					if (boundingClientRect.y < intersectionRect.y) {
+						const elem = target as HTMLElement;
+						setCurrent(elem.dataset.class as string)
+					}
+				}
+			})
+		}, options);
 
-
-		// .indexOf(min);
-
-		// if (switches !==null) {
-			// console.log((elem_menu as HTMLElement).offsetTop);
-		// }
-
-		// console.log((elem_menu as HTMLElement).offsetTop - (elem as HTMLElement).scrollTop)
-
+		const targets = document.querySelectorAll('[data-control="true"]');
+		targets.forEach(i => observer.observe(i));
 	};
 
 	return (
 		<section className={`${styles.ingredients_section} ingredients`}>
 				<h2 className={`${styles.ingredients_title} text text_type_main-large mb-5`}>Соберите бургер</h2>
-				<TabBlock titleList={getTitleList(productsIngredients)}/>
+				<TabBlock titleList={getTitleList(productsIngredients)} currentTab={currentTab}/>
 				<div className={`${styles.ingredients_inner} ingredients__inner`} onScroll={handleScroll}>
 
 					{
