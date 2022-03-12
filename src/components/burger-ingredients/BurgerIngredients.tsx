@@ -30,15 +30,13 @@ const translate = (type: string) => {
 
 
 const getTitleList = (list: {
-	image: string,
-	image_mobile: string,
-	name: string,
-	price: number,
+
 	type: string,
-	_id: string,
+
 	}[]) => {
 	return Array.from(new Set(list.map(item => item.type)))
 }
+
 
 interface TabBlockProps {
 	titleList: string[],
@@ -99,7 +97,7 @@ function BurgerBlock({type, openModal, myClass}: BurgerBlockProps) {
 			<h3 className={'text text_type_main-medium mb-4'}>{translate(type)}</h3>
 			<ul className={`${styles.burger_list}`}>
 				{getBurgerList().map((item:{_id: string, image: string, image_mobile: string, name: string, price: number})=>
-					<BurgerCard openModal={openModal} key={item._id} image={item.image} image_mobile={item.image_mobile} price={item.price} name={item.name} dataKey={item._id} type={type}/>
+					<BurgerCard openModal={openModal} key={item._id} image={item.image} image_mobile={item.image_mobile} price={item.price} name={item.name} id={item._id} type={type}/>
 				)}
 			</ul>
 		</div>
@@ -111,21 +109,23 @@ interface BurgerCardProps {
 	image_mobile: string,
 	price: number,
 	name: string,
-	dataKey: string
+	id: string
 	openModal: (e: React.MouseEvent) => void,
 	type: string,
 }
 
 
-function BurgerCard({image, image_mobile, price, name, dataKey, openModal, type}: BurgerCardProps) {
+function BurgerCard({image, image_mobile, price, name, id, openModal, type}: BurgerCardProps) {
+
 	const [, dragRef] = useDrag({
 		type: type,
-		item: dataKey
+		item: {id},
 	});
+
 
 	return (
 		<li className={`${styles.burger_item} ${styles.card}`} ref={dragRef}>
-			<a href="/#" className={styles.card_link} onClick={openModal} data-id={dataKey}>
+			<a href="/#" className={styles.card_link} onClick={openModal} data-id={id}>
 				<figure className={styles.card_img_wrap}>
 					<img className={styles.card_img}  srcSet={`${image_mobile} 600w, ${image}`} src={image} alt="" width={240} height={120}/>
 				</figure>

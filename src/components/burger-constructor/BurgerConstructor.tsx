@@ -3,7 +3,7 @@ import { useDrop } from "react-dnd";
 import styles from './BurgerConstructor.module.css';
 import { CurrencyIcon, ConstructorElement, Button, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components'
 import { useDispatch, useSelector } from 'react-redux';
-import {LIST_CURRENT_INGREDIENTS} from '../../services/actions';
+import {LIST_CURRENT_INGREDIENTS, CHANGE_LIST_CURRENT_INGREDIENTS} from '../../services/actions';
 import { RootState } from '../../services/reducers/rootReducer';
 
 type ButtonConstructorProps = {
@@ -15,7 +15,7 @@ const ButtonConstructor = ({position}:ButtonConstructorProps) => {
 	return (
 		<button className={`${styles.constructor_button} ${position? hidden : ""}`} type='button'>
 			<span>меню</span>
-			<DragIcon type="primary" />
+			<DragIcon type="primary"/>
 		</button>
 	)
 }
@@ -27,23 +27,43 @@ interface BurgerConstructorProps{
 function BurgerConstructor({openModal}: BurgerConstructorProps) {
 	const dispatch = useDispatch();
 
-	const [, headerTarget] = useDrop({
-		accept: "bun",
-		drop(itemId) {
-			onDropHandler(itemId);
-		},
-	});
-
-	const onDropHandler = (itemId: any) => {
-		console.log(itemId)
+	const getTitleList = (list: {type: string}[]) => {
+		return Array.from(new Set(list.map(item => item.type)))
 	}
+
 
 	const { productsIngredients } = useSelector((store: RootState) => ({
 		productsIngredients: store.listIngredients,
 	}));
 
 
-	// стартовый лист для конструктора как пример(временно)_
+	const [, refTarget] = useDrop({
+		accept: getTitleList(productsIngredients),
+		drop(item: {id: string}) {
+			onDropHandler(item.id)
+		},
+	});
+
+	const { constructorList } = useSelector((store: RootState) => ({
+		constructorList: store.listConstructor,
+	}));
+
+
+
+	const onDropHandler = (id: string ) => {
+		const newItem = productsIngredients.filter((item: {_id: string})=>item._id === id);
+
+		dispatch({
+			type: CHANGE_LIST_CURRENT_INGREDIENTS,
+			feed: constructorList.concat(newItem),
+		})
+
+	}
+
+
+
+
+	// стартовый лист для конструктора
   React.useEffect(() => {
     const list = []
     list.push(productsIngredients.filter((item: {type: string}) => item.type === 'bun').splice(1));
@@ -59,9 +79,6 @@ function BurgerConstructor({openModal}: BurgerConstructorProps) {
     //eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [productsIngredients])
 
-	const { constructorList } = useSelector((store: RootState) => ({
-		constructorList: store.listConstructor,
-	}));
 
 
 
@@ -82,8 +99,8 @@ function BurgerConstructor({openModal}: BurgerConstructorProps) {
 	}
 
 		return (
-			<section className={`constructor_section ${styles.constructor_section}`}>
-				<div className={`${styles.constructor_header} ${styles.constructor_box}`} ref={headerTarget}>
+			<section className={`constructor_section ${styles.constructor_section}`} ref={refTarget}>
+				<div className={`${styles.constructor_header} ${styles.constructor_box}`} >
 					<ButtonConstructor position/>
 					{constructorList.length > 0 && <ConstructorElement
 						text={`${getListBun()[0].name} (верх)`}
@@ -95,9 +112,9 @@ function BurgerConstructor({openModal}: BurgerConstructorProps) {
 				</div>
 
 				<ul className={styles.constructor_list}>
-					{getList().map((item: {type: string, price: number, _id: string, name: string, image_mobile: string})=>
+					{getList().map( (item: {type: string, price: number, _id: string, name: string, image_mobile: string}, i:number) =>
 
-						<li key={item._id} className={`constructor_item ${styles.constructor_box}`}>
+						<li key={i} className={`constructor_item ${styles.constructor_box}`}>
 							<ButtonConstructor/>
 							<ConstructorElement
 								text={item.name}
