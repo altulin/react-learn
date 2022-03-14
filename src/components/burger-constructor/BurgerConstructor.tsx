@@ -1,10 +1,11 @@
 import React from 'react';
-import { useDrop } from "react-dnd";
+import { useDrop, useDrag } from "react-dnd";
 import styles from './BurgerConstructor.module.css';
 import { CurrencyIcon, ConstructorElement, Button, DragIcon } from '@ya.praktikum/react-developer-burger-ui-components'
 import { useDispatch, useSelector } from 'react-redux';
 import {LIST_CURRENT_INGREDIENTS, CHANGE_LIST_CURRENT_INGREDIENTS} from '../../services/actions';
 import { RootState } from '../../services/reducers/rootReducer';
+const BUN = 'bun';
 
 type ButtonConstructorProps = {
 	position?: boolean,
@@ -20,11 +21,56 @@ const ButtonConstructor = ({position}:ButtonConstructorProps) => {
 	)
 }
 
+type ConstructorItemProps = {
+	_id: string,
+	name: string,
+	price: number,
+	image_mobile: string,
+	i: number,
+}
+
+
+const ConstructorItem = ({_id, name, price, image_mobile, i}: ConstructorItemProps) => {
+	const dispatch = useDispatch();
+
+	let { constructorList } = useSelector((store: RootState) => ({
+		constructorList: store.listConstructor,
+	}));
+
+
+	const handleRemove = (i: number) => {
+		constructorList.splice(i,1);
+		dispatch({
+			type: LIST_CURRENT_INGREDIENTS,
+			feed: constructorList,
+		})
+	}
+
+	const [, dragRefConstructor] = useDrag({
+		type: 'constructor',
+		item: {_id},
+	});
+
+	return (
+		<li className={`constructor_item ${styles.constructor_box}`} data-_id={_id} ref={dragRefConstructor}>
+			<ButtonConstructor/>
+			<ConstructorElement
+				text={name}
+				price={price}
+				thumbnail={image_mobile}
+				isLocked={false}
+				handleClose={()=>{handleRemove(i)}}
+			/>
+		</li>
+	)
+}
+
 interface BurgerConstructorProps{
 	openModal: () => void,
 };
 
 function BurgerConstructor({openModal}: BurgerConstructorProps) {
+
 	const dispatch = useDispatch();
 
 	const getTitleList = (list: {type: string}[]) => {
@@ -37,6 +83,7 @@ function BurgerConstructor({openModal}: BurgerConstructorProps) {
 	}));
 
 
+
 	const [, refTarget] = useDrop({
 		accept: getTitleList(productsIngredients),
 		drop(item: {id: string}) {
@@ -44,20 +91,37 @@ function BurgerConstructor({openModal}: BurgerConstructorProps) {
 		},
 	});
 
-	const { constructorList } = useSelector((store: RootState) => ({
+	const [, refConstructorTarget] = useDrop({
+		accept: 'constructor',
+		drop(item: {_id: string}) {
+			onDropHover(item._id)
+		},
+	});
+
+	let { constructorList } = useSelector((store: RootState) => ({
 		constructorList: store.listConstructor,
 	}));
 
 
+	const onDropHover = (idElem: string) => {
+		console.log(idElem)
+	}
+
 
 	const onDropHandler = (id: string ) => {
-		const newItem = productsIngredients.filter((item: {_id: string})=>item._id === id);
+		const newItem = productsIngredients.filter((item: {_id: string}) => item._id === id)[0];
+
+		if (newItem.type === BUN) {
+			constructorList = constructorList.filter((item: {type: string}) => item.type !== BUN);
+			constructorList.push(newItem);
+		} else {
+			constructorList.splice(-1, 0, newItem);
+		}
 
 		dispatch({
 			type: CHANGE_LIST_CURRENT_INGREDIENTS,
-			feed: constructorList.concat(newItem),
+			feed: constructorList,
 		})
-
 	}
 
 
@@ -66,9 +130,10 @@ function BurgerConstructor({openModal}: BurgerConstructorProps) {
 	// стартовый лист для конструктора
   React.useEffect(() => {
     const list = []
-    list.push(productsIngredients.filter((item: {type: string}) => item.type === 'bun').splice(1));
+
     list.push(productsIngredients.filter((item: {type: string}) => item.type === 'main').splice(6));
     list.push(productsIngredients.filter((item: {type: string}) => item.type === 'sauce'));
+		list.push(productsIngredients.filter((item: {type: string}) => item.type === BUN).splice(1));
 
 		dispatch({
 			type: LIST_CURRENT_INGREDIENTS,
@@ -83,17 +148,17 @@ function BurgerConstructor({openModal}: BurgerConstructorProps) {
 
 
 	const getList = () => {
-		return  constructorList.filter((item: {type: string}) => item.type !== 'bun')
+		return  constructorList.filter((item: {type: string}) => item.type !== BUN)
 	}
 
 	const getListBun = () => {
-		return  constructorList.filter((item: {type: string}) => item.type === 'bun')
+		return  constructorList.filter((item: {type: string}) => item.type === BUN)
 	}
 
 	const totalPrice = ()=> {
 		let total = 0;
 		constructorList.map((item: {type: string, price: number}) => {
-			return item.type === 'bun' ?  total += item.price * 2 :  total += item.price
+			return item.type === BUN ?  total += item.price * 2 :  total += item.price
 		})
 		return total
 	}
@@ -111,18 +176,11 @@ function BurgerConstructor({openModal}: BurgerConstructorProps) {
 					/>}
 				</div>
 
-				<ul className={styles.constructor_list}>
-					{getList().map( (item: {type: string, price: number, _id: string, name: string, image_mobile: string}, i:number) =>
+				<ul className={styles.constructor_list} ref={refConstructorTarget}>
+					{getList().map( (item: {price: number, _id: string, name: string, image_mobile: string}, i:number) =>
 
-						<li key={i} className={`constructor_item ${styles.constructor_box}`}>
-							<ButtonConstructor/>
-							<ConstructorElement
-								text={item.name}
-								price={item.price}
-								thumbnail={item.image_mobile}
-								isLocked={false}
-							/>
-						</li>
+						<ConstructorItem key={i} price={item.price} name={item.name} _id={item._id} i={i} image_mobile={item.image_mobile} />
+
 					)}
 				</ul>
 

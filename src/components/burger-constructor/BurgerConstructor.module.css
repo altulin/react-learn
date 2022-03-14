@@ -67,7 +67,7 @@
 	padding-right: 8px;
 	margin-top: 16px;
 	margin-bottom: 16px;
-	flex-grow: 1;
+	/* flex-grow: 1; */
 	overflow-y: scroll;
 }
 

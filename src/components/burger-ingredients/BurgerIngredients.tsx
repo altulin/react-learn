@@ -117,10 +117,19 @@ interface BurgerCardProps {
 
 function BurgerCard({image, image_mobile, price, name, id, openModal, type}: BurgerCardProps) {
 
+	const { constructorList } = useSelector((store: RootState) => ({
+		constructorList: store.listConstructor,
+	}));
+
 	const [, dragRef] = useDrag({
 		type: type,
 		item: {id},
 	});
+
+	const getCountValue = (_id: string) => {
+		const count = constructorList.filter((item: {_id: string}) => item._id === _id).length;
+		return count !== 0 ? count : false;
+	};
 
 
 	return (
@@ -136,6 +145,7 @@ function BurgerCard({image, image_mobile, price, name, id, openModal, type}: Bur
 				<h3 className={`${styles.card_title} text text_type_main-default`}>{name}</h3>
 			</a>
 
+			{getCountValue(id) && <span className={`${styles.card_count} text text_type_digits-default`} >{getCountValue(id)}</span>}
 		</li>
 	)
 }
