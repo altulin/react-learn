@@ -5,6 +5,8 @@ import { CurrencyIcon, ConstructorElement, Button, DragIcon } from '@ya.praktiku
 import { useDispatch, useSelector } from 'react-redux';
 import {LIST_CURRENT_INGREDIENTS, CHANGE_LIST_CURRENT_INGREDIENTS} from '../../services/actions';
 import { RootState } from '../../services/reducers/rootReducer';
+import type { XYCoord } from 'dnd-core';
+
 const BUN = 'bun';
 
 type ButtonConstructorProps = {
@@ -32,6 +34,7 @@ type ConstructorItemProps = {
 
 const ConstructorItem = ({_id, name, price, image_mobile, i}: ConstructorItemProps) => {
 	const dispatch = useDispatch();
+	const ref = React.useRef<HTMLLIElement>(null);
 
 	let { constructorList } = useSelector((store: RootState) => ({
 		constructorList: store.listConstructor,
@@ -46,13 +49,71 @@ const ConstructorItem = ({_id, name, price, image_mobile, i}: ConstructorItemPro
 		})
 	}
 
-	const [, dragRefConstructor] = useDrag({
+	// const [, ] = useDrag({
+	// 	type: 'constructor',
+	// 	item: {_id},
+	// });
+
+	const [{ isDragging }, drag] = useDrag({
 		type: 'constructor',
-		item: {_id},
+		item: {_id, i},
+		collect: (monitor: any) => ({
+			isDragging: monitor.isDragging(),
+		}),
+	})
+
+	const [, drop] = useDrop({
+		accept: 'constructor',
+		hover(item: {i: number} , monitor) {
+			// console.log(item.i)
+
+			// console.log(i)
+
+			if (!ref.current) {
+				return
+			}
+
+			const dragIndex = item.i;
+			const hoverIndex = i;
+
+			// Don't replace items with themselves
+			if (dragIndex === hoverIndex) {
+				return
+			}
+
+			// Determine rectangle on screen
+			const hoverBoundingRect = ref.current?.getBoundingClientRect();
+
+			// Get vertical middle
+			const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
+
+			// Determine mouse position
+			const clientOffset = monitor.getClientOffset();
+
+			// Get pixels to the top
+			const hoverClientY = (clientOffset as XYCoord).y - hoverBoundingRect.top;
+
+			// Dragging downwards
+			if (dragIndex < hoverIndex && hoverClientY < hoverMiddleY) {
+				return
+			}
+
+			// Dragging upwards
+			if (dragIndex > hoverIndex && hoverClientY > hoverMiddleY) {
+				return
+			}
+
+			// console.log(hoverIndex)
+			console.log(constructorList)
+		},
+
 	});
 
+	const opacity = isDragging ? 0 : 1;
+	drag(drop(ref));
+
 	return (
-		<li className={`constructor_item ${styles.constructor_box}`} data-_id={_id} ref={dragRefConstructor}>
+		<li style={{ opacity }} className={`constructor_item ${styles.constructor_box}`}  data-_id={_id} ref={ref}>
 			<ButtonConstructor/>
 			<ConstructorElement
 				text={name}
@@ -91,21 +152,21 @@ function BurgerConstructor({openModal}: BurgerConstructorProps) {
 		},
 	});
 
-	const [, refConstructorTarget] = useDrop({
-		accept: 'constructor',
-		drop(item: {_id: string}) {
-			onDropHover(item._id)
-		},
-	});
+	// const [, refConstructorTarget] = useDrop({
+	// 	accept: 'constructor',
+	// 	drop(item: {_id: string}) {
+	// 		onDropHover(item._id)
+	// 	},
+	// });
 
 	let { constructorList } = useSelector((store: RootState) => ({
 		constructorList: store.listConstructor,
 	}));
 
 
-	const onDropHover = (idElem: string) => {
-		console.log(idElem)
-	}
+	// const onDropHover = (idElem: string) => {
+	// 	console.log(idElem)
+	// }
 
 
 	const onDropHandler = (id: string ) => {
@@ -176,7 +237,7 @@ function BurgerConstructor({openModal}: BurgerConstructorProps) {
 					/>}
 				</div>
 
-				<ul className={styles.constructor_list} ref={refConstructorTarget}>
+				<ul className={styles.constructor_list}>
 					{getList().map( (item: {price: number, _id: string, name: string, image_mobile: string}, i:number) =>
 
 						<ConstructorItem key={i} price={item.price} name={item.name} _id={item._id} i={i} image_mobile={item.image_mobile} />
