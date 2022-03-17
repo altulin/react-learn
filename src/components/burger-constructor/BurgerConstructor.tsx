@@ -49,10 +49,20 @@ const ConstructorItem = ({_id, name, price, image_mobile, i}: ConstructorItemPro
 		})
 	}
 
-	// const [, ] = useDrag({
-	// 	type: 'constructor',
-	// 	item: {_id},
-	// });
+	const sortingList = (fromIndex: number, toIndex: number) => {
+		var element = constructorList[fromIndex];
+    constructorList.splice(fromIndex, 1);
+    constructorList.splice(toIndex, 0, element);
+
+		// console.log(element)
+
+		dispatch({
+			type: CHANGE_LIST_CURRENT_INGREDIENTS,
+			feed: constructorList,
+		})
+		// console.log(constructorList)
+
+	};
 
 	const [{ isDragging }, drag] = useDrag({
 		type: 'constructor',
@@ -65,9 +75,6 @@ const ConstructorItem = ({_id, name, price, image_mobile, i}: ConstructorItemPro
 	const [, drop] = useDrop({
 		accept: 'constructor',
 		hover(item: {i: number} , monitor) {
-			// console.log(item.i)
-
-			// console.log(i)
 
 			if (!ref.current) {
 				return
@@ -83,6 +90,8 @@ const ConstructorItem = ({_id, name, price, image_mobile, i}: ConstructorItemPro
 
 			// Determine rectangle on screen
 			const hoverBoundingRect = ref.current?.getBoundingClientRect();
+
+
 
 			// Get vertical middle
 			const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
@@ -103,13 +112,19 @@ const ConstructorItem = ({_id, name, price, image_mobile, i}: ConstructorItemPro
 				return
 			}
 
+			// console.log(constructorList)
+			item.i = hoverIndex;
 			// console.log(hoverIndex)
-			console.log(constructorList)
-		},
+			// console.log(dragIndex)
+			console.log(ref.current)
+			sortingList(dragIndex, hoverIndex);
 
+
+		},
 	});
 
 	const opacity = isDragging ? 0 : 1;
+	// const opacity = 1;
 	drag(drop(ref));
 
 	return (
