@@ -31,7 +31,6 @@ type ConstructorItemProps = {
 	i: number,
 }
 
-
 const ConstructorItem = ({_id, name, price, image_mobile, i}: ConstructorItemProps) => {
 	const dispatch = useDispatch();
 	const ref = React.useRef<HTMLLIElement>(null);
@@ -54,13 +53,11 @@ const ConstructorItem = ({_id, name, price, image_mobile, i}: ConstructorItemPro
     constructorList.splice(fromIndex, 1);
     constructorList.splice(toIndex, 0, element);
 
-		// console.log(element)
 
 		dispatch({
 			type: CHANGE_LIST_CURRENT_INGREDIENTS,
 			feed: constructorList,
 		})
-		// console.log(constructorList)
 
 	};
 
@@ -112,19 +109,20 @@ const ConstructorItem = ({_id, name, price, image_mobile, i}: ConstructorItemPro
 				return
 			}
 
-			// console.log(constructorList)
 			item.i = hoverIndex;
-			// console.log(hoverIndex)
-			// console.log(dragIndex)
-			console.log(ref.current)
+
+			Array.from(document.querySelectorAll('.constructor_item')).map((item: any) => item.style.opacity = "1")
+			ref.current.style.opacity = "0";
+
 			sortingList(dragIndex, hoverIndex);
-
-
 		},
+		drop() {
+			Array.from(document.querySelectorAll('.constructor_item')).map((item: any) => item.style.opacity = "1")
+		}
 	});
 
+
 	const opacity = isDragging ? 0 : 1;
-	// const opacity = 1;
 	drag(drop(ref));
 
 	return (
@@ -167,22 +165,9 @@ function BurgerConstructor({openModal}: BurgerConstructorProps) {
 		},
 	});
 
-	// const [, refConstructorTarget] = useDrop({
-	// 	accept: 'constructor',
-	// 	drop(item: {_id: string}) {
-	// 		onDropHover(item._id)
-	// 	},
-	// });
-
 	let { constructorList } = useSelector((store: RootState) => ({
 		constructorList: store.listConstructor,
 	}));
-
-
-	// const onDropHover = (idElem: string) => {
-	// 	console.log(idElem)
-	// }
-
 
 	const onDropHandler = (id: string ) => {
 		const newItem = productsIngredients.filter((item: {_id: string}) => item._id === id)[0];
@@ -199,8 +184,6 @@ function BurgerConstructor({openModal}: BurgerConstructorProps) {
 			feed: constructorList,
 		})
 	}
-
-
 
 
 	// стартовый лист для конструктора
