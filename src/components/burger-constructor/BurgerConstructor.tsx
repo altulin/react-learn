@@ -88,8 +88,6 @@ const ConstructorItem = ({_id, name, price, image_mobile, i}: ConstructorItemPro
 			// Determine rectangle on screen
 			const hoverBoundingRect = ref.current?.getBoundingClientRect();
 
-
-
 			// Get vertical middle
 			const hoverMiddleY = (hoverBoundingRect.bottom - hoverBoundingRect.top) / 2;
 
