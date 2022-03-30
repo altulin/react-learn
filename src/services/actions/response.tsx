@@ -1,4 +1,4 @@
-import { GET_LIST_INGREDIENTS, GET_FEED, GET_FEED_FAILED, CREATED_ORDER } from "../services/actions";
+import { GET_LIST_INGREDIENTS, GET_FEED, GET_FEED_FAILED, CREATED_ORDER } from ".";
 import { Dispatch } from 'redux';
 
 const baseUrl = "https://norma.nomoreparties.space/api/"
@@ -28,6 +28,7 @@ export const getFeed = () => {
 			})
 
 			.catch(() => {
+
 
 				dispatch({
 					type: GET_FEED_FAILED

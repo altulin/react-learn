@@ -7,7 +7,7 @@ import OrderDetails from '../order-details/OrderDetails'
 import { useDispatch, useSelector } from 'react-redux';
 import { CURRENT_INGREDIENT } from '../../services/actions';
 import { RootState } from '../../services/reducers/rootReducer';
-import { getFeedConstructor } from '../../utils/response';
+import { getFeedConstructor } from '../../services/actions/response';
 
 
 function App() {
@@ -20,6 +20,13 @@ function App() {
     modalIngredient: false,
     modalConstructor: false,
 	})
+
+  const currentIngredient = (feed: {}) => {
+    dispatch({
+      type: CURRENT_INGREDIENT,
+      feed,
+    })
+  }
 
   const { productsIngredients } = useSelector((store: RootState) => ({
 		productsIngredients: store.listIngredients,
@@ -34,10 +41,7 @@ function App() {
       modalIngredient: true,
     })
 
-    dispatch({
-      type: CURRENT_INGREDIENT,
-      feed: element,
-    })
+    currentIngredient(element);
   };
 
 
@@ -63,12 +67,7 @@ function App() {
 			}
     )
 
-    dispatch(
-      {
-        type: CURRENT_INGREDIENT,
-        feed: {},
-      }
-    )
+    currentIngredient({});
 	};
 
   return (

@@ -2,7 +2,7 @@ import React from 'react';
 import styles from './BurgerIngredients.module.css';
 import { Tab, CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components'
 import { useDispatch, useSelector } from 'react-redux';
-import { getFeed } from '../../utils/response';
+import { getFeed } from '../../services/actions/response';
 import { RootState } from '../../services/reducers/rootReducer';
 import { useDrag } from "react-dnd";
 
@@ -46,7 +46,7 @@ interface TabBlockProps {
 
 
 const TabBlock = ({titleList, currentTab}: TabBlockProps) => {
-	let [current, setCurrent] = React.useState(currentTab)
+	const [current, setCurrent] = React.useState(currentTab)
 
 	React.useEffect(()=> {
 		setCurrent(currentTab)

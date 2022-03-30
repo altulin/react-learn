@@ -1,6 +1,7 @@
 .constructor_section {
 	width: calc(50% - 1.5%);
 	display: flex;
+	justify-content: center;
 	flex-direction: column;
 	padding-top: 60px;
 }
@@ -128,4 +129,10 @@
 .constructor_number_box svg {
 	transform: scale(1.5);
 	margin-left: 9px;
+}
+
+.start_text {
+	padding-left: 20px;
+	margin-left: auto;
+	margin-right: auto;
 }
