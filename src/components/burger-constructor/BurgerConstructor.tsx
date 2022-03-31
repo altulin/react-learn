@@ -40,9 +40,7 @@ const ConstructorItem = ({_id, name, price, image_mobile, i}: ConstructorItemPro
 		constructorList: store.listConstructor,
 	}));
 
-	const getListCurrentIngredients = (feed: [{uuid:string}]) => {
-		feed.map(item => item.uuid=uuidv4());
-
+	const getListCurrentIngredients = (feed: {}[]) => {
 		dispatch({
 			type: LIST_CURRENT_INGREDIENTS,
 			feed,
@@ -163,16 +161,12 @@ function BurgerConstructor({openModal}: BurgerConstructorProps) {
 	}));
 
 
-	const getListCurrentIngredients = (feed: [{uuid:string}]) => {
-		feed.map(item => item.uuid = uuidv4());
-
+	const getListCurrentIngredients = (feed: {}[]) => {
 		dispatch({
 			type: LIST_CURRENT_INGREDIENTS,
 			feed,
 		})
 	}
-
-
 
 	const [, refTarget] = useDrop({
 		accept: getTitleList(productsIngredients),
@@ -191,6 +185,7 @@ function BurgerConstructor({openModal}: BurgerConstructorProps) {
 			constructorList = constructorList.filter((item: {type: string}) => item.type !== BUN);
 			constructorList.push(newItem);
 		} else {
+			newItem.uuid = uuidv4();
 			constructorList.splice(-1, 0, newItem);
 		}
 
