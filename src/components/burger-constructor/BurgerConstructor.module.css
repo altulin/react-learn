@@ -1,6 +1,7 @@
 .constructor_section {
 	width: calc(50% - 1.5%);
 	display: flex;
+	justify-content: center;
 	flex-direction: column;
 	padding-top: 60px;
 }
@@ -9,6 +10,7 @@
 	display: flex;
 	align-items: center;
 	justify-content: space-between;
+	transition: opacity 0.5s;
 }
 
 .constructor_box + .constructor_box {
@@ -67,7 +69,7 @@
 	padding-right: 8px;
 	margin-top: 16px;
 	margin-bottom: 16px;
-	flex-grow: 1;
+	/* flex-grow: 1; */
 	overflow-y: scroll;
 }
 
@@ -127,4 +129,10 @@
 .constructor_number_box svg {
 	transform: scale(1.5);
 	margin-left: 9px;
+}
+
+.start_text {
+	padding-left: 20px;
+	margin-left: auto;
+	margin-right: auto;
 }

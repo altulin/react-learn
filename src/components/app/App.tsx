@@ -4,87 +4,58 @@ import AppHeader from '../app-header/AppHeader';
 import AppMain from '../app-main/AppMain'
 import IngredientDetails from '../ingredient-details/IngredientDetails'
 import OrderDetails from '../order-details/OrderDetails'
-import { ProductsContext } from '../../services/productsContext';
-import { OrderContext } from '../../services/orderContext';
+import { useDispatch, useSelector } from 'react-redux';
+import { CURRENT_INGREDIENT } from '../../services/actions';
+import { RootState } from '../../services/reducers/rootReducer';
+import { getFeedConstructor } from '../../services/actions/response';
 
-const baseUrl = "https://norma.nomoreparties.space/api/"
-const URL = `${baseUrl}ingredients`;;
-const URL_ORDERS = `${baseUrl}orders`
 
 function App() {
+  const dispatch = useDispatch();
   const [state, setState] = React.useState({
     orderNumber: 0,
-		products:  null || [],
     constructorList: [],
 		isLoading: false,
 		hasError: false,
     modalIngredient: false,
     modalConstructor: false,
-    calories: 0,
-    proteins: 0,
-    fat: 0,
-    carbohydrates: 0,
-    name: '',
-    image_large: ''
 	})
 
-  const checkResponse = (res: Response) => {
-    if (res.ok) {
-      return res.json();
-    }
-    return Promise.reject(`Ошибка ${res.status}`);
+  const currentIngredient = (feed: {}) => {
+    dispatch({
+      type: CURRENT_INGREDIENT,
+      feed,
+    })
   }
 
-
-
-	React.useEffect(() => {
-    fetch(URL)
-      .then(checkResponse)
-      .then(data => {setState({ ...state, products: data.data, isLoading: true })})
-      .catch(() => setState({ ...state, isLoading: false, hasError: true }))
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [])
+  const { productsIngredients } = useSelector((store: RootState) => ({
+		productsIngredients: store.listIngredients,
+	}));
 
   const handleOpenModalIngridients = (e: React.MouseEvent) => {
+    const id = (e.currentTarget as HTMLElement).dataset.id;
+    const element = productsIngredients.filter((item: {_id: string})=> item._id === id)[0]
+    setState(
+    {
+      ...state,
+      modalIngredient: true,
+    })
 
-    if (state.products !== null) {
-      const id = (e.currentTarget as HTMLElement).dataset.id;
-      const element = state.products.filter((item: {_id: string})=> item._id === id)[0]
-      setState(
-			{
-        ...state,
-				modalIngredient: true,
-				calories: element['calories'],
-				proteins: element['proteins'],
-				fat: element['fat'],
-				carbohydrates: element['carbohydrates'],
-				name: element['name'],
-				image_large: element['image_large'],
-			})
-	  }
+    currentIngredient(element);
   };
 
-  const makePost = (data:string[]=[]) => {
-    fetch(URL_ORDERS, {
-      method: 'POST',
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        "ingredients": data
-      })
-    })
-    .then(checkResponse)
-    .then(data => {setState({ ...state, orderNumber: data.order.number, modalConstructor: true,})})
-    .catch((e) => console.log(e))
-  }
 
-  const handleOpenModalConstructor = (list: {_id: string}[]) => {
-    const dataOrder: string[] = [];
-    list.forEach((item:{_id:string}) => {
-      dataOrder.push(item._id)
-    });
-    makePost(dataOrder);
+  const { listConstructor } = useSelector((store: RootState) => ({
+		listConstructor: store.listConstructor,
+	}));
+
+  const handleOpenModalConstructor = () => {
+    const listId = listConstructor.map((item:{_id:string}) => item._id)
+    dispatch(getFeedConstructor(listId));
+    setState({
+       ...state,
+       modalConstructor: true,
+      })
 	}
 
   const handleCloseModal = () => {
@@ -93,26 +64,25 @@ function App() {
 				...state,
 				modalIngredient: false,
         modalConstructor: false,
-			})
-	}
+			}
+    )
+
+    currentIngredient({});
+	};
 
   return (
     <>
       <AppHeader/>
       {/* AppMain */}
-      <ProductsContext.Provider value={state.products}>
-        {state.products !== null &&<AppMain openModalIngridients={handleOpenModalIngridients} openModalConstructor ={handleOpenModalConstructor}/>}
-      </ProductsContext.Provider>
 
+        <AppMain openModalIngridients={handleOpenModalIngridients} openModalConstructor ={handleOpenModalConstructor}/>
 
       {/* modal */}
-      {state.modalIngredient && <IngredientDetails calories={state.calories} proteins={state.proteins} fat={state.fat} carbohydrates={state.carbohydrates} name={state.name} image_large={state.image_large} close={handleCloseModal} />}
-      <OrderContext.Provider value={state.orderNumber}>
-        {state.modalConstructor && <OrderDetails close={handleCloseModal} />}
-      </OrderContext.Provider>
+      {state.modalIngredient && <IngredientDetails close={handleCloseModal} />}
+
+      {state.modalConstructor && <OrderDetails close={handleCloseModal} />}
 
     </>
-
   );
 }
 
