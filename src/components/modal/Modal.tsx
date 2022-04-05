@@ -7,14 +7,14 @@ const modalRoot = document.querySelector('.modal-root') as HTMLElement;
 
 interface ModalProps {
   children: React.ReactNode;
-  onClose: () => void;
+  close: () => void;
 }
 
-function Modal({ children, onClose }: ModalProps) {
+function Modal({ children, close }: ModalProps) {
   React.useEffect(() => {
     const handlekeyPress = ({ key }: KeyboardEvent) => {
       if (key === 'Escape') {
-        onClose();
+        close();
       }
       return;
     };
@@ -30,10 +30,10 @@ function Modal({ children, onClose }: ModalProps) {
   return ReactDOM.createPortal(
     <>
       <div className={styles.inner}>
-        <button className={styles.close} onClick={onClose}></button>
+        <button className={styles.close} onClick={close}></button>
         {children}
       </div>
-      <ModalOverlay onClose={onClose} />
+      <ModalOverlay onClose={close} />
     </>,
     modalRoot,
   );

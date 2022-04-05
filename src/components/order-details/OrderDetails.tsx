@@ -2,11 +2,7 @@ import styles from './OrderDetails.module.css';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../services/reducers/rootReducer';
 
-interface OrderDetailsProps {
-  close: () => void;
-}
-
-function OrderDetails({ close }: OrderDetailsProps) {
+function OrderDetails() {
   const { orderNumber } = useSelector((store: RootState) => ({
     orderNumber: store.orderNumber,
   }));

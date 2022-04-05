@@ -92,6 +92,8 @@ function BurgerBlock({ type, openModal, myClass }: BurgerBlockProps) {
 
   const ref = React.useRef(null);
 
+  console.log(ref);
+
   return (
     <div
       className={`${styles.ingredients_block} ${myClass}`}
@@ -162,7 +164,7 @@ function BurgerCard({
   };
 
   return (
-    <li className={`${styles.burger_item} ${styles.card}`} ref={dragRef}>
+    <li className={`${styles.burger_item}`} ref={dragRef}>
       <a
         href='/#'
         className={styles.card_link}

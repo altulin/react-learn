@@ -2,11 +2,7 @@ import styles from './IngredientDetails.module.css';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../services/reducers/rootReducer';
 
-interface IngredientDetailsProps {
-  close: () => void;
-}
-
-function IngredientDetails(props: IngredientDetailsProps) {
+function IngredientDetails() {
   const { currentIngredient } = useSelector((store: RootState) => ({
     currentIngredient: store.currentIngredient,
   }));

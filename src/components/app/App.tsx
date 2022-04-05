@@ -37,6 +37,7 @@ function App() {
     const element = productsIngredients.filter(
       (item: { _id: string }) => item._id === id,
     )[0];
+
     setState({
       ...state,
       modalIngredient: true,
@@ -80,14 +81,14 @@ function App() {
 
       {/* modal */}
       {state.modalIngredient && (
-        <Modal onClose={handleCloseModal}>
-          <IngredientDetails close={handleCloseModal} />
+        <Modal close={handleCloseModal}>
+          <IngredientDetails />
         </Modal>
       )}
 
       {state.modalConstructor && (
-        <Modal onClose={handleCloseModal}>
-          <OrderDetails close={handleCloseModal} />
+        <Modal close={handleCloseModal}>
+          <OrderDetails />
         </Modal>
       )}
     </>
