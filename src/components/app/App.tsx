@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { CURRENT_INGREDIENT } from '../../services/actions';
 import { RootState } from '../../services/reducers/rootReducer';
 import { getFeedConstructor } from '../../services/actions/response';
+import Modal from '../modal/Modal';
 
 function App() {
   const dispatch = useDispatch();
@@ -78,9 +79,17 @@ function App() {
       />
 
       {/* modal */}
-      {state.modalIngredient && <IngredientDetails close={handleCloseModal} />}
+      {state.modalIngredient && (
+        <Modal onClose={handleCloseModal}>
+          <IngredientDetails close={handleCloseModal} />
+        </Modal>
+      )}
 
-      {state.modalConstructor && <OrderDetails close={handleCloseModal} />}
+      {state.modalConstructor && (
+        <Modal onClose={handleCloseModal}>
+          <OrderDetails close={handleCloseModal} />
+        </Modal>
+      )}
     </>
   );
 }

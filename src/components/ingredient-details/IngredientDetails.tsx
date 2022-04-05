@@ -1,20 +1,18 @@
-import React from 'react';
 import styles from './IngredientDetails.module.css';
-import Modal from '../modal/Modal';
-import {useSelector} from 'react-redux';
-import {RootState} from '../../services/reducers/rootReducer';
+import { useSelector } from 'react-redux';
+import { RootState } from '../../services/reducers/rootReducer';
 
 interface IngredientDetailsProps {
   close: () => void;
 }
 
 function IngredientDetails(props: IngredientDetailsProps) {
-  const {currentIngredient} = useSelector((store: RootState) => ({
+  const { currentIngredient } = useSelector((store: RootState) => ({
     currentIngredient: store.currentIngredient,
   }));
 
   return (
-    <Modal onClose={props.close}>
+    <>
       <h2 className='text text_type_main-large'>Детали ингредиента</h2>
 
       <figure className={`mb-4 ${styles.modal_img_wrap}`}>
@@ -73,7 +71,7 @@ function IngredientDetails(props: IngredientDetailsProps) {
           </span>
         </li>
       </ul>
-    </Modal>
+    </>
   );
 }
 

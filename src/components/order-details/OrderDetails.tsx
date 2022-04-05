@@ -1,5 +1,4 @@
 import styles from './OrderDetails.module.css';
-import Modal from '../modal/Modal';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../services/reducers/rootReducer';
 
@@ -13,7 +12,7 @@ function OrderDetails({ close }: OrderDetailsProps) {
   }));
 
   return (
-    <Modal onClose={close}>
+    <>
       <h2 className={`${styles.title} text text_type_digits-large`}>
         {orderNumber || 0}
       </h2>
@@ -30,7 +29,7 @@ function OrderDetails({ close }: OrderDetailsProps) {
       >
         Дождитесь готовности на орбитальной станции
       </p>
-    </Modal>
+    </>
   );
 }
 
