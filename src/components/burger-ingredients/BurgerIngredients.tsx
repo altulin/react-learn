@@ -38,23 +38,27 @@ const getTitleList = (
 
 interface TabBlockProps {
   titleList: string[];
+  tabClick: (elem: string) => void;
   currentTab: string;
 }
 
-const TabBlock = ({ titleList, currentTab }: TabBlockProps) => {
-  const [current, setCurrent] = React.useState(currentTab);
+const TabBlock = ({ titleList, tabClick, currentTab }: TabBlockProps) => {
+  const [current, setCurrent] = React.useState('');
 
   React.useEffect(() => {
     setCurrent(currentTab);
   }, [currentTab]);
 
-  const clickHandle = (elem: string) => {
-    setCurrent(elem);
-    const element = document.querySelector(`.${elem}`);
-    if (element !== null) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
-  };
+  // const clickHandle = (elem: string) => {
+  //   setCurrent(elem);
+  //   // currentTab = elem;
+  //   // const element = document.querySelector(`.${elem}`);
+  //   // if (element !== null) {
+  //   //   element.scrollIntoView({ behavior: 'smooth' });
+  //   // }
+  //   return elem;
+  //   console.log(elem);
+  // };
 
   return (
     <div className={`${styles.ingredients_tabs} mb-8`}>
@@ -63,7 +67,7 @@ const TabBlock = ({ titleList, currentTab }: TabBlockProps) => {
           <Tab
             value={item}
             active={current === item}
-            onClick={() => clickHandle(item)}
+            onClick={() => tabClick(item)}
           >
             {translate(item)}
           </Tab>
@@ -77,9 +81,15 @@ interface BurgerBlockProps {
   type: string;
   openModal: (e: React.MouseEvent) => void;
   myClass: string;
+  currentTab: string;
 }
 
-function BurgerBlock({ type, openModal, myClass }: BurgerBlockProps) {
+const BurgerBlock = ({
+  type,
+  openModal,
+  myClass,
+  currentTab,
+}: BurgerBlockProps) => {
   const { productsIngredients } = useSelector((store: RootState) => ({
     productsIngredients: store.listIngredients,
   }));
@@ -90,9 +100,15 @@ function BurgerBlock({ type, openModal, myClass }: BurgerBlockProps) {
     );
   };
 
-  const ref = React.useRef(null);
+  const ref = React.useRef<HTMLDivElement>(null);
 
-  console.log(ref);
+  React.useEffect(() => {
+    const elem = ref.current;
+
+    if (elem !== null && elem.classList.contains(currentTab)) {
+      elem.scrollIntoView({ behavior: 'smooth' });
+    }
+  }, [currentTab]);
 
   return (
     <div
@@ -126,7 +142,7 @@ function BurgerBlock({ type, openModal, myClass }: BurgerBlockProps) {
       </ul>
     </div>
   );
-}
+};
 
 interface BurgerCardProps {
   image: string;
@@ -229,22 +245,29 @@ const BurgerIngredients = React.memo(function BurgerIngredients({
       rootMargin: '-100px',
       threshold: 0,
     };
-
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         const { isIntersecting, boundingClientRect, intersectionRect, target } =
           entry;
         if (isIntersecting) {
           if (boundingClientRect.y < intersectionRect.y) {
+            // console.log('fgh');
+
             const elem = target as HTMLElement;
-            setCurrent(elem.dataset.class as string);
+            // setCurrent(elem.dataset.class as string);
+            // console.log(boundingClientRect.y);
           }
+        } else {
         }
       });
     }, options);
-
     const targets = document.querySelectorAll('[data-control="true"]');
     targets.forEach((i) => observer.observe(i));
+  };
+
+  const tabClick = (item: string) => {
+    // console.log(item);
+    setCurrent(item);
   };
 
   return (
@@ -256,6 +279,7 @@ const BurgerIngredients = React.memo(function BurgerIngredients({
       </h2>
       <TabBlock
         titleList={getTitleList(productsIngredients)}
+        tabClick={tabClick}
         currentTab={currentTab}
       />
       <div
@@ -268,6 +292,7 @@ const BurgerIngredients = React.memo(function BurgerIngredients({
             openModal={openModal}
             key={index}
             type={item}
+            currentTab={currentTab}
           />
         ))}
       </div>
