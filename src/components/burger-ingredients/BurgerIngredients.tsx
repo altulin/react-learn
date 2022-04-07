@@ -49,17 +49,6 @@ const TabBlock = ({ titleList, tabClick, currentTab }: TabBlockProps) => {
     setCurrent(currentTab);
   }, [currentTab]);
 
-  // const clickHandle = (elem: string) => {
-  //   setCurrent(elem);
-  //   // currentTab = elem;
-  //   // const element = document.querySelector(`.${elem}`);
-  //   // if (element !== null) {
-  //   //   element.scrollIntoView({ behavior: 'smooth' });
-  //   // }
-  //   return elem;
-  //   console.log(elem);
-  // };
-
   return (
     <div className={`${styles.ingredients_tabs} mb-8`}>
       {titleList.map((item, index) => (
@@ -106,7 +95,7 @@ const BurgerBlock = ({
     const elem = ref.current;
 
     if (elem !== null && elem.classList.contains(currentTab)) {
-      elem.scrollIntoView({ behavior: 'smooth' });
+      elem.scrollIntoView();
     }
   }, [currentTab]);
 
@@ -245,28 +234,25 @@ const BurgerIngredients = React.memo(function BurgerIngredients({
       rootMargin: '-100px',
       threshold: 0,
     };
+
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
         const { isIntersecting, boundingClientRect, intersectionRect, target } =
           entry;
         if (isIntersecting) {
           if (boundingClientRect.y < intersectionRect.y) {
-            // console.log('fgh');
-
             const elem = target as HTMLElement;
-            // setCurrent(elem.dataset.class as string);
-            // console.log(boundingClientRect.y);
+            setCurrent(elem.dataset.class as string);
           }
-        } else {
         }
       });
     }, options);
+
     const targets = document.querySelectorAll('[data-control="true"]');
     targets.forEach((i) => observer.observe(i));
   };
 
   const tabClick = (item: string) => {
-    // console.log(item);
     setCurrent(item);
   };
 
