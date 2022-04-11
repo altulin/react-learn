@@ -39,9 +39,10 @@ const getTitleList = (
 interface TabBlockProps {
   titleList: string[];
   currentTab: string;
+  clickTab: (elem: string) => void;
 }
 
-const TabBlock = ({ titleList, currentTab }: TabBlockProps) => {
+const TabBlock = ({ titleList, currentTab, clickTab }: TabBlockProps) => {
   const [current, setCurrent] = React.useState(currentTab);
 
   React.useEffect(() => {
@@ -49,11 +50,11 @@ const TabBlock = ({ titleList, currentTab }: TabBlockProps) => {
   }, [currentTab]);
 
   const clickHandle = (elem: string) => {
-    setCurrent(elem);
-    const element = document.querySelector(`.${elem}`);
-    if (element !== null) {
-      element.scrollIntoView({ behavior: 'smooth' });
-    }
+    // setCurrent(elem);
+    // const element = document.querySelector(`.${elem}`);
+    // if (element !== null) {
+    //   element.scrollIntoView({ behavior: 'smooth' });
+    // }
   };
 
   return (
@@ -63,7 +64,7 @@ const TabBlock = ({ titleList, currentTab }: TabBlockProps) => {
           <Tab
             value={item}
             active={current === item}
-            onClick={() => clickHandle(item)}
+            onClick={() => clickTab(item)}
           >
             {translate(item)}
           </Tab>
@@ -226,6 +227,10 @@ const BurgerIngredients = React.memo(function BurgerIngredients({
     productsIngredients: store.listIngredients,
   }));
 
+  const clickTab = () => {
+    console.log(456);
+  };
+
   const handleScroll = () => {
     const options = {
       root: document.querySelector('.ingredients__inner'),
@@ -260,6 +265,7 @@ const BurgerIngredients = React.memo(function BurgerIngredients({
       <TabBlock
         titleList={getTitleList(productsIngredients)}
         currentTab={currentTab}
+        clickTab={clickTab}
       />
       <div
         className={`${styles.ingredients_inner} ingredients__inner`}
