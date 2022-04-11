@@ -92,7 +92,10 @@ function BurgerBlock({ type, openModal, myClass }: BurgerBlockProps) {
 
   const ref = React.useRef(null);
 
-  console.log(ref);
+  React.useEffect(() => {
+    // setCurrent(currentTab);
+    console.log(ref.current);
+  }, []);
 
   return (
     <div
