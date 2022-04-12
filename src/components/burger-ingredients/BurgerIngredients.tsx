@@ -70,15 +70,10 @@ interface BurgerBlockProps {
   type: string;
   openModal: (e: React.MouseEvent) => void;
   myClass: string;
-  currentTab: string;
+  refBlock: any;
 }
 
-const BurgerBlock = ({
-  type,
-  openModal,
-  myClass,
-  currentTab,
-}: BurgerBlockProps) => {
+function BurgerBlock({ type, openModal, myClass, refBlock }: BurgerBlockProps) {
   const { productsIngredients } = useSelector((store: RootState) => ({
     productsIngredients: store.listIngredients,
   }));
@@ -89,22 +84,12 @@ const BurgerBlock = ({
     );
   };
 
-  const ref = React.useRef<HTMLDivElement>(null);
-
-  React.useEffect(() => {
-    const elem = ref.current;
-
-    if (elem !== null && elem.classList.contains(currentTab)) {
-      elem.scrollIntoView();
-    }
-  }, [currentTab]);
-
   return (
     <div
       className={`${styles.ingredients_block} ${myClass}`}
       data-control
       data-class={`${myClass}`}
-      ref={ref}
+      ref={refBlock}
     >
       <h3 className={'text text_type_main-medium mb-4'}>{translate(type)}</h3>
       <ul className={`${styles.burger_list}`}>
@@ -131,7 +116,7 @@ const BurgerBlock = ({
       </ul>
     </div>
   );
-};
+}
 
 interface BurgerCardProps {
   image: string;
@@ -216,6 +201,7 @@ const BurgerIngredients = React.memo(function BurgerIngredients({
   openModal,
 }: BurgerIngredientsProps) {
   const dispatch = useDispatch();
+  let refList: NodeListOf<Element>[] = [];
 
   const [currentTab, setCurrent] = React.useState('bun');
 
@@ -252,8 +238,15 @@ const BurgerIngredients = React.memo(function BurgerIngredients({
     targets.forEach((i) => observer.observe(i));
   };
 
-  const tabClick = (item: string) => {
-    setCurrent(item);
+  const getRefBlock = (element: NodeListOf<Element>) => {
+    refList.push(element);
+  };
+
+  const clickTab = (elem: string) => {
+    const block: any[] = refList.filter((item: any) =>
+      item.classList.contains(elem),
+    );
+    block[0].scrollIntoView({ behavior: 'smooth' });
   };
 
   return (
@@ -265,7 +258,7 @@ const BurgerIngredients = React.memo(function BurgerIngredients({
       </h2>
       <TabBlock
         titleList={getTitleList(productsIngredients)}
-        tabClick={tabClick}
+        tabClick={clickTab}
         currentTab={currentTab}
       />
       <div
@@ -278,7 +271,7 @@ const BurgerIngredients = React.memo(function BurgerIngredients({
             openModal={openModal}
             key={index}
             type={item}
-            currentTab={currentTab}
+            refBlock={getRefBlock}
           />
         ))}
       </div>
