@@ -49,14 +49,6 @@ const TabBlock = ({ titleList, currentTab, clickTab }: TabBlockProps) => {
     setCurrent(currentTab);
   }, [currentTab]);
 
-  const clickHandle = (elem: string) => {
-    // setCurrent(elem);
-    // const element = document.querySelector(`.${elem}`);
-    // if (element !== null) {
-    //   element.scrollIntoView({ behavior: 'smooth' });
-    // }
-  };
-
   return (
     <div className={`${styles.ingredients_tabs} mb-8`}>
       {titleList.map((item, index) => (
@@ -78,9 +70,10 @@ interface BurgerBlockProps {
   type: string;
   openModal: (e: React.MouseEvent) => void;
   myClass: string;
+  refBlock: any;
 }
 
-function BurgerBlock({ type, openModal, myClass }: BurgerBlockProps) {
+function BurgerBlock({ type, openModal, myClass, refBlock }: BurgerBlockProps) {
   const { productsIngredients } = useSelector((store: RootState) => ({
     productsIngredients: store.listIngredients,
   }));
@@ -91,19 +84,12 @@ function BurgerBlock({ type, openModal, myClass }: BurgerBlockProps) {
     );
   };
 
-  const ref = React.useRef(null);
-
-  React.useEffect(() => {
-    // setCurrent(currentTab);
-    console.log(ref.current);
-  }, []);
-
   return (
     <div
       className={`${styles.ingredients_block} ${myClass}`}
       data-control
       data-class={`${myClass}`}
-      ref={ref}
+      ref={refBlock}
     >
       <h3 className={'text text_type_main-medium mb-4'}>{translate(type)}</h3>
       <ul className={`${styles.burger_list}`}>
@@ -215,6 +201,7 @@ const BurgerIngredients = React.memo(function BurgerIngredients({
   openModal,
 }: BurgerIngredientsProps) {
   const dispatch = useDispatch();
+  let refList: NodeListOf<Element>[] = [];
 
   const [currentTab, setCurrent] = React.useState('bun');
 
@@ -226,10 +213,6 @@ const BurgerIngredients = React.memo(function BurgerIngredients({
   const { productsIngredients } = useSelector((store: RootState) => ({
     productsIngredients: store.listIngredients,
   }));
-
-  const clickTab = () => {
-    console.log(456);
-  };
 
   const handleScroll = () => {
     const options = {
@@ -255,6 +238,17 @@ const BurgerIngredients = React.memo(function BurgerIngredients({
     targets.forEach((i) => observer.observe(i));
   };
 
+  const getRefBlock = (element: NodeListOf<Element>) => {
+    refList.push(element);
+  };
+
+  const clickTab = (elem: string) => {
+    const block: any[] = refList.filter((item: any) =>
+      item.classList.contains(elem),
+    );
+    block[0].scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <section className={`${styles.ingredients_section} ingredients`}>
       <h2
@@ -277,6 +271,7 @@ const BurgerIngredients = React.memo(function BurgerIngredients({
             openModal={openModal}
             key={index}
             type={item}
+            refBlock={getRefBlock}
           />
         ))}
       </div>
