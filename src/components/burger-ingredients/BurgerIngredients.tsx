@@ -228,7 +228,9 @@ const BurgerIngredients = React.memo(function BurgerIngredients({
         if (isIntersecting) {
           if (boundingClientRect.y < intersectionRect.y) {
             const elem = target as HTMLElement;
-            setCurrent(elem.dataset.class as string);
+            if (currentTab !== elem.dataset.class) {
+              setCurrent(elem.dataset.class as string);
+            }
           }
         }
       });
