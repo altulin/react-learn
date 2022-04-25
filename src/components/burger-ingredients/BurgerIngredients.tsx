@@ -4,10 +4,10 @@ import {
   Tab,
   CurrencyIcon,
 } from '@ya.praktikum/react-developer-burger-ui-components';
-import {useDispatch, useSelector} from 'react-redux';
-import {getFeed} from '../../services/actions/response';
-import {RootState} from '../../services/reducers/rootReducer';
-import {useDrag} from 'react-dnd';
+import { useDispatch, useSelector } from 'react-redux';
+import { getFeed } from '../../services/actions/response';
+import { RootState } from '../../services/reducers/rootReducer';
+import { useDrag } from 'react-dnd';
 
 const translate = (type: string) => {
   let action;
@@ -41,7 +41,7 @@ interface TabBlockProps {
   currentTab: string;
 }
 
-const TabBlock = ({titleList, currentTab}: TabBlockProps) => {
+const TabBlock = ({ titleList, currentTab }: TabBlockProps) => {
   const [current, setCurrent] = React.useState(currentTab);
 
   React.useEffect(() => {
@@ -52,7 +52,7 @@ const TabBlock = ({titleList, currentTab}: TabBlockProps) => {
     setCurrent(elem);
     const element = document.querySelector(`.${elem}`);
     if (element !== null) {
-      element.scrollIntoView({behavior: 'smooth'});
+      element.scrollIntoView({ behavior: 'smooth' });
     }
   };
 
@@ -79,14 +79,14 @@ interface BurgerBlockProps {
   myClass: string;
 }
 
-function BurgerBlock({type, openModal, myClass}: BurgerBlockProps) {
-  const {productsIngredients} = useSelector((store: RootState) => ({
+function BurgerBlock({ type, openModal, myClass }: BurgerBlockProps) {
+  const { productsIngredients } = useSelector((store: RootState) => ({
     productsIngredients: store.listIngredients,
   }));
 
   const getBurgerList = () => {
     return productsIngredients.filter(
-      (item: {type: string}) => item.type === type,
+      (item: { type: string }) => item.type === type,
     );
   };
 
@@ -142,18 +142,18 @@ function BurgerCard({
   openModal,
   type,
 }: BurgerCardProps) {
-  const {constructorList} = useSelector((store: RootState) => ({
+  const { constructorList } = useSelector((store: RootState) => ({
     constructorList: store.listConstructor,
   }));
 
   const [, dragRef] = useDrag({
     type: type,
-    item: {id},
+    item: { id },
   });
 
   const getCountValue = (_id: string) => {
     const count = constructorList.filter(
-      (item: {_id: string}) => item._id === _id,
+      (item: { _id: string }) => item._id === _id,
     ).length;
     return count !== 0 ? count : false;
   };
@@ -214,7 +214,7 @@ const BurgerIngredients = React.memo(function BurgerIngredients({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const {productsIngredients} = useSelector((store: RootState) => ({
+  const { productsIngredients } = useSelector((store: RootState) => ({
     productsIngredients: store.listIngredients,
   }));
 
@@ -227,7 +227,7 @@ const BurgerIngredients = React.memo(function BurgerIngredients({
 
     const observer = new IntersectionObserver((entries) => {
       entries.forEach((entry) => {
-        const {isIntersecting, boundingClientRect, intersectionRect, target} =
+        const { isIntersecting, boundingClientRect, intersectionRect, target } =
           entry;
         if (isIntersecting) {
           if (boundingClientRect.y < intersectionRect.y) {
