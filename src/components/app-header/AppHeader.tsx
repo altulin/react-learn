@@ -17,7 +17,7 @@ interface LinkProps {
 function Link({ children, addClass, text, onClick }: LinkProps) {
   return (
     <a
-      href='/#'
+      href='/'
       className={`pl-5 pr-5 pb-4 pt-4 ${styles.link} ${addClass}`}
       onClick={onClick}
     >

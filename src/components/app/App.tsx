@@ -1,7 +1,12 @@
 import React from 'react';
-import './App.module.css';
 import AppHeader from '../app-header/AppHeader';
-import AppMain from '../app-main/AppMain';
+import {
+  HomePage,
+  LoginPage,
+  RegistrationPage,
+  ForgotPage,
+  ResetPage,
+} from '../../pages';
 import IngredientDetails from '../ingredient-details/IngredientDetails';
 import OrderDetails from '../order-details/OrderDetails';
 import { useDispatch, useSelector } from 'react-redux';
@@ -9,8 +14,11 @@ import { CURRENT_INGREDIENT } from '../../services/actions';
 import { RootState } from '../../services/reducers/rootReducer';
 import { getFeedConstructor } from '../../services/actions/response';
 import Modal from '../modal/Modal';
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import path from '../../utils/paths';
 
 function App() {
+  const { main, login, register, forgot, reset } = path;
   const dispatch = useDispatch();
   const [state, setState] = React.useState({
     orderNumber: 0,
@@ -70,14 +78,30 @@ function App() {
   };
 
   return (
-    <>
+    <Router>
       <AppHeader />
       {/* AppMain */}
 
-      <AppMain
-        openModalIngridients={handleOpenModalIngridients}
-        openModalConstructor={handleOpenModalConstructor}
-      />
+      <Switch>
+        <Route path={`${main}`} exact={true}>
+          <HomePage
+            openModalIngridients={handleOpenModalIngridients}
+            openModalConstructor={handleOpenModalConstructor}
+          />
+        </Route>
+        <Route path={`${login}`} exact={true}>
+          <LoginPage />
+        </Route>
+        <Route path={`${register}`} exact={true}>
+          <RegistrationPage />
+        </Route>
+        <Route path={`${forgot}`} exact={true}>
+          <ForgotPage />
+        </Route>
+        <Route path={`${reset}`} exact={true}>
+          <ResetPage />
+        </Route>
+      </Switch>
 
       {/* modal */}
       {state.modalIngredient && (
@@ -91,7 +115,7 @@ function App() {
           <OrderDetails />
         </Modal>
       )}
-    </>
+    </Router>
   );
 }
 

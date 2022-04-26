@@ -37,6 +37,14 @@ html body {
   flex-grow: 1;
 }
 
+.input__container .input {
+  width: 480px;
+}
+
+.input__container + .input__container {
+  margin-top: 24px;
+}
+
 /* * {
   outline: 1px solid tomato;
 } */
