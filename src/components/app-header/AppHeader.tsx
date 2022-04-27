@@ -6,17 +6,27 @@ import {
   ListIcon,
   ProfileIcon,
 } from '@ya.praktikum/react-developer-burger-ui-components';
+import { Link } from 'react-router-dom';
+import path from '../../utils/paths';
 
-interface LinkProps {
+interface LinkHeaderProps {
   text: string;
   addClass?: string;
   children?: React.ReactChild | React.ReactNode;
   onClick?: () => void;
+  to: string;
 }
 
-function Link({ children, addClass, text, onClick }: LinkProps) {
+function LinkHeader({
+  children,
+  addClass,
+  text,
+  onClick,
+  to,
+}: LinkHeaderProps) {
   return (
-    <a
+    <Link
+      to={to}
       href='/'
       className={`pl-5 pr-5 pb-4 pt-4 ${styles.link} ${addClass}`}
       onClick={onClick}
@@ -25,11 +35,12 @@ function Link({ children, addClass, text, onClick }: LinkProps) {
       <span className={`ml-2 text text_type_main-default ${styles.link_text}`}>
         {text}
       </span>
-    </a>
+    </Link>
   );
 }
 
 function AppHeader() {
+  const { profile, main } = path;
   const [state, setState] = React.useState({
     constructor: false,
     order: true,
@@ -54,30 +65,32 @@ function AppHeader() {
       <div className={`${styles.header_inner} container`}>
         <nav className={styles.header_nav}>
           <div className={styles.header_nav_left}>
-            <Link
+            <LinkHeader
               text='Конструктор'
               addClass={state.constructor ? styles.link_current : ''}
               onClick={heandlerConstructor}
+              to={'/'}
             >
               <BurgerIcon type='primary' />
-            </Link>
-            <Link
+            </LinkHeader>
+            <LinkHeader
               text='Лента заказов'
               addClass={`ml-2 ${state.order ? styles.link_current : ''}`}
               onClick={heandlerOrder}
+              to={'/'}
             >
               {state.order}
               <ListIcon type='primary' />
-            </Link>
+            </LinkHeader>
           </div>
 
-          <a href='/#' className={styles.header_nav_logo}>
+          <Link to={`${main}`} className={styles.header_nav_logo}>
             <Logo />
-          </a>
-
-          <Link text='Личный кабинет'>
-            <ProfileIcon type='primary' />
           </Link>
+
+          <LinkHeader text='Личный кабинет' to={`${profile}`}>
+            <ProfileIcon type='primary' />
+          </LinkHeader>
         </nav>
       </div>
     </header>

@@ -1,4 +1,4 @@
-import React from 'react';
+import { useState } from 'react';
 import FormPage from '../../components/form/FormPage';
 import { useHistory } from 'react-router-dom';
 import {
@@ -13,7 +13,7 @@ const URL = 'https://norma.nomoreparties.space/api/password-reset';
 const ForgotPage = () => {
   const { login, reset } = path;
   const history = useHistory();
-  const [value, setValue] = React.useState('');
+  const [value, setValue] = useState('');
 
   async function handleClick(e: any) {
     e.preventDefault();
@@ -29,8 +29,10 @@ const ForgotPage = () => {
         }),
       });
       const json = await response.json();
-      // history.replace({ pathname: `${reset}` });
-      console.log(json);
+
+      if (json.success) {
+        history.replace({ pathname: `${reset}` });
+      }
     } catch (err) {
       console.error('Ошибка:', err);
     }

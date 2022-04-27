@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import FormPage from '../../components/form/FormPage';
 import {
   Input,
@@ -6,15 +7,37 @@ import {
 import styles from '../login/LoginPage.module.css';
 import { Link } from 'react-router-dom';
 import path from '../../utils/paths';
+const URL = 'https://norma.nomoreparties.space/api/password-reset/reset';
 
 const ResetPage = () => {
   const { login } = path;
-  const setValue = (e: React.ChangeEvent<HTMLInputElement>) => {
-    //console.log(e);
-  };
 
-  const valueEmail = '';
-  const valuePassword = '';
+  const [valuePassword, setValuePassword] = useState('');
+  const [valueToken, setValueToken] = useState('');
+
+  async function handleClick(e: any) {
+    e.preventDefault();
+
+    try {
+      const response = await fetch(URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          password: valuePassword,
+          token: valueToken,
+        }),
+      });
+      const json = await response.json();
+
+      if (json.success) {
+        console.log(json);
+      }
+    } catch (err) {
+      console.error('Ошибка:', err);
+    }
+  }
 
   return (
     <FormPage>
@@ -29,19 +52,19 @@ const ResetPage = () => {
           <Input
             type={'password'}
             value={valuePassword}
-            onChange={(e) => setValue(e)}
+            onChange={(e) => setValuePassword(e.target.value)}
             placeholder={'Введите новый пароль'}
           />
 
           <Input
             type={'text'}
-            value={valueEmail}
-            onChange={(e) => setValue(e)}
+            value={valueToken}
+            onChange={(e) => setValueToken(e.target.value)}
             placeholder={'Введите код из письма'}
           />
 
           <div className={`${styles.button_wrap} mt-6`}>
-            <Button type='primary' size='large'>
+            <Button type='primary' size='large' onClick={handleClick}>
               Сохранить
             </Button>
           </div>

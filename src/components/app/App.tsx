@@ -6,6 +6,7 @@ import {
   RegistrationPage,
   ForgotPage,
   ResetPage,
+  ProfilePage,
 } from '../../pages';
 import IngredientDetails from '../ingredient-details/IngredientDetails';
 import OrderDetails from '../order-details/OrderDetails';
@@ -18,7 +19,7 @@ import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
 import path from '../../utils/paths';
 
 function App() {
-  const { main, login, register, forgot, reset } = path;
+  const { main, login, register, forgot, reset, profile } = path;
   const dispatch = useDispatch();
   const [state, setState] = React.useState({
     orderNumber: 0,
@@ -100,6 +101,9 @@ function App() {
         </Route>
         <Route path={`${reset}`} exact={true}>
           <ResetPage />
+        </Route>
+        <Route path={`${profile}`} exact={true}>
+          <ProfilePage />
         </Route>
       </Switch>
 
