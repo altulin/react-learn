@@ -15,23 +15,26 @@ const ForgotPage = () => {
   const history = useHistory();
   const [value, setValue] = React.useState('');
 
-  const handleClick = (e: any) => {
+  async function handleClick(e: any) {
     e.preventDefault();
-    fetch(URL, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({
-        email: value,
-      }),
-    })
-      .then((data) => {
-        // console.log(data);
-        history.replace({ pathname: `${reset}` });
-      })
-      .catch((e) => console.log(e));
-  };
+
+    try {
+      const response = await fetch(URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          email: value,
+        }),
+      });
+      const json = await response.json();
+      // history.replace({ pathname: `${reset}` });
+      console.log(json);
+    } catch (err) {
+      console.error('Ошибка:', err);
+    }
+  }
 
   return (
     <FormPage>
