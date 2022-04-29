@@ -7,7 +7,7 @@ import {
 import styles from '../login/LoginPage.module.css';
 import { Link } from 'react-router-dom';
 import path from '../../utils/paths';
-const URL = 'https://norma.nomoreparties.space/api/password-reset/reset';
+import { urlReset } from '../../utils/endpoints';
 
 const ResetPage = () => {
   const { login } = path;
@@ -19,7 +19,7 @@ const ResetPage = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch(URL, {
+      const response = await fetch(urlReset, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

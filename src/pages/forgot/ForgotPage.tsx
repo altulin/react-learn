@@ -8,7 +8,8 @@ import {
 import styles from '../login/LoginPage.module.css';
 import { Link } from 'react-router-dom';
 import path from '../../utils/paths';
-const URL = 'https://norma.nomoreparties.space/api/password-reset';
+// const URL = 'https://norma.nomoreparties.space/api/password-reset';
+import { urlForgot } from '../../utils/endpoints';
 
 const ForgotPage = () => {
   const { login, reset } = path;
@@ -19,7 +20,7 @@ const ForgotPage = () => {
     e.preventDefault();
 
     try {
-      const response = await fetch(URL, {
+      const response = await fetch(urlForgot, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -31,6 +32,7 @@ const ForgotPage = () => {
       const json = await response.json();
 
       if (json.success) {
+        console.log(json);
         history.replace({ pathname: `${reset}` });
       }
     } catch (err) {

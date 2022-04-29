@@ -1,4 +1,11 @@
-import { GET_LIST_INGREDIENTS, GET_FEED, GET_FEED_FAILED, LIST_CURRENT_INGREDIENTS, CURRENT_INGREDIENT, CREATED_ORDER} from "../actions";
+import {
+  GET_LIST_INGREDIENTS,
+  GET_FEED,
+  GET_FEED_FAILED,
+  LIST_CURRENT_INGREDIENTS,
+  CURRENT_INGREDIENT,
+  CREATED_ORDER,
+} from '../actions';
 
 const initialState = {
   listIngredients: [], //список всех полученных ингредиентов
@@ -9,12 +16,15 @@ const initialState = {
   feedError: false, // ошибка прм загрузке с сервера
 };
 
-export const rootReducer =(state = initialState, action: {type: string, feed: any}) => {
-	switch (action.type) {
-		case GET_LIST_INGREDIENTS: {
+export const rootReducer = (
+  state = initialState,
+  action: { type: string; feed: any },
+) => {
+  switch (action.type) {
+    case GET_LIST_INGREDIENTS: {
       return {
         ...state,
-				feed: false,
+        feed: false,
         listIngredients: action.feed,
       };
     }
@@ -22,14 +32,14 @@ export const rootReducer =(state = initialState, action: {type: string, feed: an
     case GET_FEED: {
       return {
         ...state,
-				feed: true,
+        feed: true,
       };
     }
 
     case GET_FEED_FAILED: {
       return {
         ...state,
-				feed: false,
+        feed: false,
         feedError: true,
       };
     }
@@ -55,10 +65,10 @@ export const rootReducer =(state = initialState, action: {type: string, feed: an
       };
     }
 
-		default: {
+    default: {
       return state;
     }
-	}
-}
+  }
+};
 
-export type RootState = ReturnType<typeof rootReducer>
+export type RootState = ReturnType<typeof rootReducer>;

@@ -1,20 +1,56 @@
+import { useState } from 'react';
 import FormPage from '../../components/form/FormPage';
+import { setCookie } from '../../utils/cookie';
 import {
   Input,
   Button,
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from '../login/LoginPage.module.css';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import path from '../../utils/paths';
+import { urlRegister } from '../../utils/endpoints';
 
 const RegistrationPage = () => {
   const { login } = path;
-  const setValue = (e: React.ChangeEvent<HTMLInputElement>) => {
-    //console.log(e);
+  const [value, setValue] = useState({
+    email: '',
+    password: '',
+    name: '',
+  });
+
+  const { name, email, password } = value;
+  const history = useHistory();
+
+  const getNewValues = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValue({
+      ...value,
+      [e.target.name]: e.target.value,
+    });
   };
 
-  const valueEmail = '';
-  const valuePassword = '';
+  async function handleClick(e: any) {
+    e.preventDefault();
+
+    try {
+      const response = await fetch(urlRegister, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(value),
+      });
+      const json = await response.json();
+
+      if (json.success) {
+        setCookie('token', json.refreshToken);
+        history.replace({ pathname: `${login}` });
+      } else {
+        console.log(json.message);
+      }
+    } catch (err) {
+      console.error('Ошибка:', err);
+    }
+  }
 
   return (
     <FormPage>
@@ -28,27 +64,30 @@ const RegistrationPage = () => {
 
           <Input
             type={'text'}
-            value={valueEmail}
-            onChange={(e) => setValue(e)}
+            value={name}
+            onChange={(e) => getNewValues(e)}
             placeholder={'Имя'}
+            name={'name'}
           />
 
           <Input
             type={'email'}
-            value={valueEmail}
-            onChange={(e) => setValue(e)}
+            value={email}
+            onChange={(e) => getNewValues(e)}
             placeholder={'E-mail'}
+            name={'email'}
           />
 
           <Input
             type={'password'}
-            value={valuePassword}
-            onChange={(e) => setValue(e)}
+            value={password}
+            onChange={(e) => getNewValues(e)}
             placeholder={'Пароль'}
+            name={'password'}
           />
 
           <div className={`${styles.button_wrap} mt-6`}>
-            <Button type='primary' size='large'>
+            <Button type='primary' size='large' onClick={handleClick}>
               Зарегистрироваться
             </Button>
           </div>
