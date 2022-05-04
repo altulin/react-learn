@@ -8,37 +8,61 @@ import {
 import styles from '../login/LoginPage.module.css';
 import { Link } from 'react-router-dom';
 import path from '../../utils/paths';
-// const URL = 'https://norma.nomoreparties.space/api/password-reset';
 import { urlForgot } from '../../utils/endpoints';
+import { getData } from '../../utils/getData';
 
 const ForgotPage = () => {
   const { login, reset } = path;
   const history = useHistory();
-  const [value, setValue] = useState('');
+
+  const [value, setValue] = useState({
+    email: '',
+  });
+
+  const getNewValues = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValue({
+      ...value,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const { email } = value;
+
+  async function handleSuccess() {
+    const data = await getData(urlForgot, value);
+    if (data.success) {
+      history.replace({ pathname: `${reset}` });
+    }
+  }
 
   async function handleClick(e: any) {
     e.preventDefault();
-
-    try {
-      const response = await fetch(urlForgot, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          email: value,
-        }),
-      });
-      const json = await response.json();
-
-      if (json.success) {
-        console.log(json);
-        history.replace({ pathname: `${reset}` });
-      }
-    } catch (err) {
-      console.error('Ошибка:', err);
-    }
+    handleSuccess();
   }
+
+  // async function handleClick(e: any) {
+  //   e.preventDefault();
+
+  //   try {
+  //     const response = await fetch(urlForgot, {
+  //       method: 'POST',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //       },
+  //       body: JSON.stringify({
+  //         email: value,
+  //       }),
+  //     });
+  //     const json = await response.json();
+
+  //     if (json.success) {
+  //       console.log(json);
+  //       history.replace({ pathname: `${reset}` });
+  //     }
+  //   } catch (err) {
+  //     console.error('Ошибка:', err);
+  //   }
+  // }
 
   return (
     <FormPage>
@@ -52,9 +76,10 @@ const ForgotPage = () => {
 
           <Input
             type={'email'}
-            value={value}
-            onChange={(e) => setValue(e.target.value)}
+            value={email}
+            onChange={(e) => getNewValues(e)}
             placeholder={'Укажите e-mail'}
+            name={'email'}
           />
 
           <div className={`${styles.button_wrap} mt-6`}>

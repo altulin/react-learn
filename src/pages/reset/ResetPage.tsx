@@ -5,38 +5,39 @@ import {
   Button,
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from '../login/LoginPage.module.css';
-import { Link } from 'react-router-dom';
+import { Link, useHistory } from 'react-router-dom';
 import path from '../../utils/paths';
 import { urlReset } from '../../utils/endpoints';
+import { getData } from '../../utils/getData';
 
 const ResetPage = () => {
   const { login } = path;
+  const history = useHistory();
 
-  const [valuePassword, setValuePassword] = useState('');
-  const [valueToken, setValueToken] = useState('');
+  const [value, setValue] = useState({
+    token: '',
+    password: '',
+  });
+
+  const { token, password } = value;
+
+  const getNewValues = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValue({
+      ...value,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  async function handleSuccess() {
+    const data = await getData(urlReset, value);
+    if (data.success) {
+      history.replace({ pathname: `${login}` });
+    }
+  }
 
   async function handleClick(e: any) {
     e.preventDefault();
-
-    try {
-      const response = await fetch(urlReset, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          password: valuePassword,
-          token: valueToken,
-        }),
-      });
-      const json = await response.json();
-
-      if (json.success) {
-        console.log(json);
-      }
-    } catch (err) {
-      console.error('Ошибка:', err);
-    }
+    handleSuccess();
   }
 
   return (
@@ -51,16 +52,18 @@ const ResetPage = () => {
 
           <Input
             type={'password'}
-            value={valuePassword}
-            onChange={(e) => setValuePassword(e.target.value)}
+            value={password}
+            onChange={(e) => getNewValues(e)}
             placeholder={'Введите новый пароль'}
+            name={'password'}
           />
 
           <Input
             type={'text'}
-            value={valueToken}
-            onChange={(e) => setValueToken(e.target.value)}
+            value={token}
+            onChange={(e) => getNewValues(e)}
             placeholder={'Введите код из письма'}
+            name={'token'}
           />
 
           <div className={`${styles.button_wrap} mt-6`}>

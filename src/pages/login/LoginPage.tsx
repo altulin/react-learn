@@ -2,13 +2,14 @@ import { useState } from 'react';
 import FormPage from '../../components/form/FormPage';
 import path from '../../utils/paths';
 import { urlLogin } from '../../utils/endpoints';
-import { setCookie } from '../../utils/cookie';
+import { setCookie, lifeTime } from '../../utils/cookie';
 import {
   Input,
   Button,
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './LoginPage.module.css';
 import { Link, useHistory } from 'react-router-dom';
+import { getData } from '../../utils/getData';
 
 const LoginPage = () => {
   const { register, forgot, main } = path;
@@ -28,26 +29,18 @@ const LoginPage = () => {
     });
   };
 
+  async function handleSuccess() {
+    const data = await getData(urlLogin, value);
+    const { refreshToken, accessToken } = data;
+
+    setCookie('refreshToken', refreshToken);
+    setCookie('accessToken', accessToken, lifeTime);
+    history.replace({ pathname: `${main}` });
+  }
+
   async function handleClick(e: any) {
     e.preventDefault();
-
-    try {
-      const response = await fetch(urlLogin, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(value),
-      });
-      const json = await response.json();
-
-      if (json.success) {
-        setCookie('token', json.refreshToken);
-        history.replace({ pathname: `${main}` });
-      }
-    } catch (err) {
-      console.error('Ошибка:', err);
-    }
+    handleSuccess();
   }
 
   return (

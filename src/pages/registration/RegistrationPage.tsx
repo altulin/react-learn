@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import FormPage from '../../components/form/FormPage';
-import { setCookie } from '../../utils/cookie';
+import { setCookie, lifeTime } from '../../utils/cookie';
 import {
   Input,
   Button,
@@ -43,6 +43,7 @@ const RegistrationPage = () => {
 
       if (json.success) {
         setCookie('token', json.refreshToken);
+        setCookie('accessToken', json.refreshToken, lifeTime);
         history.replace({ pathname: `${login}` });
       } else {
         console.log(json.message);

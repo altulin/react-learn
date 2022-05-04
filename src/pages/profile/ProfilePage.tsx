@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import FormPage from '../../components/form/FormPage';
 import {
   Input,
@@ -8,9 +8,15 @@ import styles from '../login/LoginPage.module.css';
 import profile_styles from './ProfilePage.module.css';
 import { Link, NavLink } from 'react-router-dom';
 import path from '../../utils/paths';
+import { getCookie, deleteCookie } from '../../utils/cookie';
+import { urlLogout, urlToken } from '../../utils/endpoints';
 
-const NavBlock = () => {
-  const { profile } = path;
+interface NavBlockProps {
+  handleExit: (e: any) => void;
+}
+
+const NavBlock = ({ handleExit }: NavBlockProps) => {
+  const { profile, profile_orders, main } = path;
 
   return (
     <div className={profile_styles.nav}>
@@ -24,7 +30,7 @@ const NavBlock = () => {
       </NavLink>
       <NavLink
         exact
-        to={{ pathname: '/profile/orders' }}
+        to={{ pathname: `${profile_orders}` }}
         className={`${profile_styles.link} text text_type_main-medium`}
         activeClassName={profile_styles.activeLink}
       >
@@ -32,9 +38,10 @@ const NavBlock = () => {
       </NavLink>
       <NavLink
         exact
-        to={{ pathname: '/profile/orders/:id' }}
+        to={{ pathname: `${main}` }}
         className={`${profile_styles.link} text text_type_main-medium`}
         activeClassName={profile_styles.activeLink}
+        onClick={handleExit}
       >
         Выход
       </NavLink>
@@ -48,37 +55,95 @@ const NavBlock = () => {
 };
 
 const ProfilePage = () => {
-  const [valueEmail, setValueEmail] = useState('');
-  const [valuePassword, setValuePassword] = useState('');
-  const [valueLogin, setValueLogin] = useState('');
+  const [value, setValue] = useState({ email: '', password: '', login: '' });
+
+  useEffect(() => {
+    // setValue({
+    //   email: '1',
+    //   password: '2',
+    //   login: '3',
+    // });
+    // getProfile();
+    getProfileDate();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const getProfileDate = () => {
+    if (!getCookie('accessToken')) {
+    }
+  };
+
+  async function handleClick(e: any) {
+    e.preventDefault();
+
+    try {
+      const response = await fetch(urlLogout, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          token: getCookie('refreshToken'),
+        }),
+      });
+      const json = await response.json();
+
+      if (json.success) {
+        console.log(json);
+        deleteCookie('refreshToken');
+        deleteCookie('accessToken');
+        // const { refreshToken, accessToken } = json;
+        // console.log(accessToken);
+
+        // setCookie('refreshToken', refreshToken);
+        // setCookie('accessToken', accessToken, lifeTime);
+
+        // history.replace({ pathname: `${main}` });
+      }
+    } catch (err) {
+      console.error('Ошибка:', err);
+    }
+  }
+
+  const { email, password, login } = value;
+
+  const getNewValues = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValue({
+      ...value,
+      [e.target.name]: e.target.value,
+    });
+  };
 
   return (
     <FormPage>
       <div className={`${styles.form_wrap} ${profile_styles.form_wrap}`}>
-        <NavBlock></NavBlock>
+        <NavBlock handleExit={handleClick}></NavBlock>
         <form>
           <Input
             type={'text'}
-            value={valueEmail}
-            onChange={(e) => setValueEmail(e.target.value)}
+            value={email}
+            onChange={(e) => getNewValues(e)}
             placeholder={'Имя'}
             icon={'EditIcon'}
+            name={'email'}
           />
 
           <Input
             type={'text'}
-            value={valueLogin}
-            onChange={(e) => setValueLogin(e.target.value)}
+            value={login}
+            onChange={(e) => getNewValues(e)}
             placeholder={'Логин'}
             icon={'EditIcon'}
+            name={'login'}
           />
 
           <Input
             type={'password'}
-            value={valuePassword}
-            onChange={(e) => setValuePassword(e.target.value)}
+            value={password}
+            onChange={(e) => getNewValues(e)}
             placeholder={'Пароль'}
             icon={'CloseIcon'}
+            name={'password'}
           />
           <div className={`${profile_styles.button_wrap} mt-6`}>
             <Link
