@@ -7,7 +7,7 @@ import {
   ProfileIcon,
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import { Link } from 'react-router-dom';
-import path from '../../utils/paths';
+import path from '../../services/utils/paths';
 
 interface LinkHeaderProps {
   text: string;

@@ -7,9 +7,9 @@ import {
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from '../login/LoginPage.module.css';
 import { Link } from 'react-router-dom';
-import path from '../../utils/paths';
-import { urlForgot } from '../../utils/endpoints';
-import { getData } from '../../utils/getData';
+import path from '../../services/utils/paths';
+import { urlForgot } from '../../services/utils/endpoints';
+import { makePostRequest } from '../../services/actions/responseAuth';
 
 const ForgotPage = () => {
   const { login, reset } = path;
@@ -29,10 +29,9 @@ const ForgotPage = () => {
   const { email } = value;
 
   async function handleSuccess() {
-    const data = await getData(urlForgot, value);
-    if (data.success) {
-      history.replace({ pathname: `${reset}` });
-    }
+    makePostRequest(urlForgot, value).then(() =>
+      history.replace({ pathname: `${reset}` }),
+    );
   }
 
   async function handleClick(e: any) {

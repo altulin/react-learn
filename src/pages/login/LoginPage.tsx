@@ -1,19 +1,22 @@
 import { useState } from 'react';
 import FormPage from '../../components/form/FormPage';
-import path from '../../utils/paths';
-import { urlLogin } from '../../utils/endpoints';
-import { setCookie, lifeTime } from '../../utils/cookie';
+import path from '../../services/utils/paths';
+import { urlLogin } from '../../services/utils/endpoints';
+import { createNewCookie } from '../../services/utils/cookie';
 import {
   Input,
   Button,
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './LoginPage.module.css';
 import { Link, useHistory } from 'react-router-dom';
-import { getData } from '../../utils/getData';
+import { makePostRequest } from '../../services/actions/responseAuth';
+import { useDispatch } from 'react-redux';
+import { CREATE_USER } from '../../services/actions';
 
 const LoginPage = () => {
   const { register, forgot, main } = path;
   const history = useHistory();
+  const dispatch = useDispatch();
 
   const [value, setValue] = useState({
     email: '',
@@ -29,14 +32,16 @@ const LoginPage = () => {
     });
   };
 
-  async function handleSuccess() {
-    const data = await getData(urlLogin, value);
-    const { refreshToken, accessToken } = data;
-
-    setCookie('refreshToken', refreshToken);
-    setCookie('accessToken', accessToken, lifeTime);
-    history.replace({ pathname: `${main}` });
-  }
+  const handleSuccess = async () => {
+    makePostRequest(urlLogin, value).then((data) => {
+      createNewCookie(data);
+      history.replace({ pathname: `${main}` });
+      dispatch({
+        type: CREATE_USER,
+        feed: data,
+      });
+    });
+  };
 
   async function handleClick(e: any) {
     e.preventDefault();

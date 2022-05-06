@@ -2,7 +2,7 @@ interface Props {
   expires?: any;
 }
 
-export const lifeTime = { expires: 1 }; // время жизни токена
+export const lifeTime = { expires: 10 }; // время жизни токена
 
 export function setCookie(name: string, value: string, props?: Props) {
   props = props || {};
@@ -32,6 +32,7 @@ export function getCookie(name: string) {
   const matches = document.cookie.match(
     new RegExp(
       '(?:^|; )' +
+        //eslint-disable-next-line
         name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') +
         '=([^;]*)',
     ),
@@ -44,3 +45,13 @@ export function deleteCookie(name: string) {
     expires: -1,
   });
 }
+
+export const createNewCookie = (data: {
+  refreshToken: string;
+  accessToken: string;
+}) => {
+  const { refreshToken, accessToken } = data;
+
+  setCookie('refreshToken', refreshToken);
+  setCookie('accessToken', accessToken.split('Bearer ')[1], lifeTime);
+};

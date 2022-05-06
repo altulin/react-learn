@@ -5,6 +5,8 @@ import {
   LIST_CURRENT_INGREDIENTS,
   CURRENT_INGREDIENT,
   CREATED_ORDER,
+  CREATE_USER,
+  DELETE_USER,
 } from '../actions';
 
 const initialState = {
@@ -14,6 +16,7 @@ const initialState = {
   orderNumber: '', // объект созданного заказа
   feed: false, // состояние загрузки с сервера для лоадера
   feedError: false, // ошибка прм загрузке с сервера
+  user: {},
 };
 
 export const rootReducer = (
@@ -62,6 +65,20 @@ export const rootReducer = (
       return {
         ...state,
         orderNumber: action.feed,
+      };
+    }
+
+    case CREATE_USER: {
+      return {
+        ...state,
+        user: { name: action.feed.user.name, email: action.feed.user.email },
+      };
+    }
+
+    case DELETE_USER: {
+      return {
+        ...state,
+        user: {},
       };
     }
 

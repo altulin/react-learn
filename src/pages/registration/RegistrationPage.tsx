@@ -1,14 +1,15 @@
 import { useState } from 'react';
 import FormPage from '../../components/form/FormPage';
-import { setCookie, lifeTime } from '../../utils/cookie';
+import { createNewCookie } from '../../services/utils/cookie';
 import {
   Input,
   Button,
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from '../login/LoginPage.module.css';
 import { Link, useHistory } from 'react-router-dom';
-import path from '../../utils/paths';
-import { urlRegister } from '../../utils/endpoints';
+import path from '../../services/utils/paths';
+import { urlRegister } from '../../services/utils/endpoints';
+import { makePostRequest } from '../../services/actions/responseAuth';
 
 const RegistrationPage = () => {
   const { login } = path;
@@ -28,29 +29,16 @@ const RegistrationPage = () => {
     });
   };
 
+  const handleSuccess = async () => {
+    makePostRequest(urlRegister, value).then((data) => {
+      createNewCookie(data);
+      history.replace({ pathname: `${login}` });
+    });
+  };
+
   async function handleClick(e: any) {
     e.preventDefault();
-
-    try {
-      const response = await fetch(urlRegister, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(value),
-      });
-      const json = await response.json();
-
-      if (json.success) {
-        setCookie('token', json.refreshToken);
-        setCookie('accessToken', json.refreshToken, lifeTime);
-        history.replace({ pathname: `${login}` });
-      } else {
-        console.log(json.message);
-      }
-    } catch (err) {
-      console.error('Ошибка:', err);
-    }
+    handleSuccess();
   }
 
   return (

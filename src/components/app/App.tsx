@@ -16,7 +16,8 @@ import { RootState } from '../../services/reducers/rootReducer';
 import { getFeedConstructor } from '../../services/actions/response';
 import Modal from '../modal/Modal';
 import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
-import path from '../../utils/paths';
+import path from '../../services/utils/paths';
+import { ProtectedRoute } from '../protected-route/ProtectedRoute';
 
 function App() {
   const { main, login, register, forgot, reset, profile } = path;
@@ -105,6 +106,9 @@ function App() {
         <Route path={`${profile}`} exact={true}>
           <ProfilePage />
         </Route>
+        {/* <ProtectedRoute path={`${profile}`}> */}
+        {/* <ProfilePage /> */}
+        {/* </ProtectedRoute> */}
       </Switch>
 
       {/* modal */}

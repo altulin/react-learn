@@ -7,9 +7,21 @@ import {
 import styles from '../login/LoginPage.module.css';
 import profile_styles from './ProfilePage.module.css';
 import { Link, NavLink } from 'react-router-dom';
-import path from '../../utils/paths';
-import { getCookie, deleteCookie } from '../../utils/cookie';
-import { urlLogout, urlToken } from '../../utils/endpoints';
+import path from '../../services/utils/paths';
+import {
+  getCookie,
+  deleteCookie,
+  createNewCookie,
+} from '../../services/utils/cookie';
+import {
+  urlLogout,
+  urlToken,
+  urlProfile,
+} from '../../services/utils/endpoints';
+import {
+  makePostRequest,
+  makeGetRequest,
+} from '../../services/actions/responseAuth';
 
 interface NavBlockProps {
   handleExit: (e: any) => void;
@@ -56,62 +68,133 @@ const NavBlock = ({ handleExit }: NavBlockProps) => {
 
 const ProfilePage = () => {
   const [value, setValue] = useState({ email: '', password: '', login: '' });
+  const [valueInput, setValueInput] = useState({
+    email: '',
+    password: '******',
+    login: '',
+  });
 
   useEffect(() => {
-    // setValue({
-    //   email: '1',
-    //   password: '2',
-    //   login: '3',
-    // });
-    // getProfile();
-    getProfileDate();
+    getProfileData();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const getProfileDate = () => {
-    if (!getCookie('accessToken')) {
-    }
+  interface Data {
+    user: {
+      email: string;
+      name: string;
+    };
+  }
+
+  const createNewData = (data: Data) => {
+    const {
+      user: { email, name },
+    } = data;
+    setValue({
+      ...value,
+      email: email,
+      login: name,
+    });
+    setValueInput({
+      ...valueInput,
+      email: email,
+      login: name,
+    });
   };
 
-  async function handleClick(e: any) {
+  const getProfileData = async () => {
+    if (getCookie('accessToken')) {
+      makeGetRequest(urlProfile).then((res) => createNewData(res));
+    } else {
+      makePostRequest(urlToken, {
+        token: getCookie('refreshToken'),
+      }).then((res) => {
+        createNewCookie(res);
+      });
+
+      // makeGetRequest(urlProfile).then((res) => createNewData(res));
+    }
+    // makeGetRequest(urlProfile).then((data) => {
+    //   if (data.success) {
+    //     createNewData(data);
+    //   }
+    // });
+    // if (data.success) {
+    // createNewData(data);
+    // } else {
+
+    // const res = await makePostRequest(urlToken, {
+    //   token: getCookie('refreshToken'),
+    // });
+    // createNewCookie(res);
+    // const dataNew = await makeGetRequest(urlProfile);
+    // createNewData(dataNew);
+    // }
+  };
+
+  const handleLogout = async () => {
+    await makePostRequest(urlLogout, {
+      token: getCookie('refreshToken'),
+    });
+
+    deleteCookie('refreshToken');
+    deleteCookie('accessToken');
+  };
+
+  const handleClick = async (e: any) => {
     e.preventDefault();
+    handleLogout();
+  };
+
+  const { email, password, login } = valueInput;
+
+  const getNewValues = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setValueInput({
+      ...valueInput,
+      [e.target.name]: e.target.value,
+    });
+  };
+
+  const cancelNewData = (e: any) => {
+    const { email, login } = value;
+    setValueInput({
+      ...valueInput,
+      email: email,
+      login: login,
+    });
+  };
+
+  const saveNewData = async (e: any) => {
+    e.preventDefault();
+    console.log(
+      JSON.stringify({
+        email: email,
+        name: login,
+      }),
+    );
 
     try {
-      const response = await fetch(urlLogout, {
-        method: 'POST',
+      const response = await fetch(urlProfile, {
+        method: 'PATCH',
+
         headers: {
           'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + getCookie('accessToken'),
         },
-        body: JSON.stringify({
-          token: getCookie('refreshToken'),
-        }),
+        body: JSON.stringify({ email: email, name: login }),
       });
+
       const json = await response.json();
 
       if (json.success) {
-        console.log(json);
-        deleteCookie('refreshToken');
-        deleteCookie('accessToken');
-        // const { refreshToken, accessToken } = json;
-        // console.log(accessToken);
-
-        // setCookie('refreshToken', refreshToken);
-        // setCookie('accessToken', accessToken, lifeTime);
-
-        // history.replace({ pathname: `${main}` });
+        return json;
+      } else {
+        console.log(json.message);
+        return Promise.reject(`Ошибка ${json.status}`);
       }
     } catch (err) {
       console.error('Ошибка:', err);
     }
-  }
-
-  const { email, password, login } = value;
-
-  const getNewValues = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setValue({
-      ...value,
-      [e.target.name]: e.target.value,
-    });
   };
 
   return (
@@ -146,13 +229,13 @@ const ProfilePage = () => {
             name={'password'}
           />
           <div className={`${profile_styles.button_wrap} mt-6`}>
-            <Link
-              to='/'
+            <button
               className={`${profile_styles.cancel} text text_type_main-default`}
+              onClick={cancelNewData}
             >
               Отмена
-            </Link>
-            <Button type='primary' size='large'>
+            </button>
+            <Button type='primary' size='large' onClick={saveNewData}>
               Сохранить
             </Button>
           </div>

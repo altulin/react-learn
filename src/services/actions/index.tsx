@@ -4,3 +4,5 @@ export const CURRENT_INGREDIENT = 'CURRENT_INGREDIENT';
 export const CREATED_ORDER = 'CREATED_ORDER';
 export const GET_FEED = 'GET_FEED';
 export const GET_FEED_FAILED = 'GET_FEED_FAILED';
+export const CREATE_USER = 'CREATE_USER';
+export const DELETE_USER = 'DELETE_USER';

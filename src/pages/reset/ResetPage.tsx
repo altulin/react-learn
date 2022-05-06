@@ -6,9 +6,9 @@ import {
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from '../login/LoginPage.module.css';
 import { Link, useHistory } from 'react-router-dom';
-import path from '../../utils/paths';
-import { urlReset } from '../../utils/endpoints';
-import { getData } from '../../utils/getData';
+import path from '../../services/utils/paths';
+import { urlReset } from '../../services/utils/endpoints';
+import { makePostRequest } from '../../services/actions/responseAuth';
 
 const ResetPage = () => {
   const { login } = path;
@@ -29,7 +29,7 @@ const ResetPage = () => {
   };
 
   async function handleSuccess() {
-    const data = await getData(urlReset, value);
+    const data = await makePostRequest(urlReset, value);
     if (data.success) {
       history.replace({ pathname: `${login}` });
     }
