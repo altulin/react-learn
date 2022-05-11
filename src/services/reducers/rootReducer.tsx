@@ -71,7 +71,7 @@ export const rootReducer = (
     case CREATE_USER: {
       return {
         ...state,
-        user: { name: action.feed.user.name, email: action.feed.user.email },
+        user: { name: action.feed.name, email: action.feed.email },
       };
     }
 

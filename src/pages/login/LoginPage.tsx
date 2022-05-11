@@ -14,7 +14,7 @@ import { useDispatch } from 'react-redux';
 import { CREATE_USER } from '../../services/actions';
 
 const LoginPage = () => {
-  const { register, forgot, main } = path;
+  const { register, forgot, profile } = path;
   const history = useHistory();
   const dispatch = useDispatch();
 
@@ -33,13 +33,15 @@ const LoginPage = () => {
   };
 
   const handleSuccess = async () => {
-    makePostRequest(urlLogin, value).then((data) => {
+    await makePostRequest(urlLogin, value).then((data) => {
       createNewCookie(data);
-      history.replace({ pathname: `${main}` });
+
       dispatch({
         type: CREATE_USER,
-        feed: data,
+        feed: data.user,
       });
+
+      history.replace({ pathname: `${profile}` });
     });
   };
 

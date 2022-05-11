@@ -10,6 +10,8 @@ import { Link, useHistory } from 'react-router-dom';
 import path from '../../services/utils/paths';
 import { urlRegister } from '../../services/utils/endpoints';
 import { makePostRequest } from '../../services/actions/responseAuth';
+import { useDispatch } from 'react-redux';
+import { CREATE_USER } from '../../services/actions';
 
 const RegistrationPage = () => {
   const { login } = path;
@@ -21,6 +23,7 @@ const RegistrationPage = () => {
 
   const { name, email, password } = value;
   const history = useHistory();
+  const dispatch = useDispatch();
 
   const getNewValues = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValue({
@@ -33,6 +36,10 @@ const RegistrationPage = () => {
     makePostRequest(urlRegister, value).then((data) => {
       createNewCookie(data);
       history.replace({ pathname: `${login}` });
+      dispatch({
+        type: CREATE_USER,
+        feed: data.user,
+      });
     });
   };
 

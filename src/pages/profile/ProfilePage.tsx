@@ -6,7 +6,7 @@ import {
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from '../login/LoginPage.module.css';
 import profile_styles from './ProfilePage.module.css';
-import { Link, NavLink } from 'react-router-dom';
+import { NavLink } from 'react-router-dom';
 import path from '../../services/utils/paths';
 import {
   getCookie,
@@ -22,6 +22,8 @@ import {
   makePostRequest,
   makeGetRequest,
 } from '../../services/actions/responseAuth';
+import { useDispatch } from 'react-redux';
+import { DELETE_USER, CREATE_USER } from '../../services/actions';
 
 interface NavBlockProps {
   handleExit: (e: any) => void;
@@ -67,6 +69,7 @@ const NavBlock = ({ handleExit }: NavBlockProps) => {
 };
 
 const ProfilePage = () => {
+  const dispatch = useDispatch();
   const [value, setValue] = useState({ email: '', password: '', login: '' });
   const [valueInput, setValueInput] = useState({
     email: '',
@@ -75,7 +78,9 @@ const ProfilePage = () => {
   });
 
   useEffect(() => {
+    // getNewAccessToken();
     getProfileData();
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -103,38 +108,27 @@ const ProfilePage = () => {
   };
 
   const getProfileData = async () => {
-    if (getCookie('accessToken')) {
-      makeGetRequest(urlProfile).then((res) => createNewData(res));
-    } else {
-      makePostRequest(urlToken, {
+    await getNewAccessToken();
+    await makeGetRequest(urlProfile).then((res) => createNewData(res));
+  };
+
+  const getNewAccessToken = async () => {
+    const token = getCookie('accessToken');
+    if (!token) {
+      await makePostRequest(urlToken, {
         token: getCookie('refreshToken'),
       }).then((res) => {
         createNewCookie(res);
       });
-
-      // makeGetRequest(urlProfile).then((res) => createNewData(res));
     }
-    // makeGetRequest(urlProfile).then((data) => {
-    //   if (data.success) {
-    //     createNewData(data);
-    //   }
-    // });
-    // if (data.success) {
-    // createNewData(data);
-    // } else {
-
-    // const res = await makePostRequest(urlToken, {
-    //   token: getCookie('refreshToken'),
-    // });
-    // createNewCookie(res);
-    // const dataNew = await makeGetRequest(urlProfile);
-    // createNewData(dataNew);
-    // }
   };
 
   const handleLogout = async () => {
     await makePostRequest(urlLogout, {
       token: getCookie('refreshToken'),
+    });
+    dispatch({
+      type: DELETE_USER,
     });
 
     deleteCookie('refreshToken');
@@ -156,6 +150,7 @@ const ProfilePage = () => {
   };
 
   const cancelNewData = (e: any) => {
+    e.preventDefault();
     const { email, login } = value;
     setValueInput({
       ...valueInput,
@@ -166,13 +161,7 @@ const ProfilePage = () => {
 
   const saveNewData = async (e: any) => {
     e.preventDefault();
-    console.log(
-      JSON.stringify({
-        email: email,
-        name: login,
-      }),
-    );
-
+    await getNewAccessToken();
     try {
       const response = await fetch(urlProfile, {
         method: 'PATCH',
@@ -187,9 +176,13 @@ const ProfilePage = () => {
       const json = await response.json();
 
       if (json.success) {
-        return json;
+        dispatch({
+          type: CREATE_USER,
+          feed: json.user,
+        });
+
+        await getProfileData();
       } else {
-        console.log(json.message);
         return Promise.reject(`Ошибка ${json.status}`);
       }
     } catch (err) {

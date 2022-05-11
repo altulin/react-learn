@@ -2,11 +2,12 @@ interface Props {
   expires?: any;
 }
 
-export const lifeTime = { expires: 10 }; // время жизни токена
+export const lifeTime = 10; // время жизни токена
 
-export function setCookie(name: string, value: string, props?: Props) {
+export const setCookie = async (name: string, value: string, props?: Props) => {
   props = props || {};
   let exp = props.expires;
+
   if (typeof exp == 'number' && exp) {
     const d = new Date();
     d.setTime(d.getTime() + exp * 1000);
@@ -25,8 +26,7 @@ export function setCookie(name: string, value: string, props?: Props) {
     }
   }
   document.cookie = updatedCookie;
-  console.log(document.cookie);
-}
+};
 
 export function getCookie(name: string) {
   const matches = document.cookie.match(
@@ -46,12 +46,14 @@ export function deleteCookie(name: string) {
   });
 }
 
-export const createNewCookie = (data: {
+export const createNewCookie = async (data: {
   refreshToken: string;
   accessToken: string;
 }) => {
   const { refreshToken, accessToken } = data;
 
-  setCookie('refreshToken', refreshToken);
-  setCookie('accessToken', accessToken.split('Bearer ')[1], lifeTime);
+  await setCookie('refreshToken', refreshToken);
+  await setCookie('accessToken', accessToken.split('Bearer ')[1], {
+    expires: lifeTime,
+  });
 };

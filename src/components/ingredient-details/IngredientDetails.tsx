@@ -1,11 +1,29 @@
 import styles from './IngredientDetails.module.css';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../services/reducers/rootReducer';
+import { useLocation } from 'react-router-dom';
+import { useEffect } from 'react';
 
 function IngredientDetails() {
-  const { currentIngredient } = useSelector((store: RootState) => ({
-    currentIngredient: store.currentIngredient,
+  const { listIngredients } = useSelector((store: RootState) => ({
+    listIngredients: store.listIngredients,
   }));
+  const location = useLocation();
+
+  const getIngredient = () => {
+    const id = location.pathname.split('/')[2];
+    return listIngredients.filter(
+      (item: { _id: string }) => item._id === id,
+    )[0];
+  };
+
+  useEffect(() => {
+    getIngredient();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const { image_large, name, calories, fat, carbohydrates, proteins } =
+    getIngredient();
 
   return (
     <>
@@ -14,7 +32,7 @@ function IngredientDetails() {
       <figure className={`mb-4 ${styles.modal_img_wrap}`}>
         <img
           className={styles.modal_img}
-          src={currentIngredient.image_large}
+          src={image_large}
           alt=''
           width={480}
           height={240}
@@ -22,7 +40,7 @@ function IngredientDetails() {
       </figure>
 
       <h3 className={`${styles.modal_title} text text_type_main-medium mb-8`}>
-        {currentIngredient.name}
+        {name}
       </h3>
 
       <ul className={styles.modal_list}>
@@ -33,7 +51,7 @@ function IngredientDetails() {
             Калории,ккал
           </span>
           <span className={`text text_type_main-default text_color_inactive`}>
-            {currentIngredient.calories}
+            {calories}
           </span>
         </li>
         <li className={styles.modal_text}>
@@ -43,7 +61,7 @@ function IngredientDetails() {
             Белки, г
           </span>
           <span className={`text text_type_main-default text_color_inactive`}>
-            {currentIngredient.proteins}
+            {proteins}
           </span>
         </li>
         <li className={styles.modal_text}>
@@ -53,7 +71,7 @@ function IngredientDetails() {
             Жиры, г
           </span>
           <span className={`text text_type_main-default text_color_inactive`}>
-            {currentIngredient.fat}
+            {fat}
           </span>
         </li>
         <li className={styles.modal_text}>
@@ -63,7 +81,7 @@ function IngredientDetails() {
             Углеводы, г
           </span>
           <span className={`text text_type_main-default text_color_inactive`}>
-            {currentIngredient.carbohydrates}
+            {carbohydrates}
           </span>
         </li>
       </ul>

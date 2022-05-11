@@ -39,30 +39,6 @@ const ForgotPage = () => {
     handleSuccess();
   }
 
-  // async function handleClick(e: any) {
-  //   e.preventDefault();
-
-  //   try {
-  //     const response = await fetch(urlForgot, {
-  //       method: 'POST',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //       },
-  //       body: JSON.stringify({
-  //         email: value,
-  //       }),
-  //     });
-  //     const json = await response.json();
-
-  //     if (json.success) {
-  //       console.log(json);
-  //       history.replace({ pathname: `${reset}` });
-  //     }
-  //   } catch (err) {
-  //     console.error('Ошибка:', err);
-  //   }
-  // }
-
   return (
     <FormPage>
       <div className={styles.form_wrap}>

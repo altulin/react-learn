@@ -41,14 +41,13 @@ export async function makeGetRequest(url: string) {
     });
 
     const json = await response.json();
-    // console.log(response);
     if (json.success) {
       return json;
     } else {
-      // console.log(json.message);
+      console.log(json.message);
       return Promise.reject(`Ошибка ${json.message}`);
     }
   } catch (err) {
-    // console.log('Ошибка:', err);
+    console.log('Ошибка:', err);
   }
 }

@@ -7,6 +7,7 @@ import {
   ForgotPage,
   ResetPage,
   ProfilePage,
+  NotFound404,
 } from '../../pages';
 import IngredientDetails from '../ingredient-details/IngredientDetails';
 import OrderDetails from '../order-details/OrderDetails';
@@ -15,13 +16,21 @@ import { CURRENT_INGREDIENT } from '../../services/actions';
 import { RootState } from '../../services/reducers/rootReducer';
 import { getFeedConstructor } from '../../services/actions/response';
 import Modal from '../modal/Modal';
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom';
+import { Switch, Route, useLocation, useHistory } from 'react-router-dom';
 import path from '../../services/utils/paths';
 import { ProtectedRoute } from '../protected-route/ProtectedRoute';
 
-function App() {
+const App = () => {
   const { main, login, register, forgot, reset, profile } = path;
   const dispatch = useDispatch();
+  type LocationProps = {
+    state: {
+      background: any;
+    };
+  };
+  const location = useLocation() as LocationProps;
+  const background = location.state && location.state.background;
+  const history = useHistory();
   const [state, setState] = React.useState({
     orderNumber: 0,
     constructorList: [],
@@ -36,6 +45,10 @@ function App() {
       type: CURRENT_INGREDIENT,
       feed,
     });
+  };
+
+  const closeModal = () => {
+    history.goBack();
   };
 
   const { productsIngredients } = useSelector((store: RootState) => ({
@@ -80,11 +93,11 @@ function App() {
   };
 
   return (
-    <Router>
+    <>
       <AppHeader />
       {/* AppMain */}
 
-      <Switch>
+      <Switch location={background || location}>
         <Route path={`${main}`} exact={true}>
           <HomePage
             openModalIngridients={handleOpenModalIngridients}
@@ -97,34 +110,45 @@ function App() {
         <Route path={`${register}`} exact={true}>
           <RegistrationPage />
         </Route>
+
         <Route path={`${forgot}`} exact={true}>
           <ForgotPage />
         </Route>
-        <Route path={`${reset}`} exact={true}>
+
+        <ProtectedRoute path={`${reset}`}>
           <ResetPage />
-        </Route>
-        <Route path={`${profile}`} exact={true}>
+        </ProtectedRoute>
+
+        <ProtectedRoute path={`${profile}`}>
           <ProfilePage />
+        </ProtectedRoute>
+        <Route>
+          <NotFound404 />
         </Route>
-        {/* <ProtectedRoute path={`${profile}`}> */}
-        {/* <ProfilePage /> */}
-        {/* </ProtectedRoute> */}
       </Switch>
 
+      {background && (
+        <Route path={'/ingredients/:id'} exact={true}>
+          <Modal close={closeModal}>
+            <IngredientDetails />
+          </Modal>
+        </Route>
+      )}
+
       {/* modal */}
-      {state.modalIngredient && (
+      {/* {state.modalIngredient && (
         <Modal close={handleCloseModal}>
           <IngredientDetails />
         </Modal>
-      )}
+      )} */}
 
       {state.modalConstructor && (
         <Modal close={handleCloseModal}>
           <OrderDetails />
         </Modal>
       )}
-    </Router>
+    </>
   );
-}
+};
 
 export default App;

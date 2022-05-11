@@ -8,6 +8,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { getFeed } from '../../services/actions/response';
 import { RootState } from '../../services/reducers/rootReducer';
 import { useDrag } from 'react-dnd';
+import { Link, useLocation } from 'react-router-dom';
 
 const translate = (type: string) => {
   let action;
@@ -142,6 +143,8 @@ function BurgerCard({
   openModal,
   type,
 }: BurgerCardProps) {
+  const location = useLocation();
+
   const { constructorList } = useSelector((store: RootState) => ({
     constructorList: store.listConstructor,
   }));
@@ -160,10 +163,12 @@ function BurgerCard({
 
   return (
     <li className={`${styles.burger_item} ${styles.card}`} ref={dragRef}>
-      <a
-        href='/#'
+      <Link
+        to={{
+          pathname: `/ingredients/${id}`,
+          state: { background: location },
+        }}
         className={styles.card_link}
-        onClick={openModal}
         data-id={id}
       >
         <figure className={styles.card_img_wrap}>
@@ -187,7 +192,7 @@ function BurgerCard({
         <h3 className={`${styles.card_title} text text_type_main-default`}>
           {name}
         </h3>
-      </a>
+      </Link>
 
       {getCountValue(id) && (
         <span className={`${styles.card_count} text text_type_digits-default`}>
