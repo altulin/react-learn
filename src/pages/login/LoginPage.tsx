@@ -11,7 +11,7 @@ import styles from './LoginPage.module.css';
 import { Link, useHistory } from 'react-router-dom';
 import { makePostRequest } from '../../services/actions/responseAuth';
 import { useDispatch } from 'react-redux';
-import { CREATE_USER } from '../../services/actions';
+import { USER_LOGIN } from '../../services/actions';
 
 const LoginPage = () => {
   const { register, forgot, profile } = path;
@@ -37,7 +37,7 @@ const LoginPage = () => {
       createNewCookie(data);
 
       dispatch({
-        type: CREATE_USER,
+        type: USER_LOGIN,
         feed: data.user,
       });
 

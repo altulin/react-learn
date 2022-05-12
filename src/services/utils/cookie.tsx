@@ -1,8 +1,9 @@
+export const accessCookie = 'accessToken';
+export const refreshCookie = 'refreshToken';
+
 interface Props {
   expires?: any;
 }
-
-export const lifeTime = 10; // время жизни токена
 
 export const setCookie = async (name: string, value: string, props?: Props) => {
   props = props || {};
@@ -26,6 +27,7 @@ export const setCookie = async (name: string, value: string, props?: Props) => {
     }
   }
   document.cookie = updatedCookie;
+  console.log(document.cookie);
 };
 
 export function getCookie(name: string) {
@@ -52,8 +54,6 @@ export const createNewCookie = async (data: {
 }) => {
   const { refreshToken, accessToken } = data;
 
-  await setCookie('refreshToken', refreshToken);
-  await setCookie('accessToken', accessToken.split('Bearer ')[1], {
-    expires: lifeTime,
-  });
+  await setCookie(refreshCookie, refreshToken);
+  await setCookie(accessCookie, accessToken.split('Bearer ')[1]);
 };

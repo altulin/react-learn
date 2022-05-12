@@ -82,7 +82,7 @@ interface BurgerBlockProps {
 
 function BurgerBlock({ type, openModal, myClass }: BurgerBlockProps) {
   const { productsIngredients } = useSelector((store: RootState) => ({
-    productsIngredients: store.listIngredients,
+    productsIngredients: store.data.listIngredients,
   }));
 
   const getBurgerList = () => {
@@ -146,7 +146,7 @@ function BurgerCard({
   const location = useLocation();
 
   const { constructorList } = useSelector((store: RootState) => ({
-    constructorList: store.listConstructor,
+    constructorList: store.data.listConstructor,
   }));
 
   const [, dragRef] = useDrag({
@@ -215,12 +215,12 @@ const BurgerIngredients = React.memo(function BurgerIngredients({
   const [currentTab, setCurrent] = React.useState('bun');
 
   React.useEffect(() => {
-    dispatch(getFeed());
+    // dispatch(getFeed());
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const { productsIngredients } = useSelector((store: RootState) => ({
-    productsIngredients: store.listIngredients,
+    productsIngredients: store.data.listIngredients,
   }));
 
   const handleScroll = () => {

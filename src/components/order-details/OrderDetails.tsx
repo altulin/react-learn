@@ -4,7 +4,7 @@ import { RootState } from '../../services/reducers/rootReducer';
 
 function OrderDetails() {
   const { orderNumber } = useSelector((store: RootState) => ({
-    orderNumber: store.orderNumber,
+    orderNumber: store.data.orderNumber,
   }));
 
   return (

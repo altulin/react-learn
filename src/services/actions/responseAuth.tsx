@@ -1,4 +1,4 @@
-import { getCookie } from '../utils/cookie';
+import { getCookie, accessCookie } from '../utils/cookie';
 
 interface Value {
   email?: string;
@@ -15,6 +15,10 @@ export async function makePostRequest(url: string, value: Value) {
       },
       body: JSON.stringify(value),
     });
+
+    // if (!response.ok) {
+    //   return;
+    // }
 
     const json = await response.json();
 
@@ -36,15 +40,20 @@ export async function makeGetRequest(url: string) {
 
       headers: {
         'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + getCookie('accessToken'),
+        Authorization: 'Bearer ' + getCookie(accessCookie),
       },
     });
 
+    if (response.status === 403) {
+      return response.status;
+    }
+
     const json = await response.json();
+
     if (json.success) {
       return json;
     } else {
-      console.log(json.message);
+      console.log(json);
       return Promise.reject(`Ошибка ${json.message}`);
     }
   } catch (err) {

@@ -51,7 +51,7 @@ const ConstructorItem = ({
   const ref = React.useRef<HTMLLIElement>(null);
 
   const { constructorList } = useSelector((store: RootState) => ({
-    constructorList: store.listConstructor,
+    constructorList: store.data.listConstructor,
   }));
 
   const getListCurrentIngredients = (feed: {}[]) => {
@@ -180,7 +180,7 @@ function BurgerConstructor({ openModal }: BurgerConstructorProps) {
   };
 
   const { productsIngredients } = useSelector((store: RootState) => ({
-    productsIngredients: store.listIngredients,
+    productsIngredients: store.data.listIngredients,
   }));
 
   const getListCurrentIngredients = (feed: {}[]) => {
@@ -198,7 +198,7 @@ function BurgerConstructor({ openModal }: BurgerConstructorProps) {
   });
 
   let { constructorList } = useSelector((store: RootState) => ({
-    constructorList: store.listConstructor,
+    constructorList: store.data.listConstructor,
   }));
 
   const onDropHandler = (id: string) => {

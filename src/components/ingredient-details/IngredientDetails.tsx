@@ -1,14 +1,16 @@
 import styles from './IngredientDetails.module.css';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../services/reducers/rootReducer';
 import { useLocation } from 'react-router-dom';
 import { useEffect } from 'react';
+import { getFeed } from '../../services/actions/response';
 
 function IngredientDetails() {
   const { listIngredients } = useSelector((store: RootState) => ({
-    listIngredients: store.listIngredients,
+    listIngredients: store.data.listIngredients,
   }));
   const location = useLocation();
+  const dispatch = useDispatch();
 
   const getIngredient = () => {
     const id = location.pathname.split('/')[2];
@@ -16,6 +18,11 @@ function IngredientDetails() {
       (item: { _id: string }) => item._id === id,
     )[0];
   };
+
+  useEffect(() => {
+    dispatch(getFeed());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     getIngredient();

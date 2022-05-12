@@ -8,9 +8,10 @@ const modalRoot = document.querySelector('.modal-root') as HTMLElement;
 interface ModalProps {
   children: React.ReactNode;
   close: () => void;
+  detailClass?: string;
 }
 
-function Modal({ children, close }: ModalProps) {
+function Modal({ children, close, detailClass }: ModalProps) {
   React.useEffect(() => {
     const handlekeyPress = ({ key }: KeyboardEvent) => {
       if (key === 'Escape') {
@@ -29,11 +30,11 @@ function Modal({ children, close }: ModalProps) {
 
   return ReactDOM.createPortal(
     <>
-      <div className={styles.inner}>
+      <div className={`${styles.inner} ${styles[`${detailClass}`]}`}>
         <button className={styles.close} onClick={close}></button>
         {children}
       </div>
-      <ModalOverlay onClose={close} />
+      <ModalOverlay onClose={close} detailClass={detailClass} />
     </>,
     modalRoot,
   );

@@ -12,6 +12,8 @@ import {
   getCookie,
   deleteCookie,
   createNewCookie,
+  accessCookie,
+  refreshCookie,
 } from '../../services/utils/cookie';
 import {
   urlLogout,
@@ -113,10 +115,10 @@ const ProfilePage = () => {
   };
 
   const getNewAccessToken = async () => {
-    const token = getCookie('accessToken');
+    const token = getCookie(accessCookie);
     if (!token) {
       await makePostRequest(urlToken, {
-        token: getCookie('refreshToken'),
+        token: getCookie(refreshCookie),
       }).then((res) => {
         createNewCookie(res);
       });
@@ -125,14 +127,14 @@ const ProfilePage = () => {
 
   const handleLogout = async () => {
     await makePostRequest(urlLogout, {
-      token: getCookie('refreshToken'),
+      token: getCookie(refreshCookie),
     });
     dispatch({
       type: DELETE_USER,
     });
 
-    deleteCookie('refreshToken');
-    deleteCookie('accessToken');
+    deleteCookie(refreshCookie);
+    deleteCookie(accessCookie);
   };
 
   const handleClick = async (e: any) => {
@@ -168,7 +170,7 @@ const ProfilePage = () => {
 
         headers: {
           'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + getCookie('accessToken'),
+          Authorization: 'Bearer ' + getCookie(accessCookie),
         },
         body: JSON.stringify({ email: email, name: login }),
       });

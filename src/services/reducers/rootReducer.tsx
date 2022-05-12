@@ -1,3 +1,6 @@
+import { userReducer } from './user';
+import { combineReducers } from 'redux';
+
 import {
   GET_LIST_INGREDIENTS,
   GET_FEED,
@@ -19,7 +22,7 @@ const initialState = {
   user: {},
 };
 
-export const rootReducer = (
+export const dataReducer = (
   state = initialState,
   action: { type: string; feed: any },
 ) => {
@@ -89,3 +92,8 @@ export const rootReducer = (
 };
 
 export type RootState = ReturnType<typeof rootReducer>;
+
+export const rootReducer = combineReducers({
+  data: dataReducer,
+  user: userReducer,
+});

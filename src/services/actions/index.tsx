@@ -6,3 +6,5 @@ export const GET_FEED = 'GET_FEED';
 export const GET_FEED_FAILED = 'GET_FEED_FAILED';
 export const CREATE_USER = 'CREATE_USER';
 export const DELETE_USER = 'DELETE_USER';
+export const TOKEN_CHACKED = 'TOKEN_CHACKED';
+export const USER_LOGIN = 'USER_LOGIN';

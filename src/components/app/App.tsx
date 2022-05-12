@@ -19,6 +19,9 @@ import Modal from '../modal/Modal';
 import { Switch, Route, useLocation, useHistory } from 'react-router-dom';
 import path from '../../services/utils/paths';
 import { ProtectedRoute } from '../protected-route/ProtectedRoute';
+import { getFeed } from '../../services/actions/response';
+import styles from './App.module.css';
+import { checkUser } from '../../services/utils/checkUser';
 
 const App = () => {
   const { main, login, register, forgot, reset, profile } = path;
@@ -40,6 +43,12 @@ const App = () => {
     modalConstructor: false,
   });
 
+  React.useEffect(() => {
+    dispatch(getFeed());
+    dispatch(checkUser());
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const currentIngredient = (feed: {}) => {
     dispatch({
       type: CURRENT_INGREDIENT,
@@ -52,7 +61,7 @@ const App = () => {
   };
 
   const { productsIngredients } = useSelector((store: RootState) => ({
-    productsIngredients: store.listIngredients,
+    productsIngredients: store.data.listIngredients,
   }));
 
   const handleOpenModalIngridients = (e: React.MouseEvent) => {
@@ -70,7 +79,7 @@ const App = () => {
   };
 
   const { listConstructor } = useSelector((store: RootState) => ({
-    listConstructor: store.listConstructor,
+    listConstructor: store.data.listConstructor,
   }));
 
   const handleOpenModalConstructor = () => {
@@ -104,12 +113,14 @@ const App = () => {
             openModalConstructor={handleOpenModalConstructor}
           />
         </Route>
-        <Route path={`${login}`} exact={true}>
+
+        <ProtectedRoute auth={true} path={`${login}`}>
           <LoginPage />
-        </Route>
-        <Route path={`${register}`} exact={true}>
+        </ProtectedRoute>
+
+        <ProtectedRoute auth={true} path={`${register}`}>
           <RegistrationPage />
-        </Route>
+        </ProtectedRoute>
 
         <Route path={`${forgot}`} exact={true}>
           <ForgotPage />
@@ -122,6 +133,21 @@ const App = () => {
         <ProtectedRoute path={`${profile}`}>
           <ProfilePage />
         </ProtectedRoute>
+
+        <Route path={'/ingredients/:id'} exact={true}>
+          {productsIngredients.length === 0 ? (
+            <h1 className={`${styles.preload_text} text text_type_main-large`}>
+              Загружаю ...
+            </h1>
+          ) : (
+            <main>
+              <Modal close={closeModal} detailClass={'detail'}>
+                <IngredientDetails />
+              </Modal>
+            </main>
+          )}
+        </Route>
+
         <Route>
           <NotFound404 />
         </Route>

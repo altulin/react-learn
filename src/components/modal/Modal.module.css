@@ -1,39 +1,52 @@
 .modal_cover {
-	position: fixed;
-	width: 100%;
-	height: 100%;
-	top: 0;
-	left: 0;
-	background-color: rgba(0, 0, 0, 0.6);
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  background-color: rgba(0, 0, 0, 0.6);
 }
 
 .inner {
-	position: fixed;
-	width: 100%;
-	padding: 40px;
-	max-width: 720px;
-	background-color: #1C1C21;
-	border: 1px solid #4C4CFF33;
-	box-shadow: 0px 24px 32px 0px #0000000A;
-	border-radius: 32px;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%);
-	z-index: 1;
+  position: fixed;
+  width: 100%;
+  padding: 40px;
+  max-width: 720px;
+  background-color: #1c1c21;
+  border: 1px solid #4c4cff33;
+  box-shadow: 0px 24px 32px 0px #0000000a;
+  border-radius: 32px;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 1;
 }
 
 .close {
-	position: absolute;
-	right: 40px;
-	top: 40px;
-	width: 24px;
-	height: 24px;
-	padding: 0;
-	background-color: transparent;
-	border: none;
-	background-image: url('../../images/close.svg');
-	background-repeat: no-repeat;
-	background-size: 18px 18px;
-	background-position: center;
-	cursor: pointer;
+  position: absolute;
+  right: 40px;
+  top: 40px;
+  width: 24px;
+  height: 24px;
+  padding: 0;
+  background-color: transparent;
+  border: none;
+  background-image: url('../../images/close.svg');
+  background-repeat: no-repeat;
+  background-size: 18px 18px;
+  background-position: center;
+  cursor: pointer;
+}
+
+.detail {
+  background-color: transparent;
+  border: none;
+}
+
+.detail button {
+  display: none;
+}
+
+.detail h2 {
+  text-align: center;
 }
