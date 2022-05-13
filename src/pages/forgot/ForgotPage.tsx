@@ -9,7 +9,7 @@ import styles from '../login/LoginPage.module.css';
 import { Link } from 'react-router-dom';
 import path from '../../services/utils/paths';
 import { urlForgot } from '../../services/utils/endpoints';
-import { makePostRequest } from '../../services/actions/responseAuth';
+import { checkResponse } from '../../services/actions/response';
 
 const ForgotPage = () => {
   const { login, reset } = path;
@@ -29,9 +29,19 @@ const ForgotPage = () => {
   const { email } = value;
 
   async function handleSuccess() {
-    makePostRequest(urlForgot, value).then(() =>
-      history.replace({ pathname: `${reset}` }),
-    );
+    await fetch(urlForgot, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(value),
+    })
+      .then((res) => checkResponse(res))
+      .then((res) => {
+        if (res && res.success) {
+          history.replace({ pathname: `${reset}` });
+        }
+      });
   }
 
   async function handleClick(e: any) {

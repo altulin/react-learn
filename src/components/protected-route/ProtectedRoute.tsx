@@ -1,4 +1,4 @@
-import { Route, Redirect } from 'react-router-dom';
+import { Route, Redirect, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../services/reducers/rootReducer';
 import paths from '../../services/utils/paths';
@@ -15,27 +15,12 @@ export function ProtectedRoute({
   children,
   ...rest
 }: ProtectedRouteProps) {
-  // const { user } = useSelector((store: RootState) => ({
-  //   user: store.user,
-  // }));
-
   const user = useSelector((state: RootState) => state.user);
 
   const { isAuthChecked, data } = user;
 
-  // const isEmptyUser = Object.keys(user).length === 0;
   const { login, main } = paths;
-
-  // return (
-  //   // <Route>
-
-  //   // </Route>
-  //   <Route
-  //     {...rest}
-  //     render={() => (!isEmptyUser ? children : <Redirect to={`${login}`} />)}
-  //     exact={true}
-  //   />
-  // );
+  const location = useLocation();
 
   if (!isAuthChecked) {
     return (
@@ -48,15 +33,19 @@ export function ProtectedRoute({
   if (!auth && !data) {
     return (
       <Route {...rest} exact>
-        <Redirect to={`${login}`} />
+        <Redirect to={{ pathname: `${login}`, state: { from: location } }} />
       </Route>
     );
   }
 
   if (auth && data) {
+    const { from } = (location.state as any) || {
+      from: { pathname: `${main}` },
+    };
+
     return (
       <Route {...rest} exact>
-        <Redirect to={`${main}`} />
+        <Redirect to={from} />
       </Route>
     );
   }

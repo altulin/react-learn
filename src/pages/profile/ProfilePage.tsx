@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import FormPage from '../../components/form/FormPage';
 import {
   Input,
@@ -11,21 +11,16 @@ import path from '../../services/utils/paths';
 import {
   getCookie,
   deleteCookie,
-  createNewCookie,
   accessCookie,
   refreshCookie,
 } from '../../services/utils/cookie';
-import {
-  urlLogout,
-  urlToken,
-  urlProfile,
-} from '../../services/utils/endpoints';
-import {
-  makePostRequest,
-  makeGetRequest,
-} from '../../services/actions/responseAuth';
+import { urlLogout } from '../../services/utils/endpoints';
+import { checkResponse } from '../../services/actions/response';
+
 import { useDispatch } from 'react-redux';
-import { DELETE_USER, CREATE_USER } from '../../services/actions';
+import { RootState } from '../../services/reducers/rootReducer';
+import { useSelector } from 'react-redux';
+import { USER_LOGOUT } from '../../services/actions';
 
 interface NavBlockProps {
   handleExit: (e: any) => void;
@@ -72,69 +67,80 @@ const NavBlock = ({ handleExit }: NavBlockProps) => {
 
 const ProfilePage = () => {
   const dispatch = useDispatch();
-  const [value, setValue] = useState({ email: '', password: '', login: '' });
-  const [valueInput, setValueInput] = useState({
-    email: '',
+  const { data } = useSelector((state: RootState) => state.user);
+
+  const [value] = useState({
+    email: data['name'] as string,
     password: '******',
-    login: '',
+    login: data['email'] as string,
   });
 
-  useEffect(() => {
-    // getNewAccessToken();
-    getProfileData();
+  const [valueInput, setValueInput] = useState({
+    email: data['name'] as string,
+    password: '******',
+    login: data['email'] as string,
+  });
 
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  // interface Data {
+  //   user: {
+  //     email: string;
+  //     name: string;
+  //   };
+  // }
 
-  interface Data {
-    user: {
-      email: string;
-      name: string;
-    };
-  }
+  // console.log(valueInput);
 
-  const createNewData = (data: Data) => {
-    const {
-      user: { email, name },
-    } = data;
-    setValue({
-      ...value,
-      email: email,
-      login: name,
-    });
-    setValueInput({
-      ...valueInput,
-      email: email,
-      login: name,
-    });
-  };
+  // const createNewData = (data: Data) => {
+  //   const {
+  //     user: { email, name },
+  //   } = data;
+  //   setValue({
+  //     ...value,
+  //     email: email,
+  //     login: name,
+  //   });
+  //   setValueInput({
+  //     ...valueInput,
+  //     email: email,
+  //     login: name,
+  //   });
+  // };
 
-  const getProfileData = async () => {
-    await getNewAccessToken();
-    await makeGetRequest(urlProfile).then((res) => createNewData(res));
-  };
+  // const getProfileData = async () => {
+  //   await getNewAccessToken();
+  //   // await makeGetRequest(urlProfile).then((res) => createNewData(res));
+  // };
 
-  const getNewAccessToken = async () => {
-    const token = getCookie(accessCookie);
-    if (!token) {
-      await makePostRequest(urlToken, {
-        token: getCookie(refreshCookie),
-      }).then((res) => {
-        createNewCookie(res);
-      });
-    }
-  };
+  // const getNewAccessToken = async () => {
+  //   const token = getCookie(accessCookie);
+  //   if (!token) {
+  //     // await makePostRequest(urlToken, {
+  //     //   token: getCookie(refreshCookie),
+  //     // }).then((res) => {
+  //     //   createNewCookie(res);
+  //     // });
+  //   }
+  // };
 
   const handleLogout = async () => {
-    await makePostRequest(urlLogout, {
-      token: getCookie(refreshCookie),
-    });
-    dispatch({
-      type: DELETE_USER,
-    });
-
-    deleteCookie(refreshCookie);
-    deleteCookie(accessCookie);
+    await fetch(urlLogout, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ token: getCookie(refreshCookie) }),
+    })
+      .then((res) => checkResponse(res))
+      .then((res) => {
+        if (res && res.success) {
+          dispatch({
+            type: USER_LOGOUT,
+          });
+          console.log(res.success);
+          deleteCookie(refreshCookie);
+          deleteCookie(accessCookie);
+        }
+      });
   };
 
   const handleClick = async (e: any) => {
@@ -153,43 +159,45 @@ const ProfilePage = () => {
 
   const cancelNewData = (e: any) => {
     e.preventDefault();
+    console.log(value);
     const { email, login } = value;
     setValueInput({
       ...valueInput,
       email: email,
       login: login,
+      password: '******',
     });
   };
 
   const saveNewData = async (e: any) => {
     e.preventDefault();
-    await getNewAccessToken();
-    try {
-      const response = await fetch(urlProfile, {
-        method: 'PATCH',
+    // await getNewAccessToken();
+    // try {
+    //   const response = await fetch(urlProfile, {
+    //     method: 'PATCH',
 
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + getCookie(accessCookie),
-        },
-        body: JSON.stringify({ email: email, name: login }),
-      });
+    //     headers: {
+    //       'Content-Type': 'application/json',
+    //       Authorization: 'Bearer ' + getCookie(accessCookie),
+    //     },
+    //     body: JSON.stringify({ email: email, name: login }),
+    //   });
 
-      const json = await response.json();
+    //   const json = await response.json();
 
-      if (json.success) {
-        dispatch({
-          type: CREATE_USER,
-          feed: json.user,
-        });
+    //   if (json.success) {
+    //     dispatch({
+    //       // type: CREATE_USER,
+    //       feed: json.user,
+    //     });
 
-        await getProfileData();
-      } else {
-        return Promise.reject(`Ошибка ${json.status}`);
-      }
-    } catch (err) {
-      console.error('Ошибка:', err);
-    }
+    //     await getProfileData();
+    //   } else {
+    //     return Promise.reject(`Ошибка ${json.status}`);
+    //   }
+    // } catch (err) {
+    //   console.error('Ошибка:', err);
+    // }
   };
 
   return (

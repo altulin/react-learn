@@ -1,17 +1,14 @@
 import { useState } from 'react';
 import FormPage from '../../components/form/FormPage';
-import { createNewCookie } from '../../services/utils/cookie';
 import {
   Input,
   Button,
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from '../login/LoginPage.module.css';
-import { Link, useHistory } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import path from '../../services/utils/paths';
-import { urlRegister } from '../../services/utils/endpoints';
-import { makePostRequest } from '../../services/actions/responseAuth';
 import { useDispatch } from 'react-redux';
-import { CREATE_USER } from '../../services/actions';
+import { registerUser } from '../../services/actions/checkUser';
 
 const RegistrationPage = () => {
   const { login } = path;
@@ -22,7 +19,6 @@ const RegistrationPage = () => {
   });
 
   const { name, email, password } = value;
-  const history = useHistory();
   const dispatch = useDispatch();
 
   const getNewValues = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -32,20 +28,9 @@ const RegistrationPage = () => {
     });
   };
 
-  const handleSuccess = async () => {
-    makePostRequest(urlRegister, value).then((data) => {
-      createNewCookie(data);
-      history.replace({ pathname: `${login}` });
-      dispatch({
-        type: CREATE_USER,
-        feed: data.user,
-      });
-    });
-  };
-
   async function handleClick(e: any) {
     e.preventDefault();
-    handleSuccess();
+    dispatch(registerUser(value));
   }
 
   return (

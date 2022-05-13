@@ -21,7 +21,7 @@ import path from '../../services/utils/paths';
 import { ProtectedRoute } from '../protected-route/ProtectedRoute';
 import { getFeed } from '../../services/actions/response';
 import styles from './App.module.css';
-import { checkUser } from '../../services/utils/checkUser';
+import { checkUser } from '../../services/actions/checkUser';
 
 const App = () => {
   const { main, login, register, forgot, reset, profile } = path;
@@ -122,11 +122,11 @@ const App = () => {
           <RegistrationPage />
         </ProtectedRoute>
 
-        <Route path={`${forgot}`} exact={true}>
+        <ProtectedRoute auth={true} path={`${forgot}`}>
           <ForgotPage />
-        </Route>
+        </ProtectedRoute>
 
-        <ProtectedRoute path={`${reset}`}>
+        <ProtectedRoute auth={true} path={`${reset}`}>
           <ResetPage />
         </ProtectedRoute>
 

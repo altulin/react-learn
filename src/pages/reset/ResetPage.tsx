@@ -8,7 +8,7 @@ import styles from '../login/LoginPage.module.css';
 import { Link, useHistory } from 'react-router-dom';
 import path from '../../services/utils/paths';
 import { urlReset } from '../../services/utils/endpoints';
-import { makePostRequest } from '../../services/actions/responseAuth';
+import { checkResponse } from '../../services/actions/response';
 
 const ResetPage = () => {
   const { login } = path;
@@ -29,10 +29,19 @@ const ResetPage = () => {
   };
 
   async function handleSuccess() {
-    const data = await makePostRequest(urlReset, value);
-    if (data.success) {
-      history.replace({ pathname: `${login}` });
-    }
+    await fetch(urlReset, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(value),
+    })
+      .then((res) => checkResponse(res))
+      .then((res) => {
+        if (res && res.success) {
+          history.replace({ pathname: `${login}` });
+        }
+      });
   }
 
   async function handleClick(e: any) {

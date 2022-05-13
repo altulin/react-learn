@@ -3,10 +3,16 @@ export const refreshCookie = 'refreshToken';
 
 interface Props {
   expires?: any;
+  path?: string;
 }
 
 export const setCookie = async (name: string, value: string, props?: Props) => {
-  props = props || {};
+  // props = props || {};
+  props = {
+    path: '/',
+    ...props,
+  };
+
   let exp = props.expires;
 
   if (typeof exp == 'number' && exp) {

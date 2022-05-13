@@ -10,7 +10,7 @@ function OrderDetails() {
   return (
     <>
       <h2 className={`${styles.title} text text_type_digits-large`}>
-        {orderNumber || 0}
+        {orderNumber && orderNumber}
       </h2>
       <p className={`${styles.id} text text_type_main-medium mt-8`}>
         идентификатор заказа

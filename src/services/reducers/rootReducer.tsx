@@ -8,15 +8,13 @@ import {
   LIST_CURRENT_INGREDIENTS,
   CURRENT_INGREDIENT,
   CREATED_ORDER,
-  CREATE_USER,
-  DELETE_USER,
 } from '../actions';
 
 const initialState = {
   listIngredients: [], //список всех полученных ингредиентов
   listConstructor: [], //список всех ингредиентов в текущем конструкторе бургера
   currentIngredient: {}, //объект текущего просматриваемого ингредиента
-  orderNumber: '', // объект созданного заказа
+  orderNumber: null, // объект созданного заказа
   feed: false, // состояние загрузки с сервера для лоадера
   feedError: false, // ошибка прм загрузке с сервера
   user: {},
@@ -61,6 +59,7 @@ export const dataReducer = (
       return {
         ...state,
         currentIngredient: action.feed,
+        orderNumber: null,
       };
     }
 
@@ -68,20 +67,6 @@ export const dataReducer = (
       return {
         ...state,
         orderNumber: action.feed,
-      };
-    }
-
-    case CREATE_USER: {
-      return {
-        ...state,
-        user: { name: action.feed.name, email: action.feed.email },
-      };
-    }
-
-    case DELETE_USER: {
-      return {
-        ...state,
-        user: {},
       };
     }
 
