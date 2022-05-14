@@ -4,8 +4,7 @@ import {
   Tab,
   CurrencyIcon,
 } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useDispatch, useSelector } from 'react-redux';
-import { getFeed } from '../../services/actions/response';
+import { useSelector } from 'react-redux';
 import { RootState } from '../../services/reducers/rootReducer';
 import { useDrag } from 'react-dnd';
 import { Link, useLocation } from 'react-router-dom';
@@ -210,14 +209,7 @@ interface BurgerIngredientsProps {
 const BurgerIngredients = React.memo(function BurgerIngredients({
   openModal,
 }: BurgerIngredientsProps) {
-  const dispatch = useDispatch();
-
   const [currentTab, setCurrent] = React.useState('bun');
-
-  React.useEffect(() => {
-    // dispatch(getFeed());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const { productsIngredients } = useSelector((store: RootState) => ({
     productsIngredients: store.data.listIngredients,

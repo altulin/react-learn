@@ -1,17 +1,13 @@
 import styles from './OrderDetails.module.css';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../services/reducers/rootReducer';
 
-function OrderDetails() {
-  const { orderNumber } = useSelector((store: RootState) => ({
-    orderNumber: store.data.orderNumber,
-  }));
+interface prop {
+  price?: number;
+}
 
+function OrderDetails({ price }: prop) {
   return (
-    <>
-      <h2 className={`${styles.title} text text_type_digits-large`}>
-        {orderNumber && orderNumber}
-      </h2>
+    <div>
+      <h2 className={`${styles.title} text text_type_digits-large`}>{price}</h2>
       <p className={`${styles.id} text text_type_main-medium mt-8`}>
         идентификатор заказа
       </p>
@@ -25,7 +21,7 @@ function OrderDetails() {
       >
         Дождитесь готовности на орбитальной станции
       </p>
-    </>
+    </div>
   );
 }
 

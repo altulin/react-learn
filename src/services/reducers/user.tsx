@@ -120,6 +120,32 @@ export const userReducer = (
       };
     }
 
+    case UPDATE_USER_REQUEST: {
+      return {
+        ...state,
+        updateUserError: null,
+        updateUserRequest: true,
+      };
+    }
+
+    case UPDATE_USER_SUCCESS: {
+      return {
+        ...state,
+        updateUserError: null,
+        updateUserRequest: false,
+        data: { name: action.feed.name, email: action.feed.email },
+      };
+    }
+
+    case UPDATE_USER_FAILED: {
+      return {
+        ...state,
+        updateUserError: true,
+        updateUserRequest: false,
+        data: null,
+      };
+    }
+
     case USER_LOGOUT: {
       return {
         ...state,

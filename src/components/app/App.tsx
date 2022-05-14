@@ -101,11 +101,14 @@ const App = () => {
     currentIngredient({});
   };
 
+  const { price } = useSelector((store: RootState) => ({
+    price: store.data.orderNumber,
+  }));
+
   return (
     <>
       <AppHeader />
       {/* AppMain */}
-
       <Switch location={background || location}>
         <Route path={`${main}`} exact={true}>
           <HomePage
@@ -152,7 +155,6 @@ const App = () => {
           <NotFound404 />
         </Route>
       </Switch>
-
       {background && (
         <Route path={'/ingredients/:id'} exact={true}>
           <Modal close={closeModal}>
@@ -160,17 +162,15 @@ const App = () => {
           </Modal>
         </Route>
       )}
-
       {/* modal */}
       {/* {state.modalIngredient && (
         <Modal close={handleCloseModal}>
           <IngredientDetails />
         </Modal>
       )} */}
-
-      {state.modalConstructor && (
+      {state.modalConstructor && price && (
         <Modal close={handleCloseModal}>
-          <OrderDetails />
+          <OrderDetails price={price} />
         </Modal>
       )}
     </>

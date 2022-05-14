@@ -11,10 +11,6 @@ import {
   GET_USER_REQUEST,
   GET_USER_SUCCESS,
   GET_USER_FAILED,
-  UPDATE_USER_REQUEST,
-  UPDATE_USER_SUCCESS,
-  UPDATE_USER_FAILED,
-  USER_LOGOUT,
 } from '.';
 
 import {
@@ -156,16 +152,14 @@ export const refreshToken = async () => {
 
 export const requestWidthRefresh = async (
   url: string,
-  options: { headers: any; method: string },
+  options: { headers: any; method: string; body?: any },
 ) => {
   try {
     const res = await fetch(url, options);
-    console.log(123);
     return await checkResponse(res);
   } catch (err: any) {
     if (err.message === 'jwt expired') {
       console.log(err.message);
-      // const refreshData = await refreshToken();
       await refreshToken().then((r) => {
         if (!r.success) {
           Promise.reject(r);
@@ -175,16 +169,8 @@ export const requestWidthRefresh = async (
 
         createNewCookie(r);
         options.headers.authorization = getCookie(accessCookie);
-        console.log(`1 ${options}`);
       });
 
-      // if (!refreshData.success) {
-      //   Promise.reject(refreshData);
-      // }
-
-      // createNewCookie(refreshData);
-      // optins.headers.authorization = refreshData.accessToken;
-      console.log(`2 ${options}`);
       const response = await fetch(url, options);
       return await checkResponse(response);
     } else {

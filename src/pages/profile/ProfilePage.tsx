@@ -14,13 +14,19 @@ import {
   accessCookie,
   refreshCookie,
 } from '../../services/utils/cookie';
-import { urlLogout } from '../../services/utils/endpoints';
+import { Dispatch } from 'redux';
+import { urlLogout, urlProfile } from '../../services/utils/endpoints';
 import { checkResponse } from '../../services/actions/response';
-
+import { requestWidthRefresh } from '../../services/actions/checkUser';
 import { useDispatch } from 'react-redux';
 import { RootState } from '../../services/reducers/rootReducer';
 import { useSelector } from 'react-redux';
-import { USER_LOGOUT } from '../../services/actions';
+import {
+  USER_LOGOUT,
+  UPDATE_USER_REQUEST,
+  UPDATE_USER_SUCCESS,
+  UPDATE_USER_FAILED,
+} from '../../services/actions';
 
 interface NavBlockProps {
   handleExit: (e: any) => void;
@@ -136,7 +142,6 @@ const ProfilePage = () => {
           dispatch({
             type: USER_LOGOUT,
           });
-          console.log(res.success);
           deleteCookie(refreshCookie);
           deleteCookie(accessCookie);
         }
@@ -159,7 +164,6 @@ const ProfilePage = () => {
 
   const cancelNewData = (e: any) => {
     e.preventDefault();
-    console.log(value);
     const { email, login } = value;
     setValueInput({
       ...valueInput,
@@ -171,33 +175,39 @@ const ProfilePage = () => {
 
   const saveNewData = async (e: any) => {
     e.preventDefault();
-    // await getNewAccessToken();
-    // try {
-    //   const response = await fetch(urlProfile, {
-    //     method: 'PATCH',
+    dispatch(patchNewData());
+  };
 
-    //     headers: {
-    //       'Content-Type': 'application/json',
-    //       Authorization: 'Bearer ' + getCookie(accessCookie),
-    //     },
-    //     body: JSON.stringify({ email: email, name: login }),
-    //   });
+  const patchNewData = () => {
+    return function (dispatch: Dispatch) {
+      dispatch({
+        type: UPDATE_USER_REQUEST,
+      });
 
-    //   const json = await response.json();
+      // console.log(JSON.stringify({ email: email, name: login }));
 
-    //   if (json.success) {
-    //     dispatch({
-    //       // type: CREATE_USER,
-    //       feed: json.user,
-    //     });
-
-    //     await getProfileData();
-    //   } else {
-    //     return Promise.reject(`Ошибка ${json.status}`);
-    //   }
-    // } catch (err) {
-    //   console.error('Ошибка:', err);
-    // }
+      return requestWidthRefresh(urlProfile, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + getCookie(accessCookie),
+        },
+        body: JSON.stringify({ email: email, name: login }),
+      })
+        .then((res) => {
+          if (res) {
+            dispatch({
+              type: UPDATE_USER_SUCCESS,
+              feed: { email: res.user.email, name: res.user.name },
+            });
+          }
+        })
+        .catch(() => {
+          dispatch({
+            type: UPDATE_USER_FAILED,
+          });
+        });
+    };
   };
 
   return (
