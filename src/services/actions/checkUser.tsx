@@ -166,18 +166,11 @@ export const requestWidthRefresh = async (
         Promise.reject(refresh);
       }
 
-      deleteCookie(accessCookie);
-      deleteCookie(refreshCookie);
-
       createNewCookie(refresh);
 
-      const response = await fetch(urlProfile, {
-        method: 'GET',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: refresh.accessToken,
-        },
-      });
+      options.headers.Authorization = refresh.accessToken;
+
+      const response = await fetch(url, options);
 
       return await checkResponse(response);
     } else {
