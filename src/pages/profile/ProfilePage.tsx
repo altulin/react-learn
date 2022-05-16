@@ -87,47 +87,6 @@ const ProfilePage = () => {
     login: data['email'] as string,
   });
 
-  // interface Data {
-  //   user: {
-  //     email: string;
-  //     name: string;
-  //   };
-  // }
-
-  // console.log(valueInput);
-
-  // const createNewData = (data: Data) => {
-  //   const {
-  //     user: { email, name },
-  //   } = data;
-  //   setValue({
-  //     ...value,
-  //     email: email,
-  //     login: name,
-  //   });
-  //   setValueInput({
-  //     ...valueInput,
-  //     email: email,
-  //     login: name,
-  //   });
-  // };
-
-  // const getProfileData = async () => {
-  //   await getNewAccessToken();
-  //   // await makeGetRequest(urlProfile).then((res) => createNewData(res));
-  // };
-
-  // const getNewAccessToken = async () => {
-  //   const token = getCookie(accessCookie);
-  //   if (!token) {
-  //     // await makePostRequest(urlToken, {
-  //     //   token: getCookie(refreshCookie),
-  //     // }).then((res) => {
-  //     //   createNewCookie(res);
-  //     // });
-  //   }
-  // };
-
   const handleLogout = async () => {
     await fetch(urlLogout, {
       method: 'POST',
@@ -184,15 +143,13 @@ const ProfilePage = () => {
         type: UPDATE_USER_REQUEST,
       });
 
-      // console.log(JSON.stringify({ email: email, name: login }));
-
       return requestWidthRefresh(urlProfile, {
         method: 'PATCH',
         headers: {
           'Content-Type': 'application/json',
           Authorization: 'Bearer ' + getCookie(accessCookie),
         },
-        body: JSON.stringify({ email: email, name: login }),
+        body: JSON.stringify({ email: email, name: login, password: password }),
       })
         .then((res) => {
           if (res) {

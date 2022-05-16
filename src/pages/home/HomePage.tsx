@@ -6,7 +6,7 @@ import BurgerIngredients from '../../components/burger-ingredients/BurgerIngredi
 import BurgerConstructor from '../../components/burger-constructor/BurgerConstructor';
 
 interface HomePageProps {
-  openModalIngridients: (e: React.MouseEvent) => void;
+  openModalIngridients?: (e: React.MouseEvent) => void;
   openModalConstructor: () => void;
 }
 

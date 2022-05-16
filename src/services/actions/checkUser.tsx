@@ -160,18 +160,25 @@ export const requestWidthRefresh = async (
   } catch (err: any) {
     if (err.message === 'jwt expired') {
       console.log(err.message);
-      await refreshToken().then((r) => {
-        if (!r.success) {
-          Promise.reject(r);
-        }
-        deleteCookie(accessCookie);
-        deleteCookie(refreshCookie);
+      const refresh = await refreshToken();
 
-        createNewCookie(r);
-        options.headers.authorization = getCookie(accessCookie);
+      if (!refresh.success) {
+        Promise.reject(refresh);
+      }
+
+      deleteCookie(accessCookie);
+      deleteCookie(refreshCookie);
+
+      createNewCookie(refresh);
+
+      const response = await fetch(urlProfile, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: refresh.accessToken,
+        },
       });
 
-      const response = await fetch(url, options);
       return await checkResponse(response);
     } else {
       return Promise.reject(err);

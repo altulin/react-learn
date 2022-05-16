@@ -64,31 +64,24 @@ const App = () => {
     productsIngredients: store.data.listIngredients,
   }));
 
-  const handleOpenModalIngridients = (e: React.MouseEvent) => {
-    const id = (e.currentTarget as HTMLElement).dataset.id;
-    const element = productsIngredients.filter(
-      (item: { _id: string }) => item._id === id,
-    )[0];
-
-    setState({
-      ...state,
-      modalIngredient: true,
-    });
-
-    currentIngredient(element);
-  };
-
   const { listConstructor } = useSelector((store: RootState) => ({
     listConstructor: store.data.listConstructor,
   }));
 
+  const user = useSelector((state: RootState) => state.user);
+  const { data } = user;
+
   const handleOpenModalConstructor = () => {
-    const listId = listConstructor.map((item: { _id: string }) => item._id);
-    dispatch(getFeedConstructor(listId));
-    setState({
-      ...state,
-      modalConstructor: true,
-    });
+    if (data) {
+      const listId = listConstructor.map((item: { _id: string }) => item._id);
+      dispatch(getFeedConstructor(listId));
+      setState({
+        ...state,
+        modalConstructor: true,
+      });
+    } else {
+      history.replace({ pathname: `${login}` });
+    }
   };
 
   const handleCloseModal = () => {
@@ -111,10 +104,7 @@ const App = () => {
       {/* AppMain */}
       <Switch location={background || location}>
         <Route path={`${main}`} exact={true}>
-          <HomePage
-            openModalIngridients={handleOpenModalIngridients}
-            openModalConstructor={handleOpenModalConstructor}
-          />
+          <HomePage openModalConstructor={handleOpenModalConstructor} />
         </Route>
 
         <ProtectedRoute auth={true} path={`${login}`}>
@@ -155,19 +145,19 @@ const App = () => {
           <NotFound404 />
         </Route>
       </Switch>
-      {background && (
+
+      {/* modal */}
+
+      {background && productsIngredients.length !== 0 && (
         <Route path={'/ingredients/:id'} exact={true}>
           <Modal close={closeModal}>
             <IngredientDetails />
           </Modal>
         </Route>
       )}
+
       {/* modal */}
-      {/* {state.modalIngredient && (
-        <Modal close={handleCloseModal}>
-          <IngredientDetails />
-        </Modal>
-      )} */}
+
       {state.modalConstructor && price && (
         <Modal close={handleCloseModal}>
           <OrderDetails price={price} />

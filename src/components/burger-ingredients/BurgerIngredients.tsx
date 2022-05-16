@@ -75,7 +75,7 @@ const TabBlock = ({ titleList, currentTab }: TabBlockProps) => {
 
 interface BurgerBlockProps {
   type: string;
-  openModal: (e: React.MouseEvent) => void;
+  openModal?: (e: React.MouseEvent) => void;
   myClass: string;
 }
 
@@ -129,7 +129,7 @@ interface BurgerCardProps {
   price: number;
   name: string;
   id: string;
-  openModal: (e: React.MouseEvent) => void;
+  openModal?: (e: React.MouseEvent) => void;
   type: string;
 }
 
@@ -168,7 +168,6 @@ function BurgerCard({
           state: { background: location },
         }}
         className={styles.card_link}
-        data-id={id}
       >
         <figure className={styles.card_img_wrap}>
           <img
@@ -203,7 +202,7 @@ function BurgerCard({
 }
 
 interface BurgerIngredientsProps {
-  openModal: (e: React.MouseEvent) => void;
+  openModal?: (e: React.MouseEvent) => void;
 }
 
 const BurgerIngredients = React.memo(function BurgerIngredients({

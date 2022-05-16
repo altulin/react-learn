@@ -33,7 +33,7 @@ export const setCookie = async (name: string, value: string, props?: Props) => {
     }
   }
   document.cookie = updatedCookie;
-  // console.log(document.cookie);
+  console.log(getCookie(accessCookie));
 };
 
 export function getCookie(name: string) {
