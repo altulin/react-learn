@@ -1,20 +1,34 @@
-import { GET_LIST_INGREDIENTS, GET_FEED, GET_FEED_FAILED, LIST_CURRENT_INGREDIENTS, CURRENT_INGREDIENT, CREATED_ORDER} from "../actions";
+import { userReducer } from './user';
+import { combineReducers } from 'redux';
+
+import {
+  GET_LIST_INGREDIENTS,
+  GET_FEED,
+  GET_FEED_FAILED,
+  LIST_CURRENT_INGREDIENTS,
+  CURRENT_INGREDIENT,
+  CREATED_ORDER,
+} from '../actions';
 
 const initialState = {
   listIngredients: [], //список всех полученных ингредиентов
   listConstructor: [], //список всех ингредиентов в текущем конструкторе бургера
   currentIngredient: {}, //объект текущего просматриваемого ингредиента
-  orderNumber: '', // объект созданного заказа
+  orderNumber: null, // объект созданного заказа
   feed: false, // состояние загрузки с сервера для лоадера
   feedError: false, // ошибка прм загрузке с сервера
+  user: {},
 };
 
-export const rootReducer =(state = initialState, action: {type: string, feed: any}) => {
-	switch (action.type) {
-		case GET_LIST_INGREDIENTS: {
+export const dataReducer = (
+  state = initialState,
+  action: { type: string; feed: any },
+) => {
+  switch (action.type) {
+    case GET_LIST_INGREDIENTS: {
       return {
         ...state,
-				feed: false,
+        feed: false,
         listIngredients: action.feed,
       };
     }
@@ -22,14 +36,14 @@ export const rootReducer =(state = initialState, action: {type: string, feed: an
     case GET_FEED: {
       return {
         ...state,
-				feed: true,
+        feed: true,
       };
     }
 
     case GET_FEED_FAILED: {
       return {
         ...state,
-				feed: false,
+        feed: false,
         feedError: true,
       };
     }
@@ -45,6 +59,7 @@ export const rootReducer =(state = initialState, action: {type: string, feed: an
       return {
         ...state,
         currentIngredient: action.feed,
+        orderNumber: null,
       };
     }
 
@@ -55,10 +70,15 @@ export const rootReducer =(state = initialState, action: {type: string, feed: an
       };
     }
 
-		default: {
+    default: {
       return state;
     }
-	}
-}
+  }
+};
 
-export type RootState = ReturnType<typeof rootReducer>
+export type RootState = ReturnType<typeof rootReducer>;
+
+export const rootReducer = combineReducers({
+  data: dataReducer,
+  user: userReducer,
+});

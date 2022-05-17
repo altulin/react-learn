@@ -1,0 +1,48 @@
+.text {
+  opacity: 0.4;
+  margin-top: 80px;
+}
+
+.form_wrap {
+  flex-grow: 1;
+  max-width: 1320px;
+  padding-left: 40px;
+  padding-right: 40px;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-direction: row;
+}
+
+.link {
+  color: #8585ad;
+  text-decoration: none;
+  padding-top: 22px;
+  padding-bottom: 22px;
+}
+
+.activeLink {
+  color: #f2f2f3;
+}
+
+.nav {
+  margin-right: 60px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+  max-width: 320px;
+}
+
+.button_wrap {
+  display: flex;
+  justify-content: flex-end;
+  align-items: center;
+}
+
+.cancel {
+  text-decoration: none;
+  color: #4c4cff;
+  margin-right: 28px;
+  border: none;
+  background-color: transparent;
+  cursor: pointer;
+}
