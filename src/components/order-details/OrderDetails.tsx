@@ -4,7 +4,7 @@ interface prop {
   price?: number;
 }
 
-function OrderDetails({ price }: prop) {
+const OrderDetails = ({ price }: prop) => {
   return (
     <div>
       <h2 className={`${styles.title} text text_type_digits-large`}>{price}</h2>
@@ -23,6 +23,6 @@ function OrderDetails({ price }: prop) {
       </p>
     </div>
   );
-}
+};
 
 export default OrderDetails;

@@ -23,14 +23,32 @@ import { getFeed } from '../../services/actions/response';
 import styles from './App.module.css';
 import { checkUser } from '../../services/actions/checkUser';
 
+export type LocationProps = {
+  state: {
+    background: {
+      pathname: string;
+      search: string;
+      state: object;
+      hash: string;
+    };
+  };
+};
+
 const App = () => {
   const { main, login, register, forgot, reset, profile } = path;
   const dispatch = useDispatch();
-  type LocationProps = {
-    state: {
-      background: any;
-    };
-  };
+
+  // export type LocationProps = {
+  //   state: {
+  //     background: {
+  //       pathname: string;
+  //       search: string;
+  //       state: object;
+  //       hash: string;
+  //     };
+  //   };
+  // };
+
   const location = useLocation() as LocationProps;
   const background = location.state && location.state.background;
   const history = useHistory();

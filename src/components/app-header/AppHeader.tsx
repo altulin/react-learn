@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import styles from './AppHeader.module.css';
 import {
   Logo,
@@ -17,13 +17,13 @@ interface LinkHeaderProps {
   to: string;
 }
 
-function LinkHeader({
+const LinkHeader: FC<LinkHeaderProps> = ({
   children,
   addClass,
   text,
   onClick,
   to,
-}: LinkHeaderProps) {
+}: LinkHeaderProps) => {
   return (
     <Link
       to={to}
@@ -37,9 +37,9 @@ function LinkHeader({
       </span>
     </Link>
   );
-}
+};
 
-function AppHeader() {
+const AppHeader = () => {
   const { profile, main } = path;
   const [state, setState] = React.useState({
     constructor: false,
@@ -95,6 +95,6 @@ function AppHeader() {
       </div>
     </header>
   );
-}
+};
 
 export default AppHeader;

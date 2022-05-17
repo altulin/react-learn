@@ -3,18 +3,21 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../services/reducers/rootReducer';
 import paths from '../../services/utils/paths';
 import stylesText from '../app/App.module.css';
+import { FC } from 'react';
+
+import { LocationProps } from '../app/App';
 
 interface ProtectedRouteProps {
-  children: any;
+  children: React.ReactNode;
   path: string;
   auth?: boolean;
 }
 
-export function ProtectedRoute({
+export const ProtectedRoute: FC<ProtectedRouteProps> = ({
   auth,
   children,
   ...rest
-}: ProtectedRouteProps) {
+}: ProtectedRouteProps) => {
   const user = useSelector((state: RootState) => state.user);
 
   const { isAuthChecked, data } = user;
@@ -51,4 +54,4 @@ export function ProtectedRoute({
   }
 
   return <Route {...rest}>{children}</Route>;
-}
+};

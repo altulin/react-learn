@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../services/reducers/rootReducer';
 import { useLocation } from 'react-router-dom';
 
-function IngredientDetails() {
+const IngredientDetails = () => {
   const { listIngredients } = useSelector((store: RootState) => ({
     listIngredients: store.data.listIngredients,
   }));
@@ -83,6 +83,6 @@ function IngredientDetails() {
       </ul>
     </>
   );
-}
+};
 
 export default IngredientDetails;

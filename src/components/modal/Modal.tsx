@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import ReactDOM from 'react-dom';
 import styles from './Modal.module.css';
 import ModalOverlay from '../modal-overlay/ModalOverlay';
@@ -11,7 +11,7 @@ interface ModalProps {
   detailClass?: string;
 }
 
-function Modal({ children, close, detailClass }: ModalProps) {
+const Modal: FC<ModalProps> = ({ children, close, detailClass }) => {
   React.useEffect(() => {
     const handlekeyPress = ({ key }: KeyboardEvent) => {
       if (key === 'Escape') {
@@ -38,6 +38,6 @@ function Modal({ children, close, detailClass }: ModalProps) {
     </>,
     modalRoot,
   );
-}
+};
 
 export default Modal;

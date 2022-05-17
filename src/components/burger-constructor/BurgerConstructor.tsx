@@ -164,15 +164,15 @@ interface BurgerConstructorProps {
   openModal: () => void;
 }
 
-function BurgerConstructorStart() {
+const BurgerConstructorStart = () => {
   return (
     <p className={`text text_type_main-medium mt-2 mb-2 ${styles.start_text}`}>
       Сюда положи булку
     </p>
   );
-}
+};
 
-function BurgerConstructor({ openModal }: BurgerConstructorProps) {
+const BurgerConstructor = ({ openModal }: BurgerConstructorProps) => {
   const dispatch = useDispatch();
 
   const getTitleList = (list: { type: string }[]) => {
@@ -336,6 +336,6 @@ function BurgerConstructor({ openModal }: BurgerConstructorProps) {
       )}
     </section>
   );
-}
+};
 
 export default BurgerConstructor;
