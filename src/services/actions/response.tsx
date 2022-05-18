@@ -37,7 +37,7 @@ export const getFeed = () => {
   };
 };
 
-export const getFeedConstructor = (list: []) => {
+export const getFeedConstructor = (list: Array<string>) => {
   return function (dispatch: Dispatch) {
     fetch(URL_ORDERS, {
       method: 'POST',

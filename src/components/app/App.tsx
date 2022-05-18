@@ -21,6 +21,7 @@ import path from '../../services/utils/paths';
 import { ProtectedRoute } from '../protected-route/ProtectedRoute';
 import { getFeed } from '../../services/actions/response';
 import styles from './App.module.css';
+import { IFeed } from '../../services/reducers/rootReducer';
 import { checkUser } from '../../services/actions/checkUser';
 
 export type TLocation = {
@@ -33,6 +34,14 @@ export type TLocation = {
     };
   };
 };
+
+export interface IStore {
+  data: {
+    listIngredients: Array<IFeed>;
+    listConstructor: Array<IFeed>;
+    orderNumber: number;
+  };
+}
 
 const App: FC = () => {
   const { main, login, register, forgot, reset, profile } = path;
@@ -65,27 +74,6 @@ const App: FC = () => {
   const closeModal = () => {
     history.goBack();
   };
-  interface IFeed {
-    calories: number;
-    carbohydrates: number;
-    fat: number;
-    image: string;
-    image_large: string;
-    image_mobile: string;
-    name: string;
-    price: 1255;
-    proteins: 80;
-    type: string;
-    _id: string;
-  }
-
-  interface IStore {
-    data: {
-      listIngredients: Array<IFeed>;
-      // listConstructor: Array<IFeed>;
-      orderNumber: number;
-    };
-  }
 
   // const { store } = useSelector((store: IStore) => ({
   //   store: store,
@@ -97,7 +85,7 @@ const App: FC = () => {
     productsIngredients: store.data.listIngredients,
   }));
 
-  const { listConstructor } = useSelector((store: RootState) => ({
+  const { listConstructor } = useSelector((store: IStore) => ({
     listConstructor: store.data.listConstructor,
   }));
 
@@ -106,12 +94,18 @@ const App: FC = () => {
 
   const handleOpenModalConstructor = () => {
     if (data) {
-      const listId = listConstructor.map((item: { _id: string }) => item._id);
-      dispatch(getFeedConstructor(listId));
-      setState({
-        ...state,
-        modalConstructor: true,
-      });
+      const listId: Array<string> = listConstructor.map(
+        (item: { _id: string }) => item._id,
+      );
+
+      if (listId.length !== 0) {
+        console.log(listId);
+        dispatch(getFeedConstructor(listId));
+        setState({
+          ...state,
+          modalConstructor: true,
+        });
+      }
     } else {
       history.replace({ pathname: `${login}` });
     }

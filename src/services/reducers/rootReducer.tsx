@@ -12,7 +12,7 @@ import {
 
 const initialState = {
   listIngredients: [], //список всех полученных ингредиентов
-  listConstructor: [], //список всех ингредиентов в текущем конструкторе бургера
+  listConstructor: null, //список всех ингредиентов в текущем конструкторе бургера
   currentIngredient: {}, //объект текущего просматриваемого ингредиента
   orderNumber: null, // объект созданного заказа
   feed: false, // состояние загрузки с сервера для лоадера
@@ -20,7 +20,7 @@ const initialState = {
   user: {},
 };
 
-interface IFeed {
+export interface IFeed {
   calories: number;
   carbohydrates: number;
   fat: number;
@@ -36,7 +36,7 @@ interface IFeed {
 
 export const dataReducer = (
   state = initialState,
-  action: { type: string; feed: any },
+  action: { type: string; feed: Array<IFeed> },
 ) => {
   // console.log(action.feed);
   switch (action.type) {
