@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, FC } from 'react';
 import FormPage from '../../components/form/FormPage';
 import {
   Input,
@@ -10,7 +10,7 @@ import path from '../../services/utils/paths';
 import { urlReset } from '../../services/utils/endpoints';
 import { checkResponse } from '../../services/actions/response';
 
-const ResetPage = () => {
+const ResetPage: FC = () => {
   const { login } = path;
   const history = useHistory();
 

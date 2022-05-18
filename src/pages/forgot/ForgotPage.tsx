@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, FC } from 'react';
 import FormPage from '../../components/form/FormPage';
 import { useHistory } from 'react-router-dom';
 import {
@@ -11,7 +11,7 @@ import path from '../../services/utils/paths';
 import { urlForgot } from '../../services/utils/endpoints';
 import { checkResponse } from '../../services/actions/response';
 
-const ForgotPage = () => {
+const ForgotPage: FC = () => {
   const { login, reset } = path;
   const history = useHistory();
 

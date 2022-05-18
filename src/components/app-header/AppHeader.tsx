@@ -1,4 +1,4 @@
-import React, { FC } from 'react';
+import React, { FC, useState } from 'react';
 import styles from './AppHeader.module.css';
 import {
   Logo,
@@ -9,7 +9,7 @@ import {
 import { Link } from 'react-router-dom';
 import path from '../../services/utils/paths';
 
-interface LinkHeaderProps {
+interface ILinkHeader {
   text: string;
   addClass?: string;
   children?: React.ReactChild | React.ReactNode;
@@ -17,13 +17,13 @@ interface LinkHeaderProps {
   to: string;
 }
 
-const LinkHeader: FC<LinkHeaderProps> = ({
+const LinkHeader: FC<ILinkHeader> = ({
   children,
   addClass,
   text,
   onClick,
   to,
-}: LinkHeaderProps) => {
+}) => {
   return (
     <Link
       to={to}
@@ -39,9 +39,9 @@ const LinkHeader: FC<LinkHeaderProps> = ({
   );
 };
 
-const AppHeader = () => {
+const AppHeader: FC = () => {
   const { profile, main } = path;
-  const [state, setState] = React.useState({
+  const [state, setState] = useState({
     constructor: false,
     order: true,
   });

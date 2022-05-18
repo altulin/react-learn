@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, FC } from 'react';
 import FormPage from '../../components/form/FormPage';
 import {
   Input,
@@ -10,7 +10,7 @@ import path from '../../services/utils/paths';
 import { useDispatch } from 'react-redux';
 import { registerUser } from '../../services/actions/checkUser';
 
-const RegistrationPage = () => {
+const RegistrationPage: FC = () => {
   const { login } = path;
   const [value, setValue] = useState({
     email: '',

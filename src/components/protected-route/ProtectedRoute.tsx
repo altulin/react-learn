@@ -3,27 +3,34 @@ import { useSelector } from 'react-redux';
 import { RootState } from '../../services/reducers/rootReducer';
 import paths from '../../services/utils/paths';
 import stylesText from '../app/App.module.css';
-import { FC } from 'react';
+import { FC, ReactNode } from 'react';
+import { TLocation } from '../app/App';
 
-import { LocationProps } from '../app/App';
-
-interface ProtectedRouteProps {
-  children: React.ReactNode;
+interface IProtectedRoute {
+  children: ReactNode;
   path: string;
   auth?: boolean;
 }
 
-export const ProtectedRoute: FC<ProtectedRouteProps> = ({
+export const ProtectedRoute: FC<IProtectedRoute> = ({
   auth,
   children,
   ...rest
-}: ProtectedRouteProps) => {
+}) => {
   const user = useSelector((state: RootState) => state.user);
 
   const { isAuthChecked, data } = user;
 
   const { login, main } = paths;
-  const location = useLocation();
+  const location: TProtectedRoute = useLocation();
+
+  type TProtectedRoute = TLocation & {
+    state: {
+      from: {
+        pathname: string;
+      };
+    };
+  };
 
   if (!isAuthChecked) {
     return (
@@ -42,7 +49,7 @@ export const ProtectedRoute: FC<ProtectedRouteProps> = ({
   }
 
   if (auth && data) {
-    const { from } = (location.state as any) || {
+    const { from } = location.state || {
       from: { pathname: `${main}` },
     };
 

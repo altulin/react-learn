@@ -5,13 +5,13 @@ import ModalOverlay from '../modal-overlay/ModalOverlay';
 
 const modalRoot = document.querySelector('.modal-root') as HTMLElement;
 
-interface ModalProps {
+interface IModal {
   children: React.ReactNode;
   close: () => void;
   detailClass?: string;
 }
 
-const Modal: FC<ModalProps> = ({ children, close, detailClass }) => {
+const Modal: FC<IModal> = ({ children, close, detailClass }) => {
   React.useEffect(() => {
     const handlekeyPress = ({ key }: KeyboardEvent) => {
       if (key === 'Escape') {

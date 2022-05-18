@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState, FC } from 'react';
 import FormPage from '../../components/form/FormPage';
 import {
   Input,
@@ -28,11 +28,11 @@ import {
   UPDATE_USER_FAILED,
 } from '../../services/actions';
 
-interface NavBlockProps {
+interface INavBlock {
   handleExit: (e: any) => void;
 }
 
-const NavBlock = ({ handleExit }: NavBlockProps) => {
+const NavBlock: FC<INavBlock> = ({ handleExit }) => {
   const { profile, profile_orders, main } = path;
 
   return (
@@ -71,7 +71,7 @@ const NavBlock = ({ handleExit }: NavBlockProps) => {
   );
 };
 
-const ProfilePage = () => {
+const ProfilePage: FC = () => {
   const dispatch = useDispatch();
   const { data } = useSelector((state: RootState) => state.user);
 
@@ -107,7 +107,7 @@ const ProfilePage = () => {
       });
   };
 
-  const handleClick = async (e: any) => {
+  const handleClick = async (e: React.MouseEvent) => {
     e.preventDefault();
     handleLogout();
   };
@@ -121,7 +121,7 @@ const ProfilePage = () => {
     });
   };
 
-  const cancelNewData = (e: any) => {
+  const cancelNewData = (e: React.MouseEvent) => {
     e.preventDefault();
     const { email, login } = value;
     setValueInput({
@@ -132,7 +132,7 @@ const ProfilePage = () => {
     });
   };
 
-  const saveNewData = async (e: any) => {
+  const saveNewData = (e: any) => {
     e.preventDefault();
     dispatch(patchNewData());
   };

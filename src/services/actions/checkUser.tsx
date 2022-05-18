@@ -18,7 +18,6 @@ import {
   refreshCookie,
   accessCookie,
   createNewCookie,
-  deleteCookie,
 } from '../utils/cookie';
 
 import {
@@ -159,7 +158,6 @@ export const requestWidthRefresh = async (
     return await checkResponse(res);
   } catch (err: any) {
     if (err.message === 'jwt expired') {
-      console.log(err.message);
       const refresh = await refreshToken();
 
       if (!refresh.success) {

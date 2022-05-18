@@ -2,8 +2,9 @@ import styles from './IngredientDetails.module.css';
 import { useSelector } from 'react-redux';
 import { RootState } from '../../services/reducers/rootReducer';
 import { useLocation } from 'react-router-dom';
+import { FC } from 'react';
 
-const IngredientDetails = () => {
+const IngredientDetails: FC = () => {
   const { listIngredients } = useSelector((store: RootState) => ({
     listIngredients: store.data.listIngredients,
   }));

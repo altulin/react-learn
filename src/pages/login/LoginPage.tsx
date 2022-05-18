@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, FC } from 'react';
 import FormPage from '../../components/form/FormPage';
 import path from '../../services/utils/paths';
 import { loginUser } from '../../services/actions/checkUser';
@@ -10,7 +10,7 @@ import styles from './LoginPage.module.css';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 
-const LoginPage = () => {
+const LoginPage: FC = () => {
   const { register, forgot } = path;
   const dispatch = useDispatch();
 
@@ -28,8 +28,10 @@ const LoginPage = () => {
     });
   };
 
-  const handleClick = (e: any) => {
-    e.preventDefault();
+  // interface IhandleClick {}
+
+  const handleClick = (event: any) => {
+    event.preventDefault();
     dispatch(loginUser(value));
   };
 

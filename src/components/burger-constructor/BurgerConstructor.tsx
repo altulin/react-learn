@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { useDrop, useDrag } from 'react-dnd';
 import styles from './BurgerConstructor.module.css';
 import {
@@ -15,11 +15,11 @@ import { v4 as uuidv4 } from 'uuid';
 
 const BUN = 'bun';
 
-type ButtonConstructorProps = {
+type TButtonConstructor = {
   position?: boolean;
 };
 
-const ButtonConstructor = ({ position }: ButtonConstructorProps) => {
+const ButtonConstructor: FC<TButtonConstructor> = ({ position }) => {
   const hidden = styles.constructor_button_hidden;
   return (
     <button
@@ -32,7 +32,7 @@ const ButtonConstructor = ({ position }: ButtonConstructorProps) => {
   );
 };
 
-type ConstructorItemProps = {
+type TConstructorItem = {
   _id: string;
   name: string;
   price: number;
@@ -40,13 +40,13 @@ type ConstructorItemProps = {
   i: number;
 };
 
-const ConstructorItem = ({
+const ConstructorItem: FC<TConstructorItem> = ({
   _id,
   name,
   price,
   image_mobile,
   i,
-}: ConstructorItemProps) => {
+}) => {
   const dispatch = useDispatch();
   const ref = React.useRef<HTMLLIElement>(null);
 
@@ -77,7 +77,7 @@ const ConstructorItem = ({
   const [{ isDragging }, drag] = useDrag({
     type: 'constructor',
     item: { _id, i },
-    collect: (monitor: any) => ({
+    collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
   });
@@ -160,11 +160,11 @@ const ConstructorItem = ({
   );
 };
 
-interface BurgerConstructorProps {
+interface IBurgerConstructor {
   openModal: () => void;
 }
 
-const BurgerConstructorStart = () => {
+const BurgerConstructorStart: FC = () => {
   return (
     <p className={`text text_type_main-medium mt-2 mb-2 ${styles.start_text}`}>
       Сюда положи булку
@@ -172,7 +172,7 @@ const BurgerConstructorStart = () => {
   );
 };
 
-const BurgerConstructor = ({ openModal }: BurgerConstructorProps) => {
+const BurgerConstructor: FC<IBurgerConstructor> = ({ openModal }) => {
   const dispatch = useDispatch();
 
   const getTitleList = (list: { type: string }[]) => {

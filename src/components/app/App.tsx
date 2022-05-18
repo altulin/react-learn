@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC, useEffect } from 'react';
 import AppHeader from '../app-header/AppHeader';
 import {
   HomePage,
@@ -23,7 +23,7 @@ import { getFeed } from '../../services/actions/response';
 import styles from './App.module.css';
 import { checkUser } from '../../services/actions/checkUser';
 
-export type LocationProps = {
+export type TLocation = {
   state: {
     background: {
       pathname: string;
@@ -34,22 +34,10 @@ export type LocationProps = {
   };
 };
 
-const App = () => {
+const App: FC = () => {
   const { main, login, register, forgot, reset, profile } = path;
   const dispatch = useDispatch();
-
-  // export type LocationProps = {
-  //   state: {
-  //     background: {
-  //       pathname: string;
-  //       search: string;
-  //       state: object;
-  //       hash: string;
-  //     };
-  //   };
-  // };
-
-  const location = useLocation() as LocationProps;
+  const location: TLocation = useLocation();
   const background = location.state && location.state.background;
   const history = useHistory();
   const [state, setState] = React.useState({
@@ -61,7 +49,7 @@ const App = () => {
     modalConstructor: false,
   });
 
-  React.useEffect(() => {
+  useEffect(() => {
     dispatch(getFeed());
     dispatch(checkUser());
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -77,8 +65,35 @@ const App = () => {
   const closeModal = () => {
     history.goBack();
   };
+  interface IFeed {
+    calories: number;
+    carbohydrates: number;
+    fat: number;
+    image: string;
+    image_large: string;
+    image_mobile: string;
+    name: string;
+    price: 1255;
+    proteins: 80;
+    type: string;
+    _id: string;
+  }
 
-  const { productsIngredients } = useSelector((store: RootState) => ({
+  interface IStore {
+    data: {
+      listIngredients: Array<IFeed>;
+      // listConstructor: Array<IFeed>;
+      orderNumber: number;
+    };
+  }
+
+  // const { store } = useSelector((store: IStore) => ({
+  //   store: store,
+  // }));
+
+  // console.log(store);
+
+  const { productsIngredients } = useSelector((store: IStore) => ({
     productsIngredients: store.data.listIngredients,
   }));
 
@@ -112,7 +127,7 @@ const App = () => {
     currentIngredient({});
   };
 
-  const { price } = useSelector((store: RootState) => ({
+  const { price } = useSelector((store: IStore) => ({
     price: store.data.orderNumber,
   }));
 
