@@ -99,7 +99,6 @@ const App: FC = () => {
       );
 
       if (listId.length !== 0) {
-        console.log(listId);
         dispatch(getFeedConstructor(listId));
         setState({
           ...state,

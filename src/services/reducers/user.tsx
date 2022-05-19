@@ -33,9 +33,14 @@ const stateUser = {
   updateUserRequest: false,
 };
 
+interface IUser {
+  name: string;
+  email: string;
+}
+
 export const userReducer = (
   state = stateUser,
-  action: { type: string; feed: any },
+  action: { type: string; feed: IUser },
 ) => {
   switch (action.type) {
     case AUTH_CHECKED: {

@@ -29,7 +29,7 @@ import {
 } from '../../services/actions';
 
 interface INavBlock {
-  handleExit: (e: any) => void;
+  handleExit: (e: React.MouseEvent | React.KeyboardEvent) => void;
 }
 
 const NavBlock: FC<INavBlock> = ({ handleExit }) => {
@@ -107,7 +107,7 @@ const ProfilePage: FC = () => {
       });
   };
 
-  const handleClick = async (e: React.MouseEvent) => {
+  const handleClick = async (e: React.MouseEvent | React.KeyboardEvent) => {
     e.preventDefault();
     handleLogout();
   };
@@ -121,7 +121,7 @@ const ProfilePage: FC = () => {
     });
   };
 
-  const cancelNewData = (e: React.MouseEvent) => {
+  const cancelNewData = (e: React.MouseEvent | React.KeyboardEvent) => {
     e.preventDefault();
     const { email, login } = value;
     setValueInput({
@@ -132,7 +132,7 @@ const ProfilePage: FC = () => {
     });
   };
 
-  const saveNewData = (e: any) => {
+  const saveNewData = (e: React.SyntheticEvent) => {
     e.preventDefault();
     dispatch(patchNewData());
   };
@@ -171,7 +171,7 @@ const ProfilePage: FC = () => {
     <FormPage>
       <div className={`${styles.form_wrap} ${profile_styles.form_wrap}`}>
         <NavBlock handleExit={handleClick}></NavBlock>
-        <form>
+        <form onSubmit={saveNewData}>
           <Input
             type={'text'}
             value={email}
@@ -205,7 +205,7 @@ const ProfilePage: FC = () => {
             >
               Отмена
             </button>
-            <Button type='primary' size='large' onClick={saveNewData}>
+            <Button type='primary' size='large'>
               Сохранить
             </Button>
           </div>

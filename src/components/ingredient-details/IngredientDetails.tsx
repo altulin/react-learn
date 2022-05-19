@@ -1,6 +1,5 @@
 import styles from './IngredientDetails.module.css';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../services/reducers/rootReducer';
 import { useLocation } from 'react-router-dom';
 import { FC } from 'react';
 import { IStore } from '../app/App';
@@ -9,15 +8,15 @@ const IngredientDetails: FC = () => {
   const { listIngredients } = useSelector((store: IStore) => ({
     listIngredients: store.data.listIngredients,
   }));
+
   const location = useLocation();
 
-  const getIngredient = () => {
+  const getIngredient: any = () => {
     const id = location.pathname.split('/')[2];
-    if (listIngredients.length) {
-      return listIngredients.filter(
-        (item: { _id: string }) => item._id === id,
-      )[0];
-    }
+
+    return listIngredients.filter(
+      (item: { _id: string; name: string }) => item._id === id,
+    )[0];
   };
 
   const { image_large, name, calories, fat, carbohydrates, proteins } =

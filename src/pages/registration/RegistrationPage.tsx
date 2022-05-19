@@ -28,7 +28,7 @@ const RegistrationPage: FC = () => {
     });
   };
 
-  async function handleClick(e: any) {
+  async function handleClick(e: React.SyntheticEvent) {
     e.preventDefault();
     dispatch(registerUser(value));
   }
@@ -36,7 +36,7 @@ const RegistrationPage: FC = () => {
   return (
     <FormPage>
       <div className={styles.form_wrap}>
-        <form>
+        <form onSubmit={handleClick}>
           <legend
             className={`${styles.legend} text text_type_main-medium mb-6`}
           >
@@ -68,7 +68,7 @@ const RegistrationPage: FC = () => {
           />
 
           <div className={`${styles.button_wrap} mt-6`}>
-            <Button type='primary' size='large' onClick={handleClick}>
+            <Button type='primary' size='large'>
               Зарегистрироваться
             </Button>
           </div>

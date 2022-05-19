@@ -211,7 +211,7 @@ const BurgerConstructor: FC<IBurgerConstructor> = ({ openModal }) => {
   }));
 
   interface IFeedNewItem extends IFeed {
-    uuid?: any;
+    uuid?: string;
     type: string;
   }
 

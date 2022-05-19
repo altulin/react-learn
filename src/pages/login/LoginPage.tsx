@@ -30,15 +30,15 @@ const LoginPage: FC = () => {
 
   // interface IhandleClick {}
 
-  const handleClick = (event: any) => {
-    event.preventDefault();
+  const handleClick = (e: React.SyntheticEvent) => {
+    e.preventDefault();
     dispatch(loginUser(value));
   };
 
   return (
     <FormPage>
       <div className={styles.form_wrap}>
-        <form>
+        <form onSubmit={handleClick}>
           <legend
             className={`${styles.legend} text text_type_main-medium mb-6`}
           >
@@ -62,7 +62,7 @@ const LoginPage: FC = () => {
           />
 
           <div className={`${styles.button_wrap} mt-6`}>
-            <Button type='primary' size='large' onClick={handleClick}>
+            <Button type='primary' size='large'>
               Войти
             </Button>
           </div>
