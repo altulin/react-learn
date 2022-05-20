@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC } from 'react';
 import { useDrop, useDrag } from 'react-dnd';
 import styles from './BurgerConstructor.module.css';
 import {
@@ -9,17 +9,19 @@ import {
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useDispatch, useSelector } from 'react-redux';
 import { LIST_CURRENT_INGREDIENTS } from '../../services/actions';
-import { RootState } from '../../services/reducers/rootReducer';
+// import { RootState } from '../../services/reducers/rootReducer';
 import type { XYCoord } from 'dnd-core';
+import { IStore } from '../app/App';
+import { IFeed } from '../../services/reducers/rootReducer';
 import { v4 as uuidv4 } from 'uuid';
 
 const BUN = 'bun';
 
-type ButtonConstructorProps = {
+type TButtonConstructor = {
   position?: boolean;
 };
 
-const ButtonConstructor = ({ position }: ButtonConstructorProps) => {
+const ButtonConstructor: FC<TButtonConstructor> = ({ position }) => {
   const hidden = styles.constructor_button_hidden;
   return (
     <button
@@ -32,25 +34,32 @@ const ButtonConstructor = ({ position }: ButtonConstructorProps) => {
   );
 };
 
-type ConstructorItemProps = {
-  _id: string;
-  name: string;
-  price: number;
-  image_mobile: string;
+interface IConstructorItem extends IFeed {
   i: number;
-};
+}
 
-const ConstructorItem = ({
+type TConstructorItem = Omit<
+  IConstructorItem,
+  | 'calories'
+  | 'carbohydrates'
+  | 'fat'
+  | 'image'
+  | 'image_large'
+  | 'type'
+  | 'proteins'
+>;
+
+const ConstructorItem: FC<TConstructorItem> = ({
   _id,
   name,
   price,
   image_mobile,
   i,
-}: ConstructorItemProps) => {
+}) => {
   const dispatch = useDispatch();
   const ref = React.useRef<HTMLLIElement>(null);
 
-  const { constructorList } = useSelector((store: RootState) => ({
+  const { constructorList } = useSelector((store: IStore) => ({
     constructorList: store.data.listConstructor,
   }));
 
@@ -77,7 +86,7 @@ const ConstructorItem = ({
   const [{ isDragging }, drag] = useDrag({
     type: 'constructor',
     item: { _id, i },
-    collect: (monitor: any) => ({
+    collect: (monitor) => ({
       isDragging: monitor.isDragging(),
     }),
   });
@@ -160,26 +169,26 @@ const ConstructorItem = ({
   );
 };
 
-interface BurgerConstructorProps {
+interface IBurgerConstructor {
   openModal: () => void;
 }
 
-function BurgerConstructorStart() {
+const BurgerConstructorStart: FC = () => {
   return (
     <p className={`text text_type_main-medium mt-2 mb-2 ${styles.start_text}`}>
       Сюда положи булку
     </p>
   );
-}
+};
 
-function BurgerConstructor({ openModal }: BurgerConstructorProps) {
+const BurgerConstructor: FC<IBurgerConstructor> = ({ openModal }) => {
   const dispatch = useDispatch();
 
   const getTitleList = (list: { type: string }[]) => {
     return Array.from(new Set(list.map((item) => item.type)));
   };
 
-  const { productsIngredients } = useSelector((store: RootState) => ({
+  const { productsIngredients } = useSelector((store: IStore) => ({
     productsIngredients: store.data.listIngredients,
   }));
 
@@ -197,12 +206,19 @@ function BurgerConstructor({ openModal }: BurgerConstructorProps) {
     },
   });
 
-  let { constructorList } = useSelector((store: RootState) => ({
+  let { constructorList } = useSelector((store: IStore) => ({
     constructorList: store.data.listConstructor,
   }));
 
+  interface IFeedNewItem extends IFeed {
+    uuid?: string;
+    type: string;
+  }
+
+  // type TFeedConstructor = Omit<IFeedNewItem, 'calories'>;
+
   const onDropHandler = (id: string) => {
-    const newItem = Object.assign(
+    const newItem: IFeedNewItem = Object.assign(
       {},
       productsIngredients.filter((item: { _id: string }) => item._id === id)[0],
     );
@@ -267,27 +283,16 @@ function BurgerConstructor({ openModal }: BurgerConstructorProps) {
 
       {getList().length > 0 ? (
         <ul className={styles.constructor_list}>
-          {getList().map(
-            (
-              item: {
-                uuid: string;
-                price: number;
-                _id: string;
-                name: string;
-                image_mobile: string;
-              },
-              i: number,
-            ) => (
-              <ConstructorItem
-                key={item.uuid}
-                price={item.price}
-                name={item.name}
-                _id={item._id}
-                i={i}
-                image_mobile={item.image_mobile}
-              />
-            ),
-          )}
+          {getList().map((item: IFeedNewItem, i: number) => (
+            <ConstructorItem
+              key={item.uuid}
+              price={item.price}
+              name={item.name}
+              _id={item._id}
+              i={i}
+              image_mobile={item.image_mobile}
+            />
+          ))}
         </ul>
       ) : (
         <p
@@ -336,6 +341,6 @@ function BurgerConstructor({ openModal }: BurgerConstructorProps) {
       )}
     </section>
   );
-}
+};
 
 export default BurgerConstructor;

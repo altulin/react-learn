@@ -1,13 +1,13 @@
-import React from 'react';
+import React, { FC, useEffect } from 'react';
 import styles from './BurgerIngredients.module.css';
 import {
   Tab,
   CurrencyIcon,
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../services/reducers/rootReducer';
 import { useDrag } from 'react-dnd';
 import { Link, useLocation } from 'react-router-dom';
+import { IStore } from '../app/App';
 
 const translate = (type: string) => {
   let action;
@@ -36,15 +36,15 @@ const getTitleList = (
   return Array.from(new Set(list.map((item) => item.type)));
 };
 
-interface TabBlockProps {
+interface ITabBlockProps {
   titleList: string[];
   currentTab: string;
 }
 
-const TabBlock = ({ titleList, currentTab }: TabBlockProps) => {
+const TabBlock: FC<ITabBlockProps> = ({ titleList, currentTab }) => {
   const [current, setCurrent] = React.useState(currentTab);
 
-  React.useEffect(() => {
+  useEffect(() => {
     setCurrent(currentTab);
   }, [currentTab]);
 
@@ -73,14 +73,14 @@ const TabBlock = ({ titleList, currentTab }: TabBlockProps) => {
   );
 };
 
-interface BurgerBlockProps {
+interface IBurgerBlock {
   type: string;
   openModal?: (e: React.MouseEvent) => void;
   myClass: string;
 }
 
-function BurgerBlock({ type, openModal, myClass }: BurgerBlockProps) {
-  const { productsIngredients } = useSelector((store: RootState) => ({
+const BurgerBlock: FC<IBurgerBlock> = ({ type, openModal, myClass }) => {
+  const { productsIngredients } = useSelector((store: IStore) => ({
     productsIngredients: store.data.listIngredients,
   }));
 
@@ -121,9 +121,9 @@ function BurgerBlock({ type, openModal, myClass }: BurgerBlockProps) {
       </ul>
     </div>
   );
-}
+};
 
-interface BurgerCardProps {
+interface IBurgerCard {
   image: string;
   image_mobile: string;
   price: number;
@@ -133,18 +133,17 @@ interface BurgerCardProps {
   type: string;
 }
 
-function BurgerCard({
+const BurgerCard: FC<IBurgerCard> = ({
   image,
   image_mobile,
   price,
   name,
   id,
-  openModal,
   type,
-}: BurgerCardProps) {
+}) => {
   const location = useLocation();
 
-  const { constructorList } = useSelector((store: RootState) => ({
+  const { constructorList } = useSelector((store: IStore) => ({
     constructorList: store.data.listConstructor,
   }));
 
@@ -199,18 +198,16 @@ function BurgerCard({
       )}
     </li>
   );
-}
+};
 
-interface BurgerIngredientsProps {
+interface IBurgerIngredients {
   openModal?: (e: React.MouseEvent) => void;
 }
 
-const BurgerIngredients = React.memo(function BurgerIngredients({
-  openModal,
-}: BurgerIngredientsProps) {
+const BurgerIngredients: FC<IBurgerIngredients> = ({ openModal }) => {
   const [currentTab, setCurrent] = React.useState('bun');
 
-  const { productsIngredients } = useSelector((store: RootState) => ({
+  const { productsIngredients } = useSelector((store: IStore) => ({
     productsIngredients: store.data.listIngredients,
   }));
 
@@ -264,6 +261,6 @@ const BurgerIngredients = React.memo(function BurgerIngredients({
       </div>
     </section>
   );
-});
+};
 
 export default BurgerIngredients;

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, FC } from 'react';
 import FormPage from '../../components/form/FormPage';
 import {
   Input,
@@ -10,7 +10,7 @@ import path from '../../services/utils/paths';
 import { urlReset } from '../../services/utils/endpoints';
 import { checkResponse } from '../../services/actions/response';
 
-const ResetPage = () => {
+const ResetPage: FC = () => {
   const { login } = path;
   const history = useHistory();
 
@@ -44,7 +44,7 @@ const ResetPage = () => {
       });
   }
 
-  async function handleClick(e: any) {
+  async function handleClick(e: React.SyntheticEvent) {
     e.preventDefault();
     handleSuccess();
   }
@@ -52,7 +52,7 @@ const ResetPage = () => {
   return (
     <FormPage>
       <div className={styles.form_wrap}>
-        <form>
+        <form onSubmit={handleClick}>
           <legend
             className={`${styles.legend} text text_type_main-medium mb-6`}
           >
@@ -76,7 +76,7 @@ const ResetPage = () => {
           />
 
           <div className={`${styles.button_wrap} mt-6`}>
-            <Button type='primary' size='large' onClick={handleClick}>
+            <Button type='primary' size='large'>
               Сохранить
             </Button>
           </div>

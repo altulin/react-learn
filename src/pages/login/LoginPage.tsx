@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, FC } from 'react';
 import FormPage from '../../components/form/FormPage';
 import path from '../../services/utils/paths';
 import { loginUser } from '../../services/actions/checkUser';
@@ -10,7 +10,7 @@ import styles from './LoginPage.module.css';
 import { Link } from 'react-router-dom';
 import { useDispatch } from 'react-redux';
 
-const LoginPage = () => {
+const LoginPage: FC = () => {
   const { register, forgot } = path;
   const dispatch = useDispatch();
 
@@ -28,7 +28,9 @@ const LoginPage = () => {
     });
   };
 
-  const handleClick = (e: any) => {
+  // interface IhandleClick {}
+
+  const handleClick = (e: React.SyntheticEvent) => {
     e.preventDefault();
     dispatch(loginUser(value));
   };
@@ -36,7 +38,7 @@ const LoginPage = () => {
   return (
     <FormPage>
       <div className={styles.form_wrap}>
-        <form>
+        <form onSubmit={handleClick}>
           <legend
             className={`${styles.legend} text text_type_main-medium mb-6`}
           >
@@ -60,7 +62,7 @@ const LoginPage = () => {
           />
 
           <div className={`${styles.button_wrap} mt-6`}>
-            <Button type='primary' size='large' onClick={handleClick}>
+            <Button type='primary' size='large'>
               Войти
             </Button>
           </div>

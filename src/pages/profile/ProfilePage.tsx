@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState, FC } from 'react';
 import FormPage from '../../components/form/FormPage';
 import {
   Input,
@@ -28,11 +28,11 @@ import {
   UPDATE_USER_FAILED,
 } from '../../services/actions';
 
-interface NavBlockProps {
-  handleExit: (e: any) => void;
+interface INavBlock {
+  handleExit: (e: React.MouseEvent | React.KeyboardEvent) => void;
 }
 
-const NavBlock = ({ handleExit }: NavBlockProps) => {
+const NavBlock: FC<INavBlock> = ({ handleExit }) => {
   const { profile, profile_orders, main } = path;
 
   return (
@@ -71,20 +71,20 @@ const NavBlock = ({ handleExit }: NavBlockProps) => {
   );
 };
 
-const ProfilePage = () => {
+const ProfilePage: FC = () => {
   const dispatch = useDispatch();
   const { data } = useSelector((state: RootState) => state.user);
 
   const [value] = useState({
-    email: data['name'] as string,
-    password: '******',
-    login: data['email'] as string,
+    email: data['email'] as string,
+    password: '',
+    login: data['name'] as string,
   });
 
   const [valueInput, setValueInput] = useState({
-    email: data['name'] as string,
-    password: '******',
-    login: data['email'] as string,
+    email: data['email'] as string,
+    password: '',
+    login: data['name'] as string,
   });
 
   const handleLogout = async () => {
@@ -107,12 +107,13 @@ const ProfilePage = () => {
       });
   };
 
-  const handleClick = async (e: any) => {
+  const handleClick = async (e: React.MouseEvent | React.KeyboardEvent) => {
     e.preventDefault();
     handleLogout();
   };
 
   const { email, password, login } = valueInput;
+  console.log(valueInput);
 
   const getNewValues = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValueInput({
@@ -121,18 +122,18 @@ const ProfilePage = () => {
     });
   };
 
-  const cancelNewData = (e: any) => {
+  const cancelNewData = (e: React.MouseEvent | React.KeyboardEvent) => {
     e.preventDefault();
     const { email, login } = value;
     setValueInput({
       ...valueInput,
       email: email,
       login: login,
-      password: '******',
+      password: '',
     });
   };
 
-  const saveNewData = async (e: any) => {
+  const saveNewData = (e: React.SyntheticEvent) => {
     e.preventDefault();
     dispatch(patchNewData());
   };
@@ -171,25 +172,23 @@ const ProfilePage = () => {
     <FormPage>
       <div className={`${styles.form_wrap} ${profile_styles.form_wrap}`}>
         <NavBlock handleExit={handleClick}></NavBlock>
-        <form>
-          <Input
-            type={'text'}
-            value={email}
-            onChange={(e) => getNewValues(e)}
-            placeholder={'Имя'}
-            icon={'EditIcon'}
-            name={'email'}
-          />
-
+        <form onSubmit={saveNewData}>
           <Input
             type={'text'}
             value={login}
             onChange={(e) => getNewValues(e)}
-            placeholder={'Логин'}
+            placeholder={'Имя'}
             icon={'EditIcon'}
             name={'login'}
           />
-
+          <Input
+            type={'text'}
+            value={email}
+            onChange={(e) => getNewValues(e)}
+            placeholder={'Логин'}
+            icon={'EditIcon'}
+            name={'email'}
+          />
           <Input
             type={'password'}
             value={password}
@@ -205,7 +204,7 @@ const ProfilePage = () => {
             >
               Отмена
             </button>
-            <Button type='primary' size='large' onClick={saveNewData}>
+            <Button type='primary' size='large'>
               Сохранить
             </Button>
           </div>

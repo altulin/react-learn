@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { FC, useEffect } from 'react';
 import AppHeader from '../app-header/AppHeader';
 import {
   HomePage,
@@ -21,17 +21,32 @@ import path from '../../services/utils/paths';
 import { ProtectedRoute } from '../protected-route/ProtectedRoute';
 import { getFeed } from '../../services/actions/response';
 import styles from './App.module.css';
+import { IFeed } from '../../services/reducers/rootReducer';
 import { checkUser } from '../../services/actions/checkUser';
 
-const App = () => {
-  const { main, login, register, forgot, reset, profile } = path;
-  const dispatch = useDispatch();
-  type LocationProps = {
-    state: {
-      background: any;
+export type TLocation = {
+  state: {
+    background: {
+      pathname: string;
+      search: string;
+      state: object;
+      hash: string;
     };
   };
-  const location = useLocation() as LocationProps;
+};
+
+export interface IStore {
+  data: {
+    listIngredients: Array<IFeed>;
+    listConstructor: Array<IFeed>;
+    orderNumber: number;
+  };
+}
+
+const App: FC = () => {
+  const { main, login, register, forgot, reset, profile } = path;
+  const dispatch = useDispatch();
+  const location: TLocation = useLocation();
   const background = location.state && location.state.background;
   const history = useHistory();
   const [state, setState] = React.useState({
@@ -43,7 +58,7 @@ const App = () => {
     modalConstructor: false,
   });
 
-  React.useEffect(() => {
+  useEffect(() => {
     dispatch(getFeed());
     dispatch(checkUser());
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -60,11 +75,17 @@ const App = () => {
     history.goBack();
   };
 
-  const { productsIngredients } = useSelector((store: RootState) => ({
+  // const { store } = useSelector((store: IStore) => ({
+  //   store: store,
+  // }));
+
+  // console.log(store);
+
+  const { productsIngredients } = useSelector((store: IStore) => ({
     productsIngredients: store.data.listIngredients,
   }));
 
-  const { listConstructor } = useSelector((store: RootState) => ({
+  const { listConstructor } = useSelector((store: IStore) => ({
     listConstructor: store.data.listConstructor,
   }));
 
@@ -73,12 +94,17 @@ const App = () => {
 
   const handleOpenModalConstructor = () => {
     if (data) {
-      const listId = listConstructor.map((item: { _id: string }) => item._id);
-      dispatch(getFeedConstructor(listId));
-      setState({
-        ...state,
-        modalConstructor: true,
-      });
+      const listId: Array<string> = listConstructor.map(
+        (item: { _id: string }) => item._id,
+      );
+
+      if (listId.length !== 0) {
+        dispatch(getFeedConstructor(listId));
+        setState({
+          ...state,
+          modalConstructor: true,
+        });
+      }
     } else {
       history.replace({ pathname: `${login}` });
     }
@@ -94,7 +120,7 @@ const App = () => {
     currentIngredient({});
   };
 
-  const { price } = useSelector((store: RootState) => ({
+  const { price } = useSelector((store: IStore) => ({
     price: store.data.orderNumber,
   }));
 

@@ -20,10 +20,25 @@ const initialState = {
   user: {},
 };
 
+export interface IFeed {
+  calories: number;
+  carbohydrates: number;
+  fat: number;
+  image: string;
+  image_large: string;
+  image_mobile: string;
+  name: string;
+  price: 1255;
+  proteins: 80;
+  type: string;
+  _id: string;
+}
+
 export const dataReducer = (
   state = initialState,
-  action: { type: string; feed: any },
+  action: { type: string; feed: Array<IFeed> },
 ) => {
+  // console.log(action.feed);
   switch (action.type) {
     case GET_LIST_INGREDIENTS: {
       return {

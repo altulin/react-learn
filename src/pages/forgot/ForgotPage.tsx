@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState, FC } from 'react';
 import FormPage from '../../components/form/FormPage';
 import { useHistory } from 'react-router-dom';
 import {
@@ -11,7 +11,7 @@ import path from '../../services/utils/paths';
 import { urlForgot } from '../../services/utils/endpoints';
 import { checkResponse } from '../../services/actions/response';
 
-const ForgotPage = () => {
+const ForgotPage: FC = () => {
   const { login, reset } = path;
   const history = useHistory();
 
@@ -44,7 +44,7 @@ const ForgotPage = () => {
       });
   }
 
-  async function handleClick(e: any) {
+  async function handleClick(e: React.SyntheticEvent) {
     e.preventDefault();
     handleSuccess();
   }
@@ -52,7 +52,7 @@ const ForgotPage = () => {
   return (
     <FormPage>
       <div className={styles.form_wrap}>
-        <form>
+        <form onSubmit={handleClick}>
           <legend
             className={`${styles.legend} text text_type_main-medium mb-6`}
           >
@@ -68,7 +68,7 @@ const ForgotPage = () => {
           />
 
           <div className={`${styles.button_wrap} mt-6`}>
-            <Button type='primary' size='large' onClick={handleClick}>
+            <Button type='primary' size='large'>
               Восстановить
             </Button>
           </div>

@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, FC } from 'react';
 import FormPage from '../../components/form/FormPage';
 import {
   Input,
@@ -10,7 +10,7 @@ import path from '../../services/utils/paths';
 import { useDispatch } from 'react-redux';
 import { registerUser } from '../../services/actions/checkUser';
 
-const RegistrationPage = () => {
+const RegistrationPage: FC = () => {
   const { login } = path;
   const [value, setValue] = useState({
     email: '',
@@ -28,7 +28,7 @@ const RegistrationPage = () => {
     });
   };
 
-  async function handleClick(e: any) {
+  async function handleClick(e: React.SyntheticEvent) {
     e.preventDefault();
     dispatch(registerUser(value));
   }
@@ -36,7 +36,7 @@ const RegistrationPage = () => {
   return (
     <FormPage>
       <div className={styles.form_wrap}>
-        <form>
+        <form onSubmit={handleClick}>
           <legend
             className={`${styles.legend} text text_type_main-medium mb-6`}
           >
@@ -68,7 +68,7 @@ const RegistrationPage = () => {
           />
 
           <div className={`${styles.button_wrap} mt-6`}>
-            <Button type='primary' size='large' onClick={handleClick}>
+            <Button type='primary' size='large'>
               Зарегистрироваться
             </Button>
           </div>

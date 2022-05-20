@@ -18,7 +18,6 @@ import {
   refreshCookie,
   accessCookie,
   createNewCookie,
-  deleteCookie,
 } from '../utils/cookie';
 
 import {
@@ -48,6 +47,8 @@ export const getUser = () => {
             type: GET_USER_SUCCESS,
             feed: { email: res.user.email, name: res.user.name },
           });
+
+          // dispatch({ type: AUTH_CHECKED });
         }
       })
       .catch(() => {
@@ -150,16 +151,20 @@ export const refreshToken = async () => {
   }).then((res) => checkResponse(res));
 };
 
+type THeaders = {
+  Authorization: string;
+  'Content-Type': 'application/json';
+};
+
 export const requestWidthRefresh = async (
   url: string,
-  options: { headers: any; method: string; body?: any },
+  options: { headers: THeaders; method: string; body?: any },
 ) => {
   try {
     const res = await fetch(url, options);
     return await checkResponse(res);
   } catch (err: any) {
     if (err.message === 'jwt expired') {
-      console.log(err.message);
       const refresh = await refreshToken();
 
       if (!refresh.success) {

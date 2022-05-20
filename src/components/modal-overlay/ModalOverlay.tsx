@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { FC } from 'react';
 import styles from './ModalOverlay.module.css';
 
-interface ModalOverlayProps {
+interface IModalOverlay {
   onClose?: (e: React.MouseEvent) => void;
   detailClass?: string;
 }
 
-function ModalOverlay({ onClose, detailClass }: ModalOverlayProps) {
+const ModalOverlay: FC<IModalOverlay> = ({ onClose, detailClass }) => {
   return (
     <div
       className={`${styles.modal_cover} modal_cover ${
@@ -15,6 +15,6 @@ function ModalOverlay({ onClose, detailClass }: ModalOverlayProps) {
       onClick={onClose}
     ></div>
   );
-}
+};
 
 export default ModalOverlay;
