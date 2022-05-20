@@ -76,15 +76,15 @@ const ProfilePage: FC = () => {
   const { data } = useSelector((state: RootState) => state.user);
 
   const [value] = useState({
-    email: data['name'] as string,
-    password: '******',
-    login: data['email'] as string,
+    email: data['email'] as string,
+    password: '',
+    login: data['name'] as string,
   });
 
   const [valueInput, setValueInput] = useState({
-    email: data['name'] as string,
-    password: '******',
-    login: data['email'] as string,
+    email: data['email'] as string,
+    password: '',
+    login: data['name'] as string,
   });
 
   const handleLogout = async () => {
@@ -113,6 +113,7 @@ const ProfilePage: FC = () => {
   };
 
   const { email, password, login } = valueInput;
+  console.log(valueInput);
 
   const getNewValues = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValueInput({
@@ -128,7 +129,7 @@ const ProfilePage: FC = () => {
       ...valueInput,
       email: email,
       login: login,
-      password: '******',
+      password: '',
     });
   };
 
@@ -174,20 +175,20 @@ const ProfilePage: FC = () => {
         <form onSubmit={saveNewData}>
           <Input
             type={'text'}
-            value={email}
+            value={login}
             onChange={(e) => getNewValues(e)}
             placeholder={'Имя'}
             icon={'EditIcon'}
-            name={'email'}
+            name={'login'}
           />
 
           <Input
             type={'text'}
-            value={login}
+            value={email}
             onChange={(e) => getNewValues(e)}
             placeholder={'Логин'}
             icon={'EditIcon'}
-            name={'login'}
+            name={'email'}
           />
 
           <Input
