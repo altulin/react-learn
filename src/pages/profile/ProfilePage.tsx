@@ -181,7 +181,6 @@ const ProfilePage: FC = () => {
             icon={'EditIcon'}
             name={'login'}
           />
-
           <Input
             type={'text'}
             value={email}
@@ -190,7 +189,6 @@ const ProfilePage: FC = () => {
             icon={'EditIcon'}
             name={'email'}
           />
-
           <Input
             type={'password'}
             value={password}
