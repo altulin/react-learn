@@ -38,7 +38,6 @@ export const dataReducer = (
   state = initialState,
   action: { type: string; feed: Array<IFeed> },
 ) => {
-  // console.log(action.feed);
   switch (action.type) {
     case GET_LIST_INGREDIENTS: {
       return {

@@ -75,12 +75,6 @@ const App: FC = () => {
     history.goBack();
   };
 
-  // const { store } = useSelector((store: IStore) => ({
-  //   store: store,
-  // }));
-
-  // console.log(store);
-
   const { productsIngredients } = useSelector((store: IStore) => ({
     productsIngredients: store.data.listIngredients,
   }));

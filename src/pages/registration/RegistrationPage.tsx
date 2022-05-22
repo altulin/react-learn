@@ -8,7 +8,8 @@ import styles from '../login/LoginPage.module.css';
 import { Link } from 'react-router-dom';
 import path from '../../services/utils/paths';
 import { useDispatch } from 'react-redux';
-import { registerUser } from '../../services/actions/checkUser';
+import { urlRegister } from '../../services/utils/endpoints';
+import { request } from '../../services/actions/checkUser';
 
 const RegistrationPage: FC = () => {
   const { login } = path;
@@ -29,8 +30,16 @@ const RegistrationPage: FC = () => {
   };
 
   async function handleClick(e: React.SyntheticEvent) {
+    const options = {
+      type: 'REGISTER',
+      method: 'POST',
+      body: value,
+      isSaveCookie: true,
+      authorization: null,
+    };
+
     e.preventDefault();
-    dispatch(registerUser(value));
+    dispatch(request(urlRegister, options));
   }
 
   return (

@@ -1,9 +1,8 @@
-export const urlForgot = 'https://norma.nomoreparties.space/api/password-reset';
-export const urlReset =
-  'https://norma.nomoreparties.space/api/password-reset/reset';
-export const urlRegister =
-  'https://norma.nomoreparties.space/api/auth/register';
-export const urlLogin = 'https://norma.nomoreparties.space/api/auth/login';
-export const urlLogout = 'https://norma.nomoreparties.space/api/auth/logout';
-export const urlProfile = 'https://norma.nomoreparties.space/api/auth/user';
-export const urlToken = 'https://norma.nomoreparties.space/api/auth/token';
+const urlBase = 'https://norma.nomoreparties.space/api/';
+export const urlForgot = `${urlBase}password-reset`;
+export const urlReset = `${urlBase}password-reset/reset`;
+export const urlRegister = `${urlBase}auth/register`;
+export const urlLogin = `${urlBase}auth/login`;
+export const urlLogout = `${urlBase}auth/logout`;
+export const urlProfile = `${urlBase}auth/user`;
+export const urlToken = `${urlBase}auth/token`;

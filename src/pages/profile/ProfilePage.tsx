@@ -17,7 +17,10 @@ import {
 import { Dispatch } from 'redux';
 import { urlLogout, urlProfile } from '../../services/utils/endpoints';
 import { checkResponse } from '../../services/actions/response';
-import { requestWidthRefresh } from '../../services/actions/checkUser';
+import {
+  requestWidthRefresh,
+  requestAndRefresh,
+} from '../../services/actions/checkUser';
 import { useDispatch } from 'react-redux';
 import { RootState } from '../../services/reducers/rootReducer';
 import { useSelector } from 'react-redux';
@@ -113,7 +116,6 @@ const ProfilePage: FC = () => {
   };
 
   const { email, password, login } = valueInput;
-  console.log(valueInput);
 
   const getNewValues = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValueInput({
@@ -135,37 +137,50 @@ const ProfilePage: FC = () => {
 
   const saveNewData = (e: React.SyntheticEvent) => {
     e.preventDefault();
-    dispatch(patchNewData());
+    // dispatch(patchNewData());
+    patchNewData();
   };
 
   const patchNewData = () => {
-    return function (dispatch: Dispatch) {
-      dispatch({
-        type: UPDATE_USER_REQUEST,
-      });
-
-      return requestWidthRefresh(urlProfile, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + getCookie(accessCookie),
-        },
-        body: JSON.stringify({ email: email, name: login, password: password }),
-      })
-        .then((res) => {
-          if (res) {
-            dispatch({
-              type: UPDATE_USER_SUCCESS,
-              feed: { email: res.user.email, name: res.user.name },
-            });
-          }
-        })
-        .catch(() => {
-          dispatch({
-            type: UPDATE_USER_FAILED,
-          });
-        });
+    const options = {
+      type: 'UPDATE',
+      method: 'PATCH',
+      body: { email: email, name: login, password: password },
+      isSaveCookie: false,
+      authorization: 'Bearer ' + getCookie(accessCookie),
     };
+
+    return function (dispatch: Dispatch) {
+      dispatch(requestAndRefresh(urlProfile, options));
+    };
+
+    //   return function (dispatch: Dispatch) {
+    //     dispatch({
+    //       type: UPDATE_USER_REQUEST,
+    //     });
+
+    //     return requestWidthRefresh(urlProfile, {
+    //       method: 'PATCH',
+    //       headers: {
+    //         'Content-Type': 'application/json',
+    //         Authorization: 'Bearer ' + getCookie(accessCookie),
+    //       },
+    //       body: JSON.stringify({ email: email, name: login, password: password }),
+    //     })
+    //       .then((res) => {
+    //         if (res) {
+    //           dispatch({
+    //             type: UPDATE_USER_SUCCESS,
+    //             feed: { email: res.user.email, name: res.user.name },
+    //           });
+    //         }
+    //       })
+    //       .catch(() => {
+    //         dispatch({
+    //           type: UPDATE_USER_FAILED,
+    //         });
+    //       });
+    //   };
   };
 
   return (

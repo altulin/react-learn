@@ -2,12 +2,6 @@ import { Dispatch } from 'redux';
 
 import {
   AUTH_CHECKED,
-  REGISTER_USER_REQUEST,
-  REGISTER_USER_SUCCESS,
-  REGISTER_USER_FAILED,
-  LOGIN_USER_REQUEST,
-  LOGIN_USER_SUCCESS,
-  LOGIN_USER_FAILED,
   GET_USER_REQUEST,
   GET_USER_SUCCESS,
   GET_USER_FAILED,
@@ -20,12 +14,7 @@ import {
   createNewCookie,
 } from '../utils/cookie';
 
-import {
-  urlProfile,
-  urlLogin,
-  urlToken,
-  urlRegister,
-} from '../utils/endpoints';
+import { urlProfile, urlToken } from '../utils/endpoints';
 import { checkResponse } from './response';
 
 export const getUser = () => {
@@ -73,44 +62,43 @@ export const checkUser = () => {
   };
 };
 
-export const loginUser = (value: { email: string; password: string }) => {
-  return async function (dispatch: Dispatch) {
-    dispatch({
-      type: LOGIN_USER_REQUEST,
-    });
+// export const loginUser = (value: { email: string; password: string }) => {
+//   return async function (dispatch: Dispatch) {
+//     dispatch({
+//       type: LOGIN_USER_REQUEST,
+//     });
 
-    await fetch(urlLogin, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(value),
-    })
-      .then((res) => checkResponse(res))
-      .then((res) => {
-        if (res && res.success) {
-          dispatch({
-            type: LOGIN_USER_SUCCESS,
-            feed: { email: res.user.email, name: res.user.name },
-          });
-          createNewCookie(res);
-        }
-      })
-      .catch(() =>
-        dispatch({
-          type: LOGIN_USER_FAILED,
-        }),
-      );
-  };
-};
-
+//     await fetch(urlLogin, {
+//       method: 'POST',
+//       headers: {
+//         'Content-Type': 'application/json',
+//       },
+//       body: JSON.stringify(value),
+//     })
+//       .then((res) => checkResponse(res))
+//       .then((res) => {
+//         if (res && res.success) {
+//           dispatch({
+//             type: LOGIN_USER_SUCCESS,
+//             feed: { email: res.user.email, name: res.user.name },
+//           });
+//           createNewCookie(res);
+//         }
+//       })
+//       .catch(() =>
+//         dispatch({
+//           type: LOGIN_USER_FAILED,
+//         }),
+//       );
+//   };
+// };
+/*
 export const registerUser = (value: {
   email: string;
   password: string;
   name: string;
 }) => {
   return async function (dispatch: Dispatch) {
-    console.log(value);
     dispatch({
       type: REGISTER_USER_REQUEST,
     });
@@ -125,7 +113,6 @@ export const registerUser = (value: {
       .then((res) => checkResponse(res))
       .then((res) => {
         if (res && res.success) {
-          console.log({ email: res.user.email, name: res.user.name });
           dispatch({
             type: REGISTER_USER_SUCCESS,
             feed: { email: res.user.email, name: res.user.name },
@@ -139,6 +126,83 @@ export const registerUser = (value: {
         }),
       );
   };
+};
+*/
+
+interface TRequestOptions {
+  type: string | boolean;
+  method: string;
+  body: {
+    email: string;
+    name?: string;
+    password?: string;
+  } | null;
+  isSaveCookie: boolean;
+  authorization: null | string;
+}
+
+export const request: (url: string, options: TRequestOptions) => void = (
+  url,
+  options,
+) => {
+  return async function (dispatch: Dispatch) {
+    const { type, method, body, isSaveCookie, authorization } = options;
+    console.log(options);
+
+    dispatch({
+      type: `${type}_USER_REQUEST}`,
+    });
+
+    await fetch(url, {
+      method: method,
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: authorization ? authorization : '',
+      },
+      body: JSON.stringify(body),
+    })
+      .then((res) => checkResponse(res))
+      .then((res) => {
+        if (res && res.success) {
+          dispatch({
+            type: `${type}_USER_SUCCESS`,
+            feed: { email: res.user.email, name: res.user.name },
+          });
+
+          isSaveCookie && createNewCookie(res);
+        }
+      })
+      .catch(() =>
+        dispatch({
+          type: `${type}_USER_FAILED`,
+        }),
+      );
+  };
+};
+
+export const requestAndRefresh: (
+  url: string,
+  options: TRequestOptions,
+) => void = (url, options) => {
+  // try {
+  // console.log(options);
+  // request(url, options);
+
+  return async function (dispatch: Dispatch) {
+    // dispatch({
+    //   type: `${options.type}_USER_REQUEST}`,
+    // });
+  };
+
+  // } catch (err: any) {
+  // if (err.message === 'jwt expired') {
+  // refreshToken().then((res) => {
+  // options.isSaveCookie = true;
+  // options.authorization = res.accessToken;
+  // request(url, options);
+  // });
+  // }
+  // }
 };
 
 export const refreshToken = async () => {

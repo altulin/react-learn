@@ -1,7 +1,9 @@
 import { useState, FC } from 'react';
 import FormPage from '../../components/form/FormPage';
 import path from '../../services/utils/paths';
-import { loginUser } from '../../services/actions/checkUser';
+// import { loginUser } from '../../services/actions/checkUser';
+import { request } from '../../services/actions/checkUser';
+import { urlLogin } from '../../services/utils/endpoints';
 import {
   Input,
   Button,
@@ -28,11 +30,17 @@ const LoginPage: FC = () => {
     });
   };
 
-  // interface IhandleClick {}
-
   const handleClick = (e: React.SyntheticEvent) => {
+    const options = {
+      type: 'LOGIN',
+      method: 'POST',
+      body: value,
+      isSaveCookie: true,
+      authorization: null,
+    };
+
     e.preventDefault();
-    dispatch(loginUser(value));
+    dispatch(request(urlLogin, options));
   };
 
   return (
