@@ -5,6 +5,7 @@ import ForgotPage from './forgot/ForgotPage';
 import ResetPage from './reset/ResetPage';
 import ProfilePage from './profile/ProfilePage';
 import { NotFound404 } from './notfound/NotFound404';
+import FeelPage from './feed/FeedPage';
 
 export {
   HomePage,
@@ -14,4 +15,5 @@ export {
   ResetPage,
   ProfilePage,
   NotFound404,
+  FeelPage,
 };

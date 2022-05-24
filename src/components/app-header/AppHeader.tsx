@@ -1,4 +1,4 @@
-import React, { FC, useState } from 'react';
+import React, { FC } from 'react';
 import styles from './AppHeader.module.css';
 import {
   Logo,
@@ -6,80 +6,43 @@ import {
   ListIcon,
   ProfileIcon,
 } from '@ya.praktikum/react-developer-burger-ui-components';
-import { Link } from 'react-router-dom';
+import { NavLink, Link } from 'react-router-dom';
 import path from '../../services/utils/paths';
 
 interface ILinkHeader {
   text: string;
-  addClass?: string;
-  children?: React.ReactChild | React.ReactNode;
-  onClick?: () => void;
+  children: React.ReactChild | React.ReactNode;
   to: string;
 }
 
-const LinkHeader: FC<ILinkHeader> = ({
-  children,
-  addClass,
-  text,
-  onClick,
-  to,
-}) => {
+const LinkHeader: FC<ILinkHeader> = ({ children, text, to }) => {
   return (
-    <Link
+    <NavLink
       to={to}
-      href='/'
-      className={`pl-5 pr-5 pb-4 pt-4 ${styles.link} ${addClass}`}
-      onClick={onClick}
+      className={`pl-5 pr-5 pb-4 pt-4 ${styles.link}`}
+      exact
+      activeClassName={styles.link_current}
     >
       {children}
       <span className={`ml-2 text text_type_main-default ${styles.link_text}`}>
         {text}
       </span>
-    </Link>
+    </NavLink>
   );
 };
 
 const AppHeader: FC = () => {
-  const { profile, main } = path;
-  const [state, setState] = useState({
-    constructor: false,
-    order: true,
-  });
-
-  const heandlerConstructor = () => {
-    setState({
-      order: false,
-      constructor: !state.constructor,
-    });
-  };
-
-  const heandlerOrder = () => {
-    setState({
-      order: !state.order,
-      constructor: false,
-    });
-  };
+  const { profile, main, feed } = path;
 
   return (
     <header className={`ml-10 mr-10 pt-4 pb-4 ${styles.header}`}>
       <div className={`${styles.header_inner} container`}>
         <nav className={styles.header_nav}>
           <div className={styles.header_nav_left}>
-            <LinkHeader
-              text='Конструктор'
-              addClass={state.constructor ? styles.link_current : ''}
-              onClick={heandlerConstructor}
-              to={'/'}
-            >
+            <LinkHeader text='Конструктор' to={`${main}`}>
               <BurgerIcon type='primary' />
             </LinkHeader>
-            <LinkHeader
-              text='Лента заказов'
-              addClass={`ml-2 ${state.order ? styles.link_current : ''}`}
-              onClick={heandlerOrder}
-              to={'/'}
-            >
-              {state.order}
+            <LinkHeader text='Лента заказов' to={`${feed}`}>
               <ListIcon type='primary' />
             </LinkHeader>
           </div>

@@ -42,7 +42,7 @@ export const ProtectedRoute: FC<IProtectedRoute> = ({
 
   if (!auth && !data) {
     return (
-      <Route {...rest} exact>
+      <Route {...rest} exact={true}>
         <Redirect to={{ pathname: `${login}`, state: { from: location } }} />
       </Route>
     );
@@ -54,11 +54,15 @@ export const ProtectedRoute: FC<IProtectedRoute> = ({
     };
 
     return (
-      <Route {...rest} exact>
+      <Route {...rest} exact={true}>
         <Redirect to={from} />
       </Route>
     );
   }
 
-  return <Route {...rest}>{children}</Route>;
+  return (
+    <Route {...rest} exact={true}>
+      {children}
+    </Route>
+  );
 };

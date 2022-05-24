@@ -8,6 +8,7 @@ import {
   ResetPage,
   ProfilePage,
   NotFound404,
+  FeelPage,
 } from '../../pages';
 import IngredientDetails from '../ingredient-details/IngredientDetails';
 import OrderDetails from '../order-details/OrderDetails';
@@ -44,7 +45,16 @@ export interface IStore {
 }
 
 const App: FC = () => {
-  const { main, login, register, forgot, reset, profile } = path;
+  const {
+    main,
+    login,
+    register,
+    forgot,
+    reset,
+    profile,
+    ingredients_id,
+    feed,
+  } = path;
   const dispatch = useDispatch();
   const location: TLocation = useLocation();
   const background = location.state && location.state.background;
@@ -74,12 +84,6 @@ const App: FC = () => {
   const closeModal = () => {
     history.goBack();
   };
-
-  // const { store } = useSelector((store: IStore) => ({
-  //   store: store,
-  // }));
-
-  // console.log(store);
 
   const { productsIngredients } = useSelector((store: IStore) => ({
     productsIngredients: store.data.listIngredients,
@@ -153,7 +157,11 @@ const App: FC = () => {
           <ProfilePage />
         </ProtectedRoute>
 
-        <Route path={'/ingredients/:id'} exact={true}>
+        <Route path={`${feed}`} exact={true}>
+          <FeelPage />
+        </Route>
+
+        <Route path={`${ingredients_id}`} exact={true}>
           {productsIngredients.length === 0 ? (
             <h1 className={`${styles.preload_text} text text_type_main-large`}>
               Загружаю ...
