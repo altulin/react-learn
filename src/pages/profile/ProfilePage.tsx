@@ -113,7 +113,6 @@ const ProfilePage: FC = () => {
   };
 
   const { email, password, login } = valueInput;
-  console.log(valueInput);
 
   const getNewValues = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValueInput({

@@ -8,9 +8,23 @@
 }
 
 .list_block {
-  width: calc(50% - 1.5%);
+  width: calc(50% - 2.5%);
   display: flex;
   flex-direction: column;
+  overflow-y: scroll;
+  padding-right: 8px;
+}
+
+.list_block::-webkit-scrollbar {
+  width: 8px;
+}
+
+.list_block_left::-webkit-scrollbar-track {
+  background-color: #2f2f37;
+}
+
+.list_block::-webkit-scrollbar-thumb {
+  background-color: #8585ad;
 }
 
 .title_wrap {
@@ -22,6 +36,7 @@
   display: flex;
   justify-content: space-between;
   flex-grow: 1;
+  overflow-y: hidden;
 }
 
 .card {
@@ -29,11 +44,127 @@
   background-color: #1c1c21;
   color: #fff;
   border-radius: 40px;
-  box-shadow: 0px 4px 8px 0px #000000;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 0px 2px rgba(0, 0, 0, 0.06),
+    0px 0px 1px rgba(0, 0, 0, 0.04);
+}
+
+.card + .card {
+  margin-top: 16px;
 }
 
 .card_header {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.bottom {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.card_list {
+  padding-left: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+  display: flex;
+  align-items: center;
+  flex-direction: row-reverse;
+}
+
+.card_item {
+  position: relative;
+  list-style: none;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  background-image: linear-gradient(#801ab2 0%, #4c4cff 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: -15px;
+}
+
+.card_img_wrap {
+  margin: 0;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #131316;
+}
+
+.card_img {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
+.card_price {
+  display: flex;
+  align-items: center;
+}
+
+.info_header {
+  display: flex;
+  margin-bottom: 80px;
+}
+
+.info_header_left {
+  width: 50%;
+}
+
+.info_header_right {
+  width: 50%;
+}
+
+.info_header_title {
+  margin-top: 0;
+  margin-bottom: 24px;
+}
+
+.ready_text {
+  color: #00cccc;
+}
+
+.ready_list {
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-left: 0;
+}
+
+.ready_item {
+  list-style: none;
+}
+
+.ready_item + .ready_item {
+  margin-top: 8px;
+}
+
+.alltime {
+  margin-bottom: 60px;
+}
+
+.inwork_list {
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-left: 0;
+}
+
+.inwork_item {
+  list-style: none;
+}
+
+.inwork_item + .inwork_item {
+  margin-top: 8px;
+}
+
+.alltime_text {
+  text-shadow: 0px 0px 16px rgba(51, 51, 255, 0.25),
+    0px 0px 8px rgba(51, 51, 255, 0.25), 0px 4px 32px rgba(51, 51, 255, 0.5);
+}
+
+.today_text {
+  text-shadow: 0px 0px 16px rgba(51, 51, 255, 0.25),
+    0px 0px 8px rgba(51, 51, 255, 0.25), 0px 4px 32px rgba(51, 51, 255, 0.5);
 }
