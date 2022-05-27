@@ -1,7 +1,8 @@
-import { FC } from 'react';
+import { FC, useCallback } from 'react';
 import styles from './FeedPage.module.css';
 import { Link, useLocation } from 'react-router-dom';
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
+import { orders_all } from '../../services/utils/endpoints';
 import { useSocket } from '../../services/utils/use-socket';
 
 const Card: FC = () => {
@@ -161,12 +162,23 @@ const Info: FC = () => {
 };
 
 const FeelPage: FC = () => {
-  const { connect, options } = useSocket(
-    'wss://norma.nomoreparties.space/orders/all',
-  );
+  const processEvent = useCallback((e) => {
+    const normalizedMessage = JSON.parse(e.data);
+    if (normalizedMessage.success === true) {
+      // pushMessage({
+      //   text: normalizedMessage.message,
+      //   username: normalizedMessage.username,
+      //   id: normalizedMessage.id,
+      //   timestamp: new Date().getTime() / 1000,
+      //   isBot: normalizedMessage.isBot,
+      // });
+      console.log(normalizedMessage);
+    }
+  }, []);
 
-  connect();
-  console.log(options);
+  useSocket(orders_all, {
+    onMessage: processEvent,
+  });
 
   return (
     <main className={`${styles.main} container pt-10`}>
