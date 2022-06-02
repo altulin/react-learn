@@ -1,0 +1,10 @@
+.wrap {
+  display: flex;
+  flex-grow: 1;
+  max-width: 1320px;
+  padding-left: 40px;
+  padding-right: 40px;
+  justify-content: flex-start;
+  align-items: flex-start;
+  flex-direction: row;
+}

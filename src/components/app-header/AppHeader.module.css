@@ -1,94 +1,97 @@
 .header {
-	background-color: #1C1C21;
-	box-shadow: 0px 24px 32px rgba(0, 0, 0, 0.04), 0px 16px 24px rgba(0, 0, 0, 0.04), 0px 4px 8px rgba(0, 0, 0, 0.04), 0px 0px 1px rgba(0, 0, 0, 0.04);
+  background-color: #1c1c21;
+  box-shadow: 0px 24px 32px rgba(0, 0, 0, 0.04),
+    0px 16px 24px rgba(0, 0, 0, 0.04), 0px 4px 8px rgba(0, 0, 0, 0.04),
+    0px 0px 1px rgba(0, 0, 0, 0.04);
+  z-index: 11;
 }
 
 .header_inner {
-	max-width: 1320px;
+  max-width: 1320px;
 }
 
 .header_nav {
-	display: flex;
-	align-items: center;
-	justify-content: space-between;
-	flex-wrap: wrap;
-	position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  position: relative;
 }
 
 .header_nav_left {
-	display: flex;
-	align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .link {
-	border-radius: 40px;
-	display: flex;
-	align-items: center;
-	text-decoration: none;
-	transition: 0.3s;
+  border-radius: 40px;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  transition: 0.3s;
 }
 
 .link:hover {
-	opacity: 0.8;
+  opacity: 0.8;
 }
 
 .link_current:hover {
-	opacity: 1;
+  opacity: 1;
 }
 
 .link_current .link_text {
-	color: #8585AD;
+  color: #8585ad;
 }
 
 .link_current svg {
-	fill: #8585AD;
+  fill: #8585ad;
 }
 
 .link svg {
-	transition: 0.3s;
+  transition: 0.3s;
 }
 
 .link_text {
-	line-height: 24px;
-	color: #F2F2F3;
-	transition: 0.3s;
+  line-height: 24px;
+  color: #f2f2f3;
+  transition: 0.3s;
 }
 
 .header_nav_logo {
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%,-50%);
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 }
 
 @media (max-width: 1440px) {
-	.header_nav_logo {
-		position: static;
-		transform: none;
-	}
+  .header_nav_logo {
+    position: static;
+    transform: none;
+  }
 }
 
 @media (max-width: 1000px) {
-	.header_nav {
-		flex-direction: column;
-	}
+  .header_nav {
+    flex-direction: column;
+  }
 
-	.header_nav_left {
-		flex-direction: column;
-		margin-bottom: 20px;
-	}
+  .header_nav_left {
+    flex-direction: column;
+    margin-bottom: 20px;
+  }
 
-	.link + .link {
-		margin-top: 20px;
-		margin-left: 0;
-	}
+  .link + .link {
+    margin-top: 20px;
+    margin-left: 0;
+  }
 
-	.header_nav_logo {
-		order: -1;
-		margin-bottom: 20px;
-	}
+  .header_nav_logo {
+    order: -1;
+    margin-bottom: 20px;
+  }
 
-	.link_user {
-		margin-top: 20px;
-	}
+  .link_user {
+    margin-top: 20px;
+  }
 }

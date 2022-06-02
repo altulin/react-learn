@@ -1,4 +1,4 @@
-import { getCookie, accessCookie } from '../utils/cookie';
+import { getCookie, accessCookie } from '../../utils/cookie';
 
 interface Value {
   email?: string;

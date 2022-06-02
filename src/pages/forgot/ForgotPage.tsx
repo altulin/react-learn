@@ -9,7 +9,7 @@ import styles from '../login/LoginPage.module.css';
 import { Link } from 'react-router-dom';
 import path from '../../services/utils/paths';
 import { urlForgot } from '../../services/utils/endpoints';
-import { checkResponse } from '../../services/actions/response';
+import { checkResponse } from '../../services/redux/actions/response';
 
 const ForgotPage: FC = () => {
   const { login, reset } = path;

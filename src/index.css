@@ -45,6 +45,14 @@ html body {
   margin-top: 24px;
 }
 
+.modal-root {
+  z-index: 10;
+}
+
+.detail .order_number {
+  text-align: center;
+}
+
 /* * { */
 /* outline: 1px solid tomato; */
 /* } */

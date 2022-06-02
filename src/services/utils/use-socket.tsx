@@ -1,4 +1,9 @@
 import { useCallback, useRef, useEffect } from 'react';
+import { useDispatch } from 'react-redux';
+import {
+  WS_CONNECTION_SUCCESS,
+  WS_CONNECTION_CLOSED,
+} from '../redux/actions/wsActionTypes';
 
 export const CONNECTING = 'CONNECTING';
 export const OPEN = 'OPEN';
@@ -18,11 +23,24 @@ type TOptions = {
 
 export const useSocket = (url: string, options: TOptions) => {
   const ws = useRef<WebSocket | null>(null);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     ws.current = new WebSocket(url);
-    ws.current.onopen = () => console.log('Соединение открыто');
-    ws.current.onclose = () => console.log('Соединение закрыто');
+    ws.current.onopen = () => {
+      dispatch({
+        type: WS_CONNECTION_SUCCESS,
+      });
+    };
+    ws.current.onerror = (e) => {
+      dispatch({ type: 'WS_CONNECTION_ERROR', payload: e });
+    };
+
+    ws.current.onclose = () => {
+      dispatch({
+        type: WS_CONNECTION_CLOSED,
+      });
+    };
 
     gettingData();
 
@@ -31,92 +49,13 @@ export const useSocket = (url: string, options: TOptions) => {
         ws.current.close();
       }
     };
-  }, []);
+  }, []); // eslint-disable-line
 
   const gettingData = useCallback(() => {
     if (!ws.current) return;
 
     ws.current.onmessage = (e) => {
-      options.onMessage(e);
-      // console.log(e.data);
+      dispatch({ type: 'WS_GET_MESSAGE', payload: options.onMessage(e) });
     };
-  }, []);
+  }, []); // eslint-disable-line
 };
-
-// export const useSocket: (url: string) => any = (url) => {
-// const ws = useRef<any>(null);
-
-// const connect: any = useCallback(() => {},[])
-// eslint-disable-line react-hooks/exhaustive-deps
-
-// const connect = useCallback(
-//   (token) => {
-//     ws.current = new WebSocket(`${url}?token=${token}`);
-
-//     ws.current.onmessage = (event) => {
-//       if (typeof options.onMessage === 'function') {
-//         options.onMessage(event);
-//       }
-//     }; // Ваш код здесь
-
-//     ws.current.onopen = (event) => {
-//       if (typeof options.onConnect === 'function') {
-//         options.onConnect(event);
-//       }
-//     };
-
-//     ws.current.onerror = (event) => {
-//       if (typeof options.onError === 'function') {
-//         options.onError(event);
-//       }
-//     };
-
-//     ws.current.onclose = (event) => {
-//       if (typeof options.onDisconnect === 'function') {
-//         options.onDisconnect(event);
-//       }
-//     };
-//   },
-//   [url, options],
-// );
-
-// export const
-
-// useEffect(() => {
-// if (ws.current) {
-//   ws.current.onmessage = (event) => {
-//     if (typeof options.onMessage === 'function') {
-//       options.onMessage(event);
-//     }
-//   }; // Ваш код здесь
-
-//   if (typeof options.onConnect === 'function') {
-//     ws.current.onopen = options.onConnect;
-//   }
-//   if (typeof options.onError === 'function') {
-//     ws.current.onerror = options.onError;
-//   }
-//   if (typeof options.onDisconnect === 'function') {
-//     ws.current.onclose = options.onDisconnect;
-//   }
-// }
-// }, [options, ws]);
-
-// useEffect(() => {
-// return () => {
-// if (ws.current && typeof ws.current.close === 'function') {
-// ws.current.close();
-// }
-// };
-// }, []);
-
-// const sendData = useCallback(
-// (message) => {
-// Ваш код здесь
-// ws.current.send(JSON.stringify(message));
-// },
-// [ws],
-// );
-
-// return { connect};
-// };

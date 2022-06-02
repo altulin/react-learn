@@ -1,0 +1,77 @@
+.card_status {
+  color: #00cccc;
+}
+
+.consist_img_wrap {
+  margin: 0;
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  /* background-color: #131316; */
+  background-image: linear-gradient(#801ab2 0%, #4c4cff 100%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.consist_img {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background-color: #131316;
+  object-fit: cover;
+}
+
+.consist_list {
+  padding-left: 0;
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.consist_item {
+  display: flex;
+  align-items: center;
+}
+
+.consist_item + .consist_item {
+  margin-top: 16px;
+}
+
+.consist_info {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+}
+
+.consist_val {
+  margin-right: 9px;
+}
+
+.consist_list_wrap {
+  max-height: 312px;
+  overflow-y: scroll;
+  padding-right: 20px;
+}
+
+.consist_list_wrap::-webkit-scrollbar {
+  width: 8px;
+}
+
+.consist_list_wrap::-webkit-scrollbar-track {
+  background-color: #2f2f37;
+}
+
+.consist_list_wrap::-webkit-scrollbar-thumb {
+  background-color: #8585ad;
+}
+
+.card_header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.card_price {
+  display: flex;
+  align-items: center;
+}

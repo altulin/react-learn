@@ -1,4 +1,5 @@
 import { userReducer } from './user';
+import { wsReducer } from './wsAllReducer';
 import { combineReducers } from 'redux';
 
 import {
@@ -96,4 +97,5 @@ export type RootState = ReturnType<typeof rootReducer>;
 export const rootReducer = combineReducers({
   data: dataReducer,
   user: userReducer,
+  wc: wsReducer,
 });

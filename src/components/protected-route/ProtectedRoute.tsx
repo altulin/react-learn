@@ -1,10 +1,10 @@
 import { Route, Redirect, useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
-import { RootState } from '../../services/reducers/rootReducer';
+import { RootState } from '../../services/redux/reducers/rootReducer';
 import paths from '../../services/utils/paths';
-import stylesText from '../app/App.module.css';
 import { FC, ReactNode } from 'react';
 import { TLocation } from '../app/App';
+import Preload from '../preload/Preload';
 
 interface IProtectedRoute {
   children: ReactNode;
@@ -33,11 +33,7 @@ export const ProtectedRoute: FC<IProtectedRoute> = ({
   };
 
   if (!isAuthChecked) {
-    return (
-      <h1 className={`${stylesText.preload_text} text text_type_main-large`}>
-        Загружаем ...
-      </h1>
-    );
+    <Preload />;
   }
 
   if (!auth && !data) {

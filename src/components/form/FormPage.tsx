@@ -1,12 +1,12 @@
 import styles from './FormPage.module.css';
 import { FC, ReactNode } from 'react';
 
-interface IFormPage {
+interface IUserPage {
   children?: ReactNode;
   newClass?: string;
 }
 
-const FormPage: FC<IFormPage> = ({ children, newClass }) => {
+const UserPage: FC<IUserPage> = ({ children, newClass }) => {
   return (
     <main className={`${styles.main} ${styles[`${newClass}`]}`}>
       {children}
@@ -14,4 +14,4 @@ const FormPage: FC<IFormPage> = ({ children, newClass }) => {
   );
 };
 
-export default FormPage;
+export default UserPage;

@@ -8,11 +8,11 @@ import {
   DragIcon,
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useDispatch, useSelector } from 'react-redux';
-import { LIST_CURRENT_INGREDIENTS } from '../../services/actions';
+import { LIST_CURRENT_INGREDIENTS } from '../../services/redux/actions';
 // import { RootState } from '../../services/reducers/rootReducer';
 import type { XYCoord } from 'dnd-core';
 import { IStore } from '../app/App';
-import { IFeed } from '../../services/reducers/rootReducer';
+import { IFeed } from '../../services/redux/reducers/rootReducer';
 import { v4 as uuidv4 } from 'uuid';
 
 const BUN = 'bun';

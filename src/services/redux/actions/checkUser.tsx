@@ -18,14 +18,14 @@ import {
   refreshCookie,
   accessCookie,
   createNewCookie,
-} from '../utils/cookie';
+} from '../../utils/cookie';
 
 import {
   urlProfile,
   urlLogin,
   urlToken,
   urlRegister,
-} from '../utils/endpoints';
+} from '../../utils/endpoints';
 import { checkResponse } from './response';
 
 export const getUser = () => {

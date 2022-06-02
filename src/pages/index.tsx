@@ -3,8 +3,9 @@ import LoginPage from './login/LoginPage';
 import RegistrationPage from './registration/RegistrationPage';
 import ForgotPage from './forgot/ForgotPage';
 import ResetPage from './reset/ResetPage';
-import ProfilePage from './profile/ProfilePage';
+import { ProfilePage } from './profile/ProfilePage';
 import { NotFound404 } from './notfound/NotFound404';
+import HistoryPage from './history/HistoryPage';
 import FeelPage from './feed/FeedPage';
 
 export {
@@ -16,4 +17,5 @@ export {
   ProfilePage,
   NotFound404,
   FeelPage,
+  HistoryPage,
 };

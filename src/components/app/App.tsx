@@ -9,21 +9,23 @@ import {
   ProfilePage,
   NotFound404,
   FeelPage,
+  HistoryPage,
 } from '../../pages';
 import IngredientDetails from '../ingredient-details/IngredientDetails';
 import OrderDetails from '../order-details/OrderDetails';
 import { useDispatch, useSelector } from 'react-redux';
-import { CURRENT_INGREDIENT } from '../../services/actions';
-import { RootState } from '../../services/reducers/rootReducer';
-import { getFeedConstructor } from '../../services/actions/response';
+import { CURRENT_INGREDIENT } from '../../services/redux/actions';
+import { RootState } from '../../services/redux/reducers/rootReducer';
+import { getFeedConstructor } from '../../services/redux/actions/response';
 import Modal from '../modal/Modal';
 import { Switch, Route, useLocation, useHistory } from 'react-router-dom';
 import path from '../../services/utils/paths';
 import { ProtectedRoute } from '../protected-route/ProtectedRoute';
-import { getFeed } from '../../services/actions/response';
-import styles from './App.module.css';
-import { IFeed } from '../../services/reducers/rootReducer';
-import { checkUser } from '../../services/actions/checkUser';
+import { getFeed } from '../../services/redux/actions/response';
+import { IFeed } from '../../services/redux/reducers/rootReducer';
+import { checkUser } from '../../services/redux/actions/checkUser';
+import Preload from '../preload/Preload';
+import OrderInfo from '../order-info/OrderInfo';
 
 export type TLocation = {
   state: {
@@ -42,6 +44,24 @@ export interface IStore {
     listConstructor: Array<IFeed>;
     orderNumber: number;
   };
+  wc: {
+    messages: {
+      success: boolean;
+      orders: [
+        {
+          _id: string;
+          ingredients: Array<string>;
+          status: string;
+          name: string;
+          number: number;
+          createdAt: string;
+          updatedAt: string;
+        },
+      ];
+      total: number;
+      totalToday: number;
+    };
+  };
 }
 
 const App: FC = () => {
@@ -54,6 +74,9 @@ const App: FC = () => {
     profile,
     ingredients_id,
     feed,
+    feed_id,
+    profile_orders,
+    profile_orders_id,
   } = path;
   const dispatch = useDispatch();
   const location: TLocation = useLocation();
@@ -154,7 +177,18 @@ const App: FC = () => {
         </ProtectedRoute>
 
         <ProtectedRoute path={`${profile}`}>
-          <ProfilePage />
+          <ProtectedRoute path={`${profile}`}>
+            <ProfilePage />
+          </ProtectedRoute>
+
+          <ProtectedRoute path={`${profile_orders}`}>
+            <HistoryPage />
+          </ProtectedRoute>
+        </ProtectedRoute>
+
+        <ProtectedRoute auth={true} path={`${profile_orders}`}>
+          <h4>test</h4>
+          {/*  */}
         </ProtectedRoute>
 
         <Route path={`${feed}`} exact={true}>
@@ -163,13 +197,23 @@ const App: FC = () => {
 
         <Route path={`${ingredients_id}`} exact={true}>
           {productsIngredients.length === 0 ? (
-            <h1 className={`${styles.preload_text} text text_type_main-large`}>
-              Загружаю ...
-            </h1>
+            <Preload />
           ) : (
             <main>
               <Modal close={closeModal} detailClass={'detail'}>
                 <IngredientDetails />
+              </Modal>
+            </main>
+          )}
+        </Route>
+
+        <Route path={`${feed_id}`} exact={true}>
+          {false ? (
+            <Preload />
+          ) : (
+            <main>
+              <Modal close={closeModal} detailClass={'detail'}>
+                <OrderInfo />
               </Modal>
             </main>
           )}
@@ -183,9 +227,17 @@ const App: FC = () => {
       {/* modal */}
 
       {background && productsIngredients.length !== 0 && (
-        <Route path={'/ingredients/:id'} exact={true}>
+        <Route path={`${ingredients_id}`} exact={true}>
           <Modal close={closeModal}>
             <IngredientDetails />
+          </Modal>
+        </Route>
+      )}
+
+      {background && (
+        <Route path={`${feed_id}`} exact={true}>
+          <Modal close={closeModal}>
+            <OrderInfo />
           </Modal>
         </Route>
       )}

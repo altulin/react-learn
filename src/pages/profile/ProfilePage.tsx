@@ -1,5 +1,5 @@
 import React, { useState, FC } from 'react';
-import FormPage from '../../components/form/FormPage';
+import UserPage from '../../components/form/FormPage';
 import {
   Input,
   Button,
@@ -16,24 +16,24 @@ import {
 } from '../../services/utils/cookie';
 import { Dispatch } from 'redux';
 import { urlLogout, urlProfile } from '../../services/utils/endpoints';
-import { checkResponse } from '../../services/actions/response';
-import { requestWidthRefresh } from '../../services/actions/checkUser';
+import { checkResponse } from '../../services/redux/actions/response';
+import { requestWidthRefresh } from '../../services/redux/actions/checkUser';
 import { useDispatch } from 'react-redux';
-import { RootState } from '../../services/reducers/rootReducer';
+import { RootState } from '../../services/redux/reducers/rootReducer';
 import { useSelector } from 'react-redux';
 import {
   USER_LOGOUT,
   UPDATE_USER_REQUEST,
   UPDATE_USER_SUCCESS,
   UPDATE_USER_FAILED,
-} from '../../services/actions';
+} from '../../services/redux/actions';
 
 interface INavBlock {
   handleExit: (e: React.MouseEvent | React.KeyboardEvent) => void;
 }
 
-const NavBlock: FC<INavBlock> = ({ handleExit }) => {
-  const { profile, profile_orders, main } = path;
+export const NavBlock: FC<INavBlock> = ({ handleExit }) => {
+  const { profile, main, profile_orders } = path;
 
   return (
     <div className={profile_styles.nav}>
@@ -53,6 +53,7 @@ const NavBlock: FC<INavBlock> = ({ handleExit }) => {
       >
         История заказов
       </NavLink>
+
       <NavLink
         exact
         to={{ pathname: `${main}` }}
@@ -71,7 +72,7 @@ const NavBlock: FC<INavBlock> = ({ handleExit }) => {
   );
 };
 
-const ProfilePage: FC = () => {
+export const ProfilePage: FC = () => {
   const dispatch = useDispatch();
   const { data } = useSelector((state: RootState) => state.user);
 
@@ -168,7 +169,7 @@ const ProfilePage: FC = () => {
   };
 
   return (
-    <FormPage>
+    <UserPage>
       <div className={`${styles.form_wrap} ${profile_styles.form_wrap}`}>
         <NavBlock handleExit={handleClick}></NavBlock>
         <form onSubmit={saveNewData}>
@@ -209,8 +210,6 @@ const ProfilePage: FC = () => {
           </div>
         </form>
       </div>
-    </FormPage>
+    </UserPage>
   );
 };
-
-export default ProfilePage;

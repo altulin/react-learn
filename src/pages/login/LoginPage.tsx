@@ -1,7 +1,7 @@
 import { useState, FC } from 'react';
 import FormPage from '../../components/form/FormPage';
 import path from '../../services/utils/paths';
-import { loginUser } from '../../services/actions/checkUser';
+import { loginUser } from '../../services/redux/actions/checkUser';
 import {
   Input,
   Button,
