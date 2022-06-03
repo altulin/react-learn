@@ -8,6 +8,7 @@ import { useSelector } from 'react-redux';
 import Preload from '../../components/preload/Preload';
 import { getDate } from '../../services/utils/date';
 import { IStore } from '../../components/app/App';
+import paths from '../../services/utils/paths';
 
 interface ICard {
   name: string;
@@ -18,77 +19,82 @@ interface ICard {
     image: string;
     price: number;
   }>;
+  pathname: string;
 }
 
-const Card: FC<ICard> = memo(({ name, number, dataTime, id, data }) => {
-  const valImg = 6;
-  const allImg = data.length;
-  const location = useLocation();
+export const Card: FC<ICard> = memo(
+  ({ name, number, dataTime, id, data, pathname }) => {
+    const valImg = 6;
+    const allImg = data.length;
+    const location = useLocation();
 
-  const { day, hours, minutes, gmt } = getDate(dataTime);
+    const { day, hours, minutes, gmt } = getDate(dataTime);
 
-  return (
-    <Link
-      to={{
-        pathname: `/feed/${id}`,
-        state: { background: location },
-      }}
-      className={`${styles.card} p-6`}
-    >
-      <div className={`${styles.card_header}`}>
-        <span className={`${styles.number} text text_type_digits-default`}>
-          #{number}
-        </span>
-        <div
-          className={`${styles.date} text text_type_main-default text_color_inactive`}
-        >
-          <span className={`${styles.day} mr-2`}>{day},</span>
-          <span className={`${styles.time} mr-2`}>{`${hours}:${minutes}`}</span>
-          <span className={`${styles.gmt}`}>GMT{gmt}</span>
-        </div>
-      </div>
-      <h3 className={`${styles.card_title} text text_type_main-medium mt-6`}>
-        {name}
-      </h3>
-
-      <div className={`${styles.bottom} mt-6`}>
-        <ul className={`${styles.card_list}`}>
-          {data.slice(0, valImg).map((elem, index: number) => (
-            <li
-              key={index}
-              className={`${styles.card_item}`}
-              style={{ zIndex: valImg - index }}
-            >
-              <figure className={`${styles.card_img_wrap}`}>
-                <img
-                  className={`${styles.card_img}`}
-                  src={elem.image}
-                  alt='ингридиент'
-                />
-              </figure>
-
-              {index === valImg - 1 && (
-                <span
-                  className={`${styles.card_index} text text_type_main-default`}
-                >
-                  +{allImg - valImg + 1}
-                </span>
-              )}
-            </li>
-          ))}
-        </ul>
-
-        <p className={`${styles.card_price}`}>
-          <span className='text text_type_digits-default mr-2'>
-            {data.map((item) => item.price).reduce((a, b) => a + b)}
+    return (
+      <Link
+        to={{
+          pathname: `${pathname}/${id}`,
+          state: { background: location },
+        }}
+        className={`${styles.card} p-6`}
+      >
+        <div className={`${styles.card_header}`}>
+          <span className={`${styles.number} text text_type_digits-default`}>
+            #{number}
           </span>
+          <div
+            className={`${styles.date} text text_type_main-default text_color_inactive`}
+          >
+            <span className={`${styles.day} mr-2`}>{day},</span>
+            <span
+              className={`${styles.time} mr-2`}
+            >{`${hours}:${minutes}`}</span>
+            <span className={`${styles.gmt}`}>GMT{gmt}</span>
+          </div>
+        </div>
+        <h3 className={`${styles.card_title} text text_type_main-medium mt-6`}>
+          {name}
+        </h3>
 
-          <CurrencyIcon type='primary' />
-        </p>
-      </div>
-    </Link>
-  );
-});
+        <div className={`${styles.bottom} mt-6`}>
+          <ul className={`${styles.card_list}`}>
+            {data.slice(0, valImg).map((elem, index: number) => (
+              <li
+                key={index}
+                className={`${styles.card_item}`}
+                style={{ zIndex: valImg - index }}
+              >
+                <figure className={`${styles.card_img_wrap}`}>
+                  <img
+                    className={`${styles.card_img}`}
+                    src={elem.image}
+                    alt='ингридиент'
+                  />
+                </figure>
+
+                {index === valImg - 1 && (
+                  <span
+                    className={`${styles.card_index} text text_type_main-default`}
+                  >
+                    +{allImg - valImg + 1}
+                  </span>
+                )}
+              </li>
+            ))}
+          </ul>
+
+          <p className={`${styles.card_price}`}>
+            <span className='text text_type_digits-default mr-2'>
+              {data.map((item) => item.price).reduce((a, b) => a + b)}
+            </span>
+
+            <CurrencyIcon type='primary' />
+          </p>
+        </div>
+      </Link>
+    );
+  },
+);
 
 interface IInfo {
   total: number;
@@ -169,7 +175,9 @@ const Info: FC<IInfo> = memo(({ total, totalToday, infoDone, infoPending }) => {
   );
 });
 
-const FeelPage: FC = memo(() => {
+export const FeelPage: FC = memo(() => {
+  const { feed } = paths;
+
   const { listIngredients } = useSelector((store: IStore) => ({
     listIngredients: store.data.listIngredients,
   }));
@@ -259,6 +267,7 @@ const FeelPage: FC = memo(() => {
                   dataTime={item.createdAt}
                   id={item._id}
                   data={getDataCard(item.ingredients)}
+                  pathname={feed}
                 />
               ))}
             </section>
@@ -280,5 +289,3 @@ const FeelPage: FC = memo(() => {
     </>
   );
 });
-
-export default FeelPage;

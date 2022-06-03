@@ -69,6 +69,7 @@ export const checkUser = () => {
       });
     } else {
       dispatch({ type: AUTH_CHECKED });
+      return accessToken;
     }
   };
 };

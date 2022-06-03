@@ -6,7 +6,7 @@ import ResetPage from './reset/ResetPage';
 import { ProfilePage } from './profile/ProfilePage';
 import { NotFound404 } from './notfound/NotFound404';
 import HistoryPage from './history/HistoryPage';
-import FeelPage from './feed/FeedPage';
+import { FeelPage } from './feed/FeedPage';
 
 export {
   HomePage,

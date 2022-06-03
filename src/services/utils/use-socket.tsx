@@ -28,15 +28,19 @@ export const useSocket = (url: string, options: TOptions) => {
   useEffect(() => {
     ws.current = new WebSocket(url);
     ws.current.onopen = () => {
+      console.log('open');
       dispatch({
         type: WS_CONNECTION_SUCCESS,
       });
     };
     ws.current.onerror = (e) => {
+      console.log(e);
       dispatch({ type: 'WS_CONNECTION_ERROR', payload: e });
     };
 
     ws.current.onclose = () => {
+      console.log('close');
+
       dispatch({
         type: WS_CONNECTION_CLOSED,
       });

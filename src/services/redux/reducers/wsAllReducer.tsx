@@ -14,7 +14,9 @@ type TAction = {
 
 const initialState = {
   wsConnected: false,
-  messages: [],
+  messages: {
+    success: false,
+  },
 };
 
 export const wsReducer = (state = initialState, action: TAction) => {
@@ -38,6 +40,7 @@ export const wsReducer = (state = initialState, action: TAction) => {
         ...state,
         error: undefined,
         wsConnected: false,
+        messages: { success: false },
       };
 
     case WS_GET_MESSAGE:

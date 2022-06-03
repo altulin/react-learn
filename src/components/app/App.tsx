@@ -13,7 +13,7 @@ import {
 } from '../../pages';
 import IngredientDetails from '../ingredient-details/IngredientDetails';
 import OrderDetails from '../order-details/OrderDetails';
-import { useDispatch, useSelector } from 'react-redux';
+import { useDispatch, useSelector, shallowEqual } from 'react-redux';
 import { CURRENT_INGREDIENT } from '../../services/redux/actions';
 import { RootState } from '../../services/redux/reducers/rootReducer';
 import { getFeedConstructor } from '../../services/redux/actions/response';
@@ -108,9 +108,14 @@ const App: FC = () => {
     history.goBack();
   };
 
-  const { productsIngredients } = useSelector((store: IStore) => ({
-    productsIngredients: store.data.listIngredients,
-  }));
+  const { productsIngredients } = useSelector(
+    (store: IStore) => ({
+      productsIngredients: store.data.listIngredients,
+    }),
+    shallowEqual,
+  );
+
+  // shallowEqual
 
   const { listConstructor } = useSelector((store: IStore) => ({
     listConstructor: store.data.listConstructor,
@@ -184,11 +189,6 @@ const App: FC = () => {
           <ProtectedRoute path={`${profile_orders}`}>
             <HistoryPage />
           </ProtectedRoute>
-        </ProtectedRoute>
-
-        <ProtectedRoute auth={true} path={`${profile_orders}`}>
-          <h4>test</h4>
-          {/*  */}
         </ProtectedRoute>
 
         <Route path={`${feed}`} exact={true}>
