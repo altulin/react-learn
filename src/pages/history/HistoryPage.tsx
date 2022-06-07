@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux';
 import {
   getCookie,
   deleteCookie,
+  createNewCookie,
   accessCookie,
   refreshCookie,
 } from '../../services/utils/cookie';
@@ -15,54 +16,49 @@ import { useDispatch } from 'react-redux';
 import { USER_LOGOUT } from '../../services/redux/actions';
 import { IStore } from '../../components/app/App';
 import { orders_user } from '../../services/utils/endpoints';
-import { requestWidthRefresh } from '../../services/redux/actions/checkUser';
-import { urlProfile } from '../../services/utils/endpoints';
-import { Dispatch } from 'redux';
+import { refreshToken } from '../../services/redux/actions/checkUser';
 import { useSocket } from '../../services/utils/use-socket';
+import paths from '../../services/utils/paths';
+import { Card } from '../feed/FeedPage';
+import { getDataCard } from '../../services/utils/dataCard';
+import Preload from '../../components/preload/Preload';
 
 const HistoryPage: FC = () => {
   const dispatch = useDispatch();
+  const { profile_orders } = paths;
+
+  const { listIngredients } = useSelector((store: IStore) => ({
+    listIngredients: store.data.listIngredients,
+  }));
 
   const getNormMessage = useCallback((e) => {
     const normalizedMessage = JSON.parse(e.data);
     if (normalizedMessage.success === true) {
       return normalizedMessage;
+    } else if (normalizedMessage.message === 'Invalid or missing token') {
+      refreshToken()
+        .then((refresh) => {
+          console.log(123);
+          createNewCookie(refresh);
+
+          // eslint-disable-next-line
+          useSocket(`${orders_user}?token=${refresh.accessToken}`, {
+            onMessage: getNormMessage,
+          });
+
+          return normalizedMessage.message;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
   }, []);
 
-  // useSocket(orders_all, {
-  //   onMessage: getNormMessage,
-  // });
-
-  // console.log(dispatch(checkUser()));
-
-  // const getToken = () => {
-  //   return function (dispatch: Dispatch) {
-  //     return requestWidthRefresh(urlProfile, {
-  //       method: 'GET',
-  //       headers: {
-  //         'Content-Type': 'application/json',
-  //         Authorization: 'Bearer ' + getCookie(accessCookie),
-  //       },
-  //     })
-  //       .then((res) => {
-
-  //       })
-  //       .catch(() => {});
-  //   };
-  // };?token=${accessToken}
   const accessToken = getCookie(accessCookie);
 
   useSocket(`${orders_user}?token=${accessToken}`, {
     onMessage: getNormMessage,
   });
-
-  useEffect(() => {
-    // console.log(getCookie(accessCookie));
-    // getToken();
-    // dispatch(checkUser());
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
 
   const [state, setState] = useState<any>({
     success: false,
@@ -73,15 +69,13 @@ const HistoryPage: FC = () => {
     messages: store.wc.messages,
   }));
 
-  // useEffect(() => {
-  // if (messages.success) {
-  // const { orders } = messages;
+  useEffect(() => {
+    if (messages.success) {
+      const { orders } = messages;
 
-  // setState({ success: true, orders });
-
-  // console.log(messages);
-  // }
-  // }, [messages]); // eslint-disable-line
+      setState({ success: true, orders });
+    }
+  }, [messages]); // eslint-disable-line
 
   const handleLogout = async () => {
     await fetch(urlLogout, {
@@ -108,11 +102,33 @@ const HistoryPage: FC = () => {
     handleLogout();
   };
   return (
-    <UserPage>
-      <div className={`${styles.wrap} `}>
-        <NavBlock handleExit={handleClick} />
-      </div>
-    </UserPage>
+    <>
+      {state.success ? (
+        <UserPage historyPage={true}>
+          <div className={`${styles.wrap} `}>
+            <NavBlock handleExit={handleClick} />
+
+            <section
+              className={`${styles.list_block} ${styles.list_block_left}`}
+            >
+              {state.orders.map((item: any) => (
+                <Card
+                  key={item._id}
+                  name={item.name}
+                  number={item.number}
+                  dataTime={item.createdAt}
+                  id={item._id}
+                  data={getDataCard(item.ingredients, listIngredients)}
+                  pathname={profile_orders}
+                />
+              ))}
+            </section>
+          </div>
+        </UserPage>
+      ) : (
+        <Preload />
+      )}
+    </>
   );
 };
 

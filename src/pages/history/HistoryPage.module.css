@@ -2,9 +2,32 @@
   display: flex;
   flex-grow: 1;
   max-width: 1320px;
+  width: 100%;
   padding-left: 40px;
   padding-right: 40px;
-  justify-content: flex-start;
+  /* justify-content: center; */
   align-items: flex-start;
   flex-direction: row;
+  overflow-y: hidden;
+}
+
+.list_block {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  overflow-y: scroll;
+  height: 100%;
+  padding-right: 8px;
+}
+
+.list_block::-webkit-scrollbar {
+  width: 8px;
+}
+
+.list_block::-webkit-scrollbar-track {
+  background-color: #2f2f37;
+}
+
+.list_block::-webkit-scrollbar-thumb {
+  background-color: #8585ad;
 }

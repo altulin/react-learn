@@ -53,6 +53,14 @@ html body {
   text-align: center;
 }
 
+body .historyPage {
+  /* padding-top: 44px; */
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  overflow-y: hidden;
+}
+
 /* * { */
 /* outline: 1px solid tomato; */
 /* } */

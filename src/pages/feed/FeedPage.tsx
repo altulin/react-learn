@@ -9,6 +9,7 @@ import Preload from '../../components/preload/Preload';
 import { getDate } from '../../services/utils/date';
 import { IStore } from '../../components/app/App';
 import paths from '../../services/utils/paths';
+import { getDataCard } from '../../services/utils/dataCard';
 
 interface ICard {
   name: string;
@@ -201,26 +202,26 @@ export const FeelPage: FC = memo(() => {
     }
   }, [messages]); // eslint-disable-line
 
-  const getDataCard = (ingredients: Array<string>) => {
-    return ingredients.map((id: string) => {
-      const object = listIngredients.filter(
-        (i: { _id: string }) => i._id === id,
-      )[0];
+  // const getDataCard = (ingredients: Array<string>) => {
+  //   return ingredients.map((id: string) => {
+  //     const object = listIngredients.filter(
+  //       (i: { _id: string }) => i._id === id,
+  //     )[0];
 
-      try {
-        return {
-          image: object.image,
-          price: object.price,
-        };
-      } catch (e) {
-        console.log(e);
-        return {
-          image: 'https://code.s3.yandex.net/react/code/sauce-01.png',
-          price: 100500,
-        };
-      }
-    });
-  };
+  //     try {
+  //       return {
+  //         image: object.image,
+  //         price: object.price,
+  //       };
+  //     } catch (e) {
+  //       console.log(e);
+  //       return {
+  //         image: 'https://code.s3.yandex.net/react/code/sauce-01.png',
+  //         price: 100500,
+  //       };
+  //     }
+  //   });
+  // };
 
   const getDataInfo = (status: string) => {
     const list = state.orders
@@ -266,7 +267,7 @@ export const FeelPage: FC = memo(() => {
                   number={item.number}
                   dataTime={item.createdAt}
                   id={item._id}
-                  data={getDataCard(item.ingredients)}
+                  data={getDataCard(item.ingredients, listIngredients)}
                   pathname={feed}
                 />
               ))}

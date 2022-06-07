@@ -1,25 +1,59 @@
 import { FC, useState, useEffect, useCallback } from 'react';
-import styles from './OrderInfo.module.css';
+import styles from '../order-info/OrderInfo.module.css';
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useLocation } from 'react-router-dom';
 import { useSelector } from 'react-redux';
 import { IStore } from '../app/App';
 import Preload from '../preload/Preload';
 import { getDate } from '../../services/utils/date';
-import { orders_all } from '../../services/utils/endpoints';
+import { orders_user } from '../../services/utils/endpoints';
 import { useSocket } from '../../services/utils/use-socket';
+import {
+  getCookie,
+  // deleteCookie,
+  createNewCookie,
+  accessCookie,
+  // refreshCookie,
+} from '../../services/utils/cookie';
 
-const OrderInfo: FC = () => {
+import { refreshToken } from '../../services/redux/actions/checkUser';
+
+const OrderInfoHistory: FC = () => {
   const location = useLocation();
+
+  // const getNormMessage = useCallback((e) => {
+  //   const normalizedMessage = JSON.parse(e.data);
+  //   if (normalizedMessage.success === true) {
+  //     return normalizedMessage;
+  //   }
+  // }, []);
 
   const getNormMessage = useCallback((e) => {
     const normalizedMessage = JSON.parse(e.data);
     if (normalizedMessage.success === true) {
       return normalizedMessage;
+    } else if (normalizedMessage.message === 'Invalid or missing token') {
+      refreshToken()
+        .then((refresh) => {
+          console.log(123);
+          createNewCookie(refresh);
+
+          // eslint-disable-next-line
+          useSocket(`${orders_user}?token=${refresh.accessToken}`, {
+            onMessage: getNormMessage,
+          });
+
+          return normalizedMessage.message;
+        })
+        .catch((err) => {
+          console.log(err);
+        });
     }
   }, []);
 
-  useSocket(orders_all, {
+  const accessToken = getCookie(accessCookie);
+
+  useSocket(`${orders_user}?token=${accessToken}`, {
     onMessage: getNormMessage,
   });
 
@@ -208,4 +242,4 @@ const OrderInfo: FC = () => {
   );
 };
 
-export default OrderInfo;
+export default OrderInfoHistory;

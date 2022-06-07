@@ -8,7 +8,7 @@ import { Dispatch } from 'redux';
 
 const baseUrl = 'https://norma.nomoreparties.space/api/';
 const URL = `${baseUrl}ingredients`;
-const URL_ORDERS = `${baseUrl}orders`;
+export const URL_ORDERS = `${baseUrl}orders`;
 
 export const checkResponse = (res: Response) => {
   return res.ok ? res.json() : res.json().then((err) => Promise.reject(err));

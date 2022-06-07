@@ -9,3 +9,5 @@ export const urlProfile = 'https://norma.nomoreparties.space/api/auth/user';
 export const urlToken = 'https://norma.nomoreparties.space/api/auth/token';
 export const orders_all = 'wss://norma.nomoreparties.space/orders/all';
 export const orders_user = 'wss://norma.nomoreparties.space/orders';
+
+export const urlOrder = 'https://norma.nomoreparties.space/api/orders';

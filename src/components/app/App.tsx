@@ -14,9 +14,12 @@ import {
 import IngredientDetails from '../ingredient-details/IngredientDetails';
 import OrderDetails from '../order-details/OrderDetails';
 import { useDispatch, useSelector, shallowEqual } from 'react-redux';
-import { CURRENT_INGREDIENT } from '../../services/redux/actions';
+import {
+  CURRENT_INGREDIENT,
+  CREATED_ORDER,
+} from '../../services/redux/actions';
 import { RootState } from '../../services/redux/reducers/rootReducer';
-import { getFeedConstructor } from '../../services/redux/actions/response';
+// import { getFeedConstructor } from '../../services/redux/actions/response';
 import Modal from '../modal/Modal';
 import { Switch, Route, useLocation, useHistory } from 'react-router-dom';
 import path from '../../services/utils/paths';
@@ -26,6 +29,10 @@ import { IFeed } from '../../services/redux/reducers/rootReducer';
 import { checkUser } from '../../services/redux/actions/checkUser';
 import Preload from '../preload/Preload';
 import OrderInfo from '../order-info/OrderInfo';
+import OrderInfoHistory from '../order-info-history/OrderInfoHistory';
+import { requestWidthRefresh } from '../../services/redux/actions/checkUser';
+import { urlOrder } from '../../services/utils/endpoints';
+import { getCookie, accessCookie } from '../../services/utils/cookie';
 
 export type TLocation = {
   state: {
@@ -131,7 +138,25 @@ const App: FC = () => {
       );
 
       if (listId.length !== 0) {
-        dispatch(getFeedConstructor(listId));
+        // dispatch(getFeedConstructor(listId));
+        requestWidthRefresh(urlOrder, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + getCookie(accessCookie),
+          },
+          body: JSON.stringify({
+            ingredients: listId,
+          }),
+        })
+          .then((data) => {
+            dispatch({
+              type: CREATED_ORDER,
+              feed: data.order.number,
+            });
+          })
+          .catch((e) => console.log(e));
+
         setState({
           ...state,
           modalConstructor: true,
@@ -189,6 +214,18 @@ const App: FC = () => {
           <ProtectedRoute path={`${profile_orders}`}>
             <HistoryPage />
           </ProtectedRoute>
+
+          <Route path={`${profile_orders_id}`} exact={true}>
+            {false ? (
+              <Preload />
+            ) : (
+              <main>
+                <Modal close={closeModal} detailClass={'detail'}>
+                  <OrderInfoHistory />
+                </Modal>
+              </main>
+            )}
+          </Route>
         </ProtectedRoute>
 
         <Route path={`${feed}`} exact={true}>
@@ -238,6 +275,14 @@ const App: FC = () => {
         <Route path={`${feed_id}`} exact={true}>
           <Modal close={closeModal}>
             <OrderInfo />
+          </Modal>
+        </Route>
+      )}
+
+      {background && (
+        <Route path={`${profile_orders_id}`} exact={true}>
+          <Modal close={closeModal}>
+            <OrderInfoHistory />
           </Modal>
         </Route>
       )}
