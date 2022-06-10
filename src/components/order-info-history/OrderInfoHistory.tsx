@@ -10,23 +10,21 @@ import { orders_user } from '../../services/utils/endpoints';
 import { useSocket } from '../../services/utils/use-socket';
 import {
   getCookie,
-  // deleteCookie,
   createNewCookie,
   accessCookie,
-  // refreshCookie,
 } from '../../services/utils/cookie';
+
+import {
+  WS_CONNECTION_SUCCESS,
+  WS_CONNECTION_ERROR,
+  WS_CONNECTION_CLOSED,
+  WS_GET_MESSAGE,
+} from '../../services/redux/actions/wsActionTypes';
 
 import { refreshToken } from '../../services/redux/actions/checkUser';
 
 const OrderInfoHistory: FC = () => {
   const location = useLocation();
-
-  // const getNormMessage = useCallback((e) => {
-  //   const normalizedMessage = JSON.parse(e.data);
-  //   if (normalizedMessage.success === true) {
-  //     return normalizedMessage;
-  //   }
-  // }, []);
 
   const getNormMessage = useCallback((e) => {
     const normalizedMessage = JSON.parse(e.data);
@@ -41,6 +39,10 @@ const OrderInfoHistory: FC = () => {
           // eslint-disable-next-line
           useSocket(`${orders_user}?token=${refresh.accessToken}`, {
             onMessage: getNormMessage,
+            typeSuccess: WS_CONNECTION_SUCCESS,
+            typeError: WS_CONNECTION_ERROR,
+            typeClosed: WS_CONNECTION_CLOSED,
+            typeMesssage: WS_GET_MESSAGE,
           });
 
           return normalizedMessage.message;
@@ -55,6 +57,10 @@ const OrderInfoHistory: FC = () => {
 
   useSocket(`${orders_user}?token=${accessToken}`, {
     onMessage: getNormMessage,
+    typeSuccess: WS_CONNECTION_SUCCESS,
+    typeError: WS_CONNECTION_ERROR,
+    typeClosed: WS_CONNECTION_CLOSED,
+    typeMesssage: WS_GET_MESSAGE,
   });
 
   const { listIngredients } = useSelector((store: IStore) => ({

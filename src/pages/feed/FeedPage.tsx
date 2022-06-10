@@ -10,6 +10,12 @@ import { getDate } from '../../services/utils/date';
 import { IStore } from '../../components/app/App';
 import paths from '../../services/utils/paths';
 import { getDataCard } from '../../services/utils/dataCard';
+import {
+  WS_CONNECTION_SUCCESS,
+  WS_CONNECTION_ERROR,
+  WS_CONNECTION_CLOSED,
+  WS_GET_MESSAGE,
+} from '../../services/redux/actions/wsActionTypes';
 
 interface ICard {
   name: string;
@@ -242,6 +248,10 @@ export const FeelPage: FC = memo(() => {
 
   useSocket(orders_all, {
     onMessage: getNormMessage,
+    typeSuccess: WS_CONNECTION_SUCCESS,
+    typeError: WS_CONNECTION_ERROR,
+    typeClosed: WS_CONNECTION_CLOSED,
+    typeMesssage: WS_GET_MESSAGE,
   });
 
   return (

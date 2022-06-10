@@ -1,9 +1,5 @@
 import { useCallback, useRef, useEffect } from 'react';
 import { useDispatch } from 'react-redux';
-import {
-  WS_CONNECTION_SUCCESS,
-  WS_CONNECTION_CLOSED,
-} from '../redux/actions/wsActionTypes';
 
 export const CONNECTING = 'CONNECTING';
 export const OPEN = 'OPEN';
@@ -19,30 +15,36 @@ export const socketStates = {
 
 type TOptions = {
   onMessage: (e: any) => void;
+  typeSuccess: string;
+  typeError: string;
+  typeClosed: string;
+  typeMesssage: string;
 };
 
 export const useSocket = (url: string, options: TOptions) => {
   const ws = useRef<WebSocket | null>(null);
   const dispatch = useDispatch();
+  const { onMessage, typeSuccess, typeError, typeClosed, typeMesssage } =
+    options;
 
   useEffect(() => {
     ws.current = new WebSocket(url);
     ws.current.onopen = () => {
       console.log('open');
       dispatch({
-        type: WS_CONNECTION_SUCCESS,
+        type: typeSuccess,
       });
     };
     ws.current.onerror = (e) => {
       console.log(e);
-      dispatch({ type: 'WS_CONNECTION_ERROR', payload: e });
+      dispatch({ type: typeError, payload: e });
     };
 
     ws.current.onclose = () => {
       console.log('close');
 
       dispatch({
-        type: WS_CONNECTION_CLOSED,
+        type: typeClosed,
       });
     };
 
@@ -59,7 +61,7 @@ export const useSocket = (url: string, options: TOptions) => {
     if (!ws.current) return;
 
     ws.current.onmessage = (e) => {
-      dispatch({ type: 'WS_GET_MESSAGE', payload: options.onMessage(e) });
+      dispatch({ type: typeMesssage, payload: onMessage(e) });
     };
   }, []); // eslint-disable-line
 };
