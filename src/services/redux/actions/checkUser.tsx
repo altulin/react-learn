@@ -1,4 +1,4 @@
-import { Dispatch } from 'redux';
+import { AppDispatch } from '../../..';
 
 import {
   AUTH_CHECKED,
@@ -11,6 +11,7 @@ import {
   GET_USER_REQUEST,
   GET_USER_SUCCESS,
   GET_USER_FAILED,
+  TResponseActions,
 } from '.';
 
 import {
@@ -27,58 +28,84 @@ import {
   urlRegister,
 } from '../../utils/endpoints';
 import { checkResponse } from './response';
+// import { type } from 'os';
 
 export const getUser = () => {
-  return function (dispatch: Dispatch) {
-    dispatch({
-      type: GET_USER_REQUEST,
-    });
+  const getUserSuccess = (feed: {
+    email: string;
+    name: string;
+  }): TResponseActions => ({
+    type: GET_USER_SUCCESS,
+    feed,
+  });
 
-    return requestWidthRefresh(urlProfile, {
-      method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: 'Bearer ' + getCookie(accessCookie),
-      },
-    })
-      .then((res) => {
-        if (res) {
-          dispatch({
-            type: GET_USER_SUCCESS,
-            feed: { email: res.user.email, name: res.user.name },
-          });
+  const getUserRequest = (): TResponseActions => ({
+    type: GET_USER_REQUEST,
+  });
 
-          // dispatch({ type: AUTH_CHECKED });
-        }
-      })
-      .catch(() => {
-        dispatch({
-          type: GET_USER_FAILED,
-        });
+  const getUserFailed = (): TResponseActions => ({
+    type: GET_USER_FAILED,
+  });
+  return async function (dispatch: AppDispatch) {
+    dispatch(getUserRequest());
+
+    try {
+      const res = await requestWidthRefresh(urlProfile, {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + getCookie(accessCookie),
+        },
       });
+      if (res) {
+        dispatch(
+          getUserSuccess({ email: res.user.email, name: res.user.name }),
+        );
+      }
+    } catch {
+      dispatch(getUserFailed());
+    }
   };
 };
 
 export const checkUser = () => {
+  const authChecked = (): TResponseActions => ({
+    type: AUTH_CHECKED,
+  });
+
   return function (dispatch: any) {
     const accessToken = getCookie(accessCookie);
 
     if (accessToken) {
       dispatch(getUser()).finally(() => {
-        dispatch({ type: AUTH_CHECKED });
+        dispatch(authChecked());
       });
     } else {
-      dispatch({ type: AUTH_CHECKED });
+      dispatch(authChecked());
       return accessToken;
     }
   };
 };
 
 export const loginUser = (value: { email: string; password: string }) => {
-  return async function (dispatch: Dispatch) {
-    dispatch({
-      type: LOGIN_USER_REQUEST,
-    });
+  const loginUserSuccess = (feed: {
+    email: string;
+    name: string;
+  }): TResponseActions => ({
+    type: LOGIN_USER_SUCCESS,
+    feed,
+  });
+
+  const loginUserRequest = (): TResponseActions => ({
+    type: LOGIN_USER_REQUEST,
+  });
+
+  const loginUserFailed = (): TResponseActions => ({
+    type: LOGIN_USER_FAILED,
+  });
+
+  return async function (dispatch: AppDispatch) {
+    dispatch(loginUserRequest());
 
     await fetch(urlLogin, {
       method: 'POST',
@@ -90,18 +117,16 @@ export const loginUser = (value: { email: string; password: string }) => {
       .then((res) => checkResponse(res))
       .then((res) => {
         if (res && res.success) {
-          dispatch({
-            type: LOGIN_USER_SUCCESS,
-            feed: { email: res.user.email, name: res.user.name },
-          });
+          dispatch(
+            loginUserSuccess({
+              email: res.user.email,
+              name: res.user.name,
+            }),
+          );
           createNewCookie(res);
         }
       })
-      .catch(() =>
-        dispatch({
-          type: LOGIN_USER_FAILED,
-        }),
-      );
+      .catch(() => dispatch(loginUserFailed()));
   };
 };
 
@@ -110,11 +135,24 @@ export const registerUser = (value: {
   password: string;
   name: string;
 }) => {
-  return async function (dispatch: Dispatch) {
-    console.log(value);
-    dispatch({
-      type: REGISTER_USER_REQUEST,
-    });
+  const registerUserRequest = (): TResponseActions => ({
+    type: REGISTER_USER_REQUEST,
+  });
+
+  const registerUserFailed = (): TResponseActions => ({
+    type: REGISTER_USER_FAILED,
+  });
+
+  const registerUserSuccess = (feed: {
+    email: string;
+    name: string;
+  }): TResponseActions => ({
+    type: REGISTER_USER_SUCCESS,
+    feed,
+  });
+
+  return async function (dispatch: AppDispatch) {
+    dispatch(registerUserRequest());
 
     await fetch(urlRegister, {
       method: 'POST',
@@ -126,19 +164,13 @@ export const registerUser = (value: {
       .then((res) => checkResponse(res))
       .then((res) => {
         if (res && res.success) {
-          console.log({ email: res.user.email, name: res.user.name });
-          dispatch({
-            type: REGISTER_USER_SUCCESS,
-            feed: { email: res.user.email, name: res.user.name },
-          });
+          dispatch(
+            registerUserSuccess({ email: res.user.email, name: res.user.name }),
+          );
           createNewCookie(res);
         }
       })
-      .catch(() =>
-        dispatch({
-          type: REGISTER_USER_FAILED,
-        }),
-      );
+      .catch(() => dispatch(registerUserFailed()));
   };
 };
 

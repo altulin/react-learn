@@ -2,8 +2,7 @@ import { FC, useState, useEffect, useCallback } from 'react';
 import styles from '../order-info/OrderInfo.module.css';
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useLocation } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { IStore } from '../app/App';
+import { useSelector } from '../../index';
 import Preload from '../preload/Preload';
 import { getDate } from '../../services/utils/date';
 import { orders_user } from '../../services/utils/endpoints';
@@ -63,11 +62,11 @@ const OrderInfoHistory: FC = () => {
     typeMesssage: WS_GET_MESSAGE,
   });
 
-  const { listIngredients } = useSelector((store: IStore) => ({
+  const { listIngredients } = useSelector((store) => ({
     listIngredients: store.data.listIngredients,
   }));
 
-  const { messages } = useSelector((store: IStore) => ({
+  const { messages } = useSelector((store) => ({
     messages: store.wc.messages,
   }));
 

@@ -3,7 +3,7 @@ import { FC, useState, useEffect, useCallback } from 'react';
 import UserPage from '../../components/form/FormPage';
 import { NavBlock } from '../profile/ProfilePage';
 import { urlLogout } from '../../services/utils/endpoints';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from '../../index';
 import {
   getCookie,
   deleteCookie,
@@ -12,9 +12,7 @@ import {
   refreshCookie,
 } from '../../services/utils/cookie';
 import { checkResponse } from '../../services/redux/actions/response';
-import { useDispatch } from 'react-redux';
-import { USER_LOGOUT } from '../../services/redux/actions';
-import { IStore } from '../../components/app/App';
+import { USER_LOGOUT, TResponseActions } from '../../services/redux/actions';
 import { orders_user } from '../../services/utils/endpoints';
 import { refreshToken } from '../../services/redux/actions/checkUser';
 import { useSocket } from '../../services/utils/use-socket';
@@ -33,7 +31,7 @@ const HistoryPage: FC = () => {
   const dispatch = useDispatch();
   const { profile_orders } = paths;
 
-  const { listIngredients } = useSelector((store: IStore) => ({
+  const { listIngredients } = useSelector((store) => ({
     listIngredients: store.data.listIngredients,
   }));
 
@@ -79,7 +77,7 @@ const HistoryPage: FC = () => {
     orders: {},
   });
 
-  const { messages } = useSelector((store: IStore) => ({
+  const { messages } = useSelector((store) => ({
     messages: store.wc.messages,
   }));
 
@@ -92,6 +90,10 @@ const HistoryPage: FC = () => {
   }, [messages]); // eslint-disable-line
 
   const handleLogout = async () => {
+    const userLogout = (): TResponseActions => ({
+      type: USER_LOGOUT,
+    });
+
     await fetch(urlLogout, {
       method: 'POST',
       headers: {
@@ -102,9 +104,7 @@ const HistoryPage: FC = () => {
       .then((res) => checkResponse(res))
       .then((res) => {
         if (res && res.success) {
-          dispatch({
-            type: USER_LOGOUT,
-          });
+          dispatch(userLogout());
           deleteCookie(refreshCookie);
           deleteCookie(accessCookie);
         }

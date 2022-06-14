@@ -7,7 +7,7 @@ import {
 import styles from '../login/LoginPage.module.css';
 import { Link } from 'react-router-dom';
 import path from '../../services/utils/paths';
-import { useDispatch } from 'react-redux';
+import { useDispatch } from '../../index';
 import { registerUser } from '../../services/redux/actions/checkUser';
 
 const RegistrationPage: FC = () => {

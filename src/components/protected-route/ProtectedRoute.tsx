@@ -1,6 +1,5 @@
 import { Route, Redirect, useLocation } from 'react-router-dom';
-import { useSelector } from 'react-redux';
-import { RootState } from '../../services/redux/reducers/rootReducer';
+import { useSelector } from '../../index';
 import paths from '../../services/utils/paths';
 import { FC, ReactNode } from 'react';
 import { TLocation } from '../app/App';
@@ -17,7 +16,7 @@ export const ProtectedRoute: FC<IProtectedRoute> = ({
   children,
   ...rest
 }) => {
-  const user = useSelector((state: RootState) => state.user);
+  const user = useSelector((state) => state.user);
 
   const { isAuthChecked, data } = user;
 

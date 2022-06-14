@@ -9,16 +9,25 @@ import {
   LIST_CURRENT_INGREDIENTS,
   CURRENT_INGREDIENT,
   CREATED_ORDER,
+  TResponseActions,
 } from '../actions';
+
+type TInitialState = {
+  listIngredients: Array<IFeed>;
+  listConstructor: Array<IFeed>;
+  orderNumber: number;
+  feed: boolean;
+  feedError: boolean;
+};
 
 const initialState = {
   listIngredients: [], //список всех полученных ингредиентов
   listConstructor: [], //список всех ингредиентов в текущем конструкторе бургера
-  currentIngredient: {}, //объект текущего просматриваемого ингредиента
+  // currentIngredient: {}, //объект текущего просматриваемого ингредиента
   orderNumber: null, // объект созданного заказа
   feed: false, // состояние загрузки с сервера для лоадера
   feedError: false, // ошибка прм загрузке с сервера
-  user: {},
+  // user: {},
 };
 
 export interface IFeed {
@@ -35,11 +44,7 @@ export interface IFeed {
   _id: string;
 }
 
-export const dataReducer = (
-  state = initialState,
-  action: { type: string; feed: Array<IFeed> },
-) => {
-  // console.log(action.feed);
+export const dataReducer = (state = initialState, action: TResponseActions) => {
   switch (action.type) {
     case GET_LIST_INGREDIENTS: {
       return {
@@ -91,8 +96,6 @@ export const dataReducer = (
     }
   }
 };
-
-export type RootState = ReturnType<typeof rootReducer>;
 
 export const rootReducer = combineReducers({
   data: dataReducer,

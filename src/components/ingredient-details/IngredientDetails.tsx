@@ -1,11 +1,10 @@
 import styles from './IngredientDetails.module.css';
-import { useSelector } from 'react-redux';
+import { useSelector } from '../../index';
 import { useLocation } from 'react-router-dom';
 import { FC } from 'react';
-import { IStore } from '../app/App';
 
 const IngredientDetails: FC = () => {
-  const { listIngredients } = useSelector((store: IStore) => ({
+  const { listIngredients } = useSelector((store) => ({
     listIngredients: store.data.listIngredients,
   }));
 

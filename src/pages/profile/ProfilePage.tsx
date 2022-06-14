@@ -14,18 +14,17 @@ import {
   accessCookie,
   refreshCookie,
 } from '../../services/utils/cookie';
-import { Dispatch } from 'redux';
+import { AppDispatch } from '../..';
 import { urlLogout, urlProfile } from '../../services/utils/endpoints';
 import { checkResponse } from '../../services/redux/actions/response';
 import { requestWidthRefresh } from '../../services/redux/actions/checkUser';
-import { useDispatch } from 'react-redux';
-import { RootState } from '../../services/redux/reducers/rootReducer';
-import { useSelector } from 'react-redux';
+import { useSelector, useDispatch } from '../../index';
 import {
   USER_LOGOUT,
   UPDATE_USER_REQUEST,
   UPDATE_USER_SUCCESS,
   UPDATE_USER_FAILED,
+  TResponseActions,
 } from '../../services/redux/actions';
 
 interface INavBlock {
@@ -74,7 +73,7 @@ export const NavBlock: FC<INavBlock> = ({ handleExit }) => {
 
 export const ProfilePage: FC = () => {
   const dispatch = useDispatch();
-  const { data } = useSelector((state: RootState) => state.user);
+  const { data } = useSelector((state) => state.user);
 
   const [value] = useState({
     email: data['email'] as string,
@@ -89,6 +88,10 @@ export const ProfilePage: FC = () => {
   });
 
   const handleLogout = async () => {
+    const userLogout = (): TResponseActions => ({
+      type: USER_LOGOUT,
+    });
+
     await fetch(urlLogout, {
       method: 'POST',
       headers: {
@@ -99,9 +102,7 @@ export const ProfilePage: FC = () => {
       .then((res) => checkResponse(res))
       .then((res) => {
         if (res && res.success) {
-          dispatch({
-            type: USER_LOGOUT,
-          });
+          dispatch(userLogout());
           deleteCookie(refreshCookie);
           deleteCookie(accessCookie);
         }
@@ -138,33 +139,38 @@ export const ProfilePage: FC = () => {
     dispatch(patchNewData());
   };
 
-  const patchNewData = () => {
-    return function (dispatch: Dispatch) {
-      dispatch({
-        type: UPDATE_USER_REQUEST,
-      });
+  const updateUserRequest = (): TResponseActions => ({
+    type: UPDATE_USER_REQUEST,
+  });
 
-      return requestWidthRefresh(urlProfile, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + getCookie(accessCookie),
-        },
-        body: JSON.stringify({ email: email, name: login, password: password }),
-      })
-        .then((res) => {
-          if (res) {
-            dispatch({
-              type: UPDATE_USER_SUCCESS,
-              feed: { email: res.user.email, name: res.user.name },
-            });
-          }
-        })
-        .catch(() => {
-          dispatch({
-            type: UPDATE_USER_FAILED,
-          });
+  const patchNewData = () => {
+    return async function (dispatch: AppDispatch) {
+      dispatch(updateUserRequest());
+
+      try {
+        const res = await requestWidthRefresh(urlProfile, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + getCookie(accessCookie),
+          },
+          body: JSON.stringify({
+            email: email,
+            name: login,
+            password: password,
+          }),
         });
+        if (res) {
+          dispatch({
+            type: UPDATE_USER_SUCCESS,
+            feed: { email: res.user.email, name: res.user.name },
+          });
+        }
+      } catch {
+        dispatch({
+          type: UPDATE_USER_FAILED,
+        });
+      }
     };
   };
 

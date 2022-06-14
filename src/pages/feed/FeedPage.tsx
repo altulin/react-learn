@@ -4,10 +4,9 @@ import { Link, useLocation } from 'react-router-dom';
 import { CurrencyIcon } from '@ya.praktikum/react-developer-burger-ui-components';
 import { orders_all } from '../../services/utils/endpoints';
 import { useSocket } from '../../services/utils/use-socket';
-import { useSelector } from 'react-redux';
+import { useSelector } from '../../index';
 import Preload from '../../components/preload/Preload';
 import { getDate } from '../../services/utils/date';
-import { IStore } from '../../components/app/App';
 import paths from '../../services/utils/paths';
 import { getDataCard } from '../../services/utils/dataCard';
 import {
@@ -185,11 +184,11 @@ const Info: FC<IInfo> = memo(({ total, totalToday, infoDone, infoPending }) => {
 export const FeelPage: FC = memo(() => {
   const { feed } = paths;
 
-  const { listIngredients } = useSelector((store: IStore) => ({
+  const { listIngredients } = useSelector((store) => ({
     listIngredients: store.data.listIngredients,
   }));
 
-  const { messages } = useSelector((store: IStore) => ({
+  const { messages } = useSelector((store) => ({
     messages: store.wc.messages,
   }));
 

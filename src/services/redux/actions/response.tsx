@@ -3,43 +3,53 @@ import {
   GET_FEED,
   GET_FEED_FAILED,
   CREATED_ORDER,
+  TResponseActions,
 } from '.';
-import { Dispatch } from 'redux';
 
-const baseUrl = 'https://norma.nomoreparties.space/api/';
-const URL = `${baseUrl}ingredients`;
-export const URL_ORDERS = `${baseUrl}orders`;
+import { AppDispatch } from '../../..';
+import { urlOrder, urlIngredients } from '../../utils/endpoints';
 
 export const checkResponse = (res: Response) => {
   return res.ok ? res.json() : res.json().then((err) => Promise.reject(err));
 };
 
-export const getFeed = () => {
-  return async function (dispatch: Dispatch) {
-    dispatch({
-      type: GET_FEED,
-    });
+const getListIngredients = (data: Array<{}>): TResponseActions => ({
+  type: GET_LIST_INGREDIENTS,
+  feed: data,
+});
 
-    await fetch(URL)
+const getFeedAction = (): TResponseActions => ({
+  type: GET_FEED,
+});
+
+const getFeedFailed = (): TResponseActions => ({
+  type: GET_FEED_FAILED,
+});
+
+const createdOrder = (data: Array<{}>): TResponseActions => ({
+  type: CREATED_ORDER,
+  feed: data,
+});
+
+export const getFeed = () => {
+  return async function (dispatch: AppDispatch) {
+    dispatch(getFeedAction());
+
+    await fetch(urlIngredients)
       .then(checkResponse)
       .then((data) => {
-        dispatch({
-          type: GET_LIST_INGREDIENTS,
-          feed: data.data,
-        });
+        dispatch(getListIngredients(data.data));
       })
 
       .catch(() => {
-        dispatch({
-          type: GET_FEED_FAILED,
-        });
+        dispatch(getFeedFailed());
       });
   };
 };
 
 export const getFeedConstructor = (list: Array<string>) => {
-  return function (dispatch: Dispatch) {
-    fetch(URL_ORDERS, {
+  return function (dispatch: AppDispatch) {
+    fetch(urlOrder, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
@@ -50,10 +60,7 @@ export const getFeedConstructor = (list: Array<string>) => {
     })
       .then(checkResponse)
       .then((data) => {
-        dispatch({
-          type: CREATED_ORDER,
-          feed: data.order.number,
-        });
+        dispatch(createdOrder(data.order.number));
       })
       .catch((e) => console.log(e));
   };

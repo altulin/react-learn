@@ -7,11 +7,12 @@ import {
   Button,
   DragIcon,
 } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useDispatch, useSelector } from 'react-redux';
-import { LIST_CURRENT_INGREDIENTS } from '../../services/redux/actions';
-// import { RootState } from '../../services/reducers/rootReducer';
+import { useDispatch, useSelector } from '../../';
+import {
+  LIST_CURRENT_INGREDIENTS,
+  TResponseActions,
+} from '../../services/redux/actions';
 import type { XYCoord } from 'dnd-core';
-import { IStore } from '../app/App';
 import { IFeed } from '../../services/redux/reducers/rootReducer';
 import { v4 as uuidv4 } from 'uuid';
 
@@ -20,6 +21,11 @@ const BUN = 'bun';
 type TButtonConstructor = {
   position?: boolean;
 };
+
+const listCurrentIngredients = (feed: Array<{}>): TResponseActions => ({
+  type: LIST_CURRENT_INGREDIENTS,
+  feed,
+});
 
 const ButtonConstructor: FC<TButtonConstructor> = ({ position }) => {
   const hidden = styles.constructor_button_hidden;
@@ -59,20 +65,13 @@ const ConstructorItem: FC<TConstructorItem> = ({
   const dispatch = useDispatch();
   const ref = React.useRef<HTMLLIElement>(null);
 
-  const { constructorList } = useSelector((store: IStore) => ({
+  const { constructorList } = useSelector((store) => ({
     constructorList: store.data.listConstructor,
   }));
 
-  const getListCurrentIngredients = (feed: {}[]) => {
-    dispatch({
-      type: LIST_CURRENT_INGREDIENTS,
-      feed,
-    });
-  };
-
   const handleRemove = (i: number) => {
     constructorList.splice(i, 1);
-    getListCurrentIngredients(constructorList);
+    dispatch(listCurrentIngredients(constructorList));
   };
 
   const sortingList = (fromIndex: number, toIndex: number) => {
@@ -80,7 +79,7 @@ const ConstructorItem: FC<TConstructorItem> = ({
     constructorList.splice(fromIndex, 1);
     constructorList.splice(toIndex, 0, element);
 
-    getListCurrentIngredients(constructorList);
+    dispatch(listCurrentIngredients(constructorList));
   };
 
   const [{ isDragging }, drag] = useDrag({
@@ -188,16 +187,9 @@ const BurgerConstructor: FC<IBurgerConstructor> = ({ openModal }) => {
     return Array.from(new Set(list.map((item) => item.type)));
   };
 
-  const { productsIngredients } = useSelector((store: IStore) => ({
+  const { productsIngredients } = useSelector((store) => ({
     productsIngredients: store.data.listIngredients,
   }));
-
-  const getListCurrentIngredients = (feed: {}[]) => {
-    dispatch({
-      type: LIST_CURRENT_INGREDIENTS,
-      feed,
-    });
-  };
 
   const [, refTarget] = useDrop({
     accept: getTitleList(productsIngredients),
@@ -206,7 +198,7 @@ const BurgerConstructor: FC<IBurgerConstructor> = ({ openModal }) => {
     },
   });
 
-  let { constructorList } = useSelector((store: IStore) => ({
+  let { constructorList } = useSelector((store) => ({
     constructorList: store.data.listConstructor,
   }));
 
@@ -214,8 +206,6 @@ const BurgerConstructor: FC<IBurgerConstructor> = ({ openModal }) => {
     uuid?: string;
     type: string;
   }
-
-  // type TFeedConstructor = Omit<IFeedNewItem, 'calories'>;
 
   const onDropHandler = (id: string) => {
     const newItem: IFeedNewItem = Object.assign(
@@ -232,7 +222,7 @@ const BurgerConstructor: FC<IBurgerConstructor> = ({ openModal }) => {
       constructorList.splice(-1, 0, newItem);
     }
 
-    getListCurrentIngredients(constructorList);
+    dispatch(listCurrentIngredients(constructorList));
   };
 
   const getList = () => {

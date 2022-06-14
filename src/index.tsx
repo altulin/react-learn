@@ -3,17 +3,43 @@ import ReactDOM from 'react-dom';
 import './index.css';
 import App from './components/app/App';
 import reportWebVitals from './reportWebVitals';
-import { Provider } from 'react-redux';
-import { createStore, compose, applyMiddleware } from 'redux';
-import thunk from 'redux-thunk';
+import {
+  Provider,
+  TypedUseSelectorHook,
+  useSelector as selectorHook,
+  useDispatch as dispatchHook,
+} from 'react-redux';
+
+import {
+  createStore,
+  compose,
+  applyMiddleware,
+  Dispatch,
+  ActionCreator,
+  Action,
+} from 'redux';
+import thunk, { ThunkAction } from 'redux-thunk';
 import { rootReducer } from './services/redux/reducers/rootReducer';
 import { BrowserRouter as Router } from 'react-router-dom';
+import { TResponseActions } from './services/redux/actions';
+import { IStore } from './components/app/App';
 
 const composeEnhancers =
   (window['__REDUX_DEVTOOLS_EXTENSION_COMPOSE__'] as typeof compose) || compose;
 const enhancer = composeEnhancers(applyMiddleware(thunk));
 
 const store = createStore(rootReducer, enhancer);
+export type RootState = ReturnType<typeof store.getState>;
+type TApplicationActions = TResponseActions;
+
+export type AppThunk<TReturn = void> = ActionCreator<
+  ThunkAction<TReturn, Action, RootState, TApplicationActions>
+>;
+
+export type AppDispatch = Dispatch<TApplicationActions>;
+export const useSelector: TypedUseSelectorHook<RootState | IStore> =
+  selectorHook;
+export const useDispatch = () => dispatchHook<AppDispatch | AppThunk>();
 
 declare global {
   interface Window {

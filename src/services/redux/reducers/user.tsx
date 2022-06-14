@@ -23,13 +23,13 @@ const stateUser = {
   registerUserError: null,
   registerUserRequest: false,
 
-  loginUserError: null,
+  loginUserError: false,
   loginUserRequest: false,
 
-  getUserError: null,
+  getUserError: false,
   getUserRequest: false,
 
-  updateUserError: null,
+  updateUserError: false,
   updateUserRequest: false,
 };
 
@@ -53,7 +53,7 @@ export const userReducer = (
     case REGISTER_USER_REQUEST: {
       return {
         ...state,
-        registerUserError: null,
+        registerUserError: false,
         registerUserRequest: true,
       };
     }
@@ -77,7 +77,7 @@ export const userReducer = (
     case LOGIN_USER_REQUEST: {
       return {
         ...state,
-        loginUserError: null,
+        loginUserError: false,
         loginUserRequest: true,
       };
     }
@@ -102,7 +102,7 @@ export const userReducer = (
     case GET_USER_REQUEST: {
       return {
         ...state,
-        getUserError: null,
+        getUserError: false,
         getUserRequest: true,
       };
     }
@@ -110,7 +110,7 @@ export const userReducer = (
     case GET_USER_SUCCESS: {
       return {
         ...state,
-        getUserError: null,
+        getUserError: false,
         getUserRequest: false,
         data: { name: action.feed.name, email: action.feed.email },
       };
@@ -128,7 +128,7 @@ export const userReducer = (
     case UPDATE_USER_REQUEST: {
       return {
         ...state,
-        updateUserError: null,
+        updateUserError: false,
         updateUserRequest: true,
       };
     }
@@ -136,7 +136,7 @@ export const userReducer = (
     case UPDATE_USER_SUCCESS: {
       return {
         ...state,
-        updateUserError: null,
+        updateUserError: false,
         updateUserRequest: false,
         data: { name: action.feed.name, email: action.feed.email },
       };

@@ -4,10 +4,9 @@ import {
   Tab,
   CurrencyIcon,
 } from '@ya.praktikum/react-developer-burger-ui-components';
-import { useSelector } from 'react-redux';
+import { useSelector } from '../../index';
 import { useDrag } from 'react-dnd';
 import { Link, useLocation } from 'react-router-dom';
-import { IStore } from '../app/App';
 
 const translate = (type: string) => {
   let action;
@@ -80,7 +79,7 @@ interface IBurgerBlock {
 }
 
 const BurgerBlock: FC<IBurgerBlock> = ({ type, openModal, myClass }) => {
-  const { productsIngredients } = useSelector((store: IStore) => ({
+  const { productsIngredients } = useSelector((store) => ({
     productsIngredients: store.data.listIngredients,
   }));
 
@@ -143,7 +142,7 @@ const BurgerCard: FC<IBurgerCard> = ({
 }) => {
   const location = useLocation();
 
-  const { constructorList } = useSelector((store: IStore) => ({
+  const { constructorList } = useSelector((store) => ({
     constructorList: store.data.listConstructor,
   }));
 
@@ -207,7 +206,7 @@ interface IBurgerIngredients {
 const BurgerIngredients: FC<IBurgerIngredients> = ({ openModal }) => {
   const [currentTab, setCurrent] = React.useState('bun');
 
-  const { productsIngredients } = useSelector((store: IStore) => ({
+  const { productsIngredients } = useSelector((store) => ({
     productsIngredients: store.data.listIngredients,
   }));
 

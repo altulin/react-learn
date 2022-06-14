@@ -1,5 +1,5 @@
 import { useCallback, useRef, useEffect } from 'react';
-import { useDispatch } from 'react-redux';
+import { useDispatch } from '../../index';
 
 export const CONNECTING = 'CONNECTING';
 export const OPEN = 'OPEN';

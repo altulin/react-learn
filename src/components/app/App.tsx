@@ -13,13 +13,13 @@ import {
 } from '../../pages';
 import IngredientDetails from '../ingredient-details/IngredientDetails';
 import OrderDetails from '../order-details/OrderDetails';
-import { useDispatch, useSelector, shallowEqual } from 'react-redux';
+import { shallowEqual } from 'react-redux';
+import { useSelector, useDispatch } from '../..';
 import {
   CURRENT_INGREDIENT,
   CREATED_ORDER,
+  TResponseActions,
 } from '../../services/redux/actions';
-import { RootState } from '../../services/redux/reducers/rootReducer';
-// import { getFeedConstructor } from '../../services/redux/actions/response';
 import Modal from '../modal/Modal';
 import { Switch, Route, useLocation, useHistory } from 'react-router-dom';
 import path from '../../services/utils/paths';
@@ -69,7 +69,32 @@ export interface IStore {
       totalToday: number;
     };
   };
+  user: {
+    isAuthChecked: boolean;
+
+    data: {
+      name: string;
+      email: string;
+    };
+
+    registerUserError: boolean;
+    registerUserRequest: boolean;
+
+    loginUserError: boolean;
+    loginUserRequest: boolean;
+
+    getUserError: boolean;
+    getUserRequest: boolean;
+
+    updateUserError: boolean;
+    updateUserRequest: boolean;
+  };
 }
+
+export const currentIngredient = (feed: {}): TResponseActions => ({
+  type: CURRENT_INGREDIENT,
+  feed,
+});
 
 const App: FC = () => {
   const {
@@ -104,31 +129,22 @@ const App: FC = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const currentIngredient = (feed: {}) => {
-    dispatch({
-      type: CURRENT_INGREDIENT,
-      feed,
-    });
-  };
-
   const closeModal = () => {
     history.goBack();
   };
 
   const { productsIngredients } = useSelector(
-    (store: IStore) => ({
+    (store) => ({
       productsIngredients: store.data.listIngredients,
     }),
     shallowEqual,
   );
 
-  // shallowEqual
-
-  const { listConstructor } = useSelector((store: IStore) => ({
+  const { listConstructor } = useSelector((store) => ({
     listConstructor: store.data.listConstructor,
   }));
 
-  const user = useSelector((state: RootState) => state.user);
+  const user = useSelector((state) => state.user);
   const { data } = user;
 
   const handleOpenModalConstructor = () => {
@@ -138,7 +154,6 @@ const App: FC = () => {
       );
 
       if (listId.length !== 0) {
-        // dispatch(getFeedConstructor(listId));
         requestWidthRefresh(urlOrder, {
           method: 'POST',
           headers: {
@@ -174,10 +189,10 @@ const App: FC = () => {
       modalConstructor: false,
     });
 
-    currentIngredient({});
+    dispatch(currentIngredient({}));
   };
 
-  const { price } = useSelector((store: IStore) => ({
+  const { price } = useSelector((store) => ({
     price: store.data.orderNumber,
   }));
 

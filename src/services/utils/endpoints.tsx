@@ -9,6 +9,7 @@ export const urlLogout = `${baseUrl}/auth/logout`;
 export const urlProfile = `${baseUrl}/auth/user`;
 export const urlToken = `${baseUrl}/auth/token`;
 export const urlOrder = `${baseUrl}/orders`;
+export const urlIngredients = `${baseUrl}/ingredients`;
 
 export const orders_all = `${baseWs}/orders/all`;
 export const orders_user = `${baseWs}/orders`;

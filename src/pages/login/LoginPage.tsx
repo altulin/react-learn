@@ -8,7 +8,7 @@ import {
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './LoginPage.module.css';
 import { Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch } from '../../index';
 
 const LoginPage: FC = () => {
   const { register, forgot } = path;
