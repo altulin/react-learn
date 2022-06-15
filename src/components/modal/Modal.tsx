@@ -30,7 +30,9 @@ const Modal: FC<IModal> = ({ children, close, detailClass }) => {
 
   return ReactDOM.createPortal(
     <>
-      <div className={`${styles.inner} ${styles[`${detailClass}`]}`}>
+      <div
+        className={`${styles.inner} ${styles[`${detailClass}`]} ${detailClass}`}
+      >
         <button className={styles.close} onClick={close}></button>
         {children}
       </div>

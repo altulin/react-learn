@@ -1,14 +1,14 @@
 import { useState, FC } from 'react';
 import FormPage from '../../components/form/FormPage';
 import path from '../../services/utils/paths';
-import { loginUser } from '../../services/actions/checkUser';
+import { loginUser } from '../../services/redux/actions/checkUser';
 import {
   Input,
   Button,
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import styles from './LoginPage.module.css';
 import { Link } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import { useDispatch } from '../../index';
 
 const LoginPage: FC = () => {
   const { register, forgot } = path;

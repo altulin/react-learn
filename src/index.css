@@ -45,6 +45,22 @@ html body {
   margin-top: 24px;
 }
 
-/* * {
-  outline: 1px solid tomato;
-} */
+.modal-root {
+  z-index: 10;
+}
+
+.detail .order_number {
+  text-align: center;
+}
+
+body .historyPage {
+  /* padding-top: 44px; */
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  overflow-y: hidden;
+}
+
+/* * { */
+/* outline: 1px solid tomato; */
+/* } */

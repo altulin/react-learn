@@ -1,5 +1,5 @@
 import React, { useState, FC } from 'react';
-import FormPage from '../../components/form/FormPage';
+import UserPage from '../../components/form/FormPage';
 import {
   Input,
   Button,
@@ -14,26 +14,25 @@ import {
   accessCookie,
   refreshCookie,
 } from '../../services/utils/cookie';
-import { Dispatch } from 'redux';
+import { AppDispatch } from '../..';
 import { urlLogout, urlProfile } from '../../services/utils/endpoints';
-import { checkResponse } from '../../services/actions/response';
-import { requestWidthRefresh } from '../../services/actions/checkUser';
-import { useDispatch } from 'react-redux';
-import { RootState } from '../../services/reducers/rootReducer';
-import { useSelector } from 'react-redux';
+import { checkResponse } from '../../services/redux/actions/response';
+import { requestWidthRefresh } from '../../services/redux/actions/checkUser';
+import { useSelector, useDispatch } from '../../index';
 import {
   USER_LOGOUT,
   UPDATE_USER_REQUEST,
   UPDATE_USER_SUCCESS,
   UPDATE_USER_FAILED,
-} from '../../services/actions';
+  TResponseActions,
+} from '../../services/redux/actions';
 
 interface INavBlock {
   handleExit: (e: React.MouseEvent | React.KeyboardEvent) => void;
 }
 
-const NavBlock: FC<INavBlock> = ({ handleExit }) => {
-  const { profile, profile_orders, main } = path;
+export const NavBlock: FC<INavBlock> = ({ handleExit }) => {
+  const { profile, main, profile_orders } = path;
 
   return (
     <div className={profile_styles.nav}>
@@ -53,6 +52,7 @@ const NavBlock: FC<INavBlock> = ({ handleExit }) => {
       >
         История заказов
       </NavLink>
+
       <NavLink
         exact
         to={{ pathname: `${main}` }}
@@ -71,9 +71,9 @@ const NavBlock: FC<INavBlock> = ({ handleExit }) => {
   );
 };
 
-const ProfilePage: FC = () => {
+export const ProfilePage: FC = () => {
   const dispatch = useDispatch();
-  const { data } = useSelector((state: RootState) => state.user);
+  const { data } = useSelector((state) => state.user);
 
   const [value] = useState({
     email: data['email'] as string,
@@ -88,6 +88,10 @@ const ProfilePage: FC = () => {
   });
 
   const handleLogout = async () => {
+    const userLogout = (): TResponseActions => ({
+      type: USER_LOGOUT,
+    });
+
     await fetch(urlLogout, {
       method: 'POST',
       headers: {
@@ -98,9 +102,7 @@ const ProfilePage: FC = () => {
       .then((res) => checkResponse(res))
       .then((res) => {
         if (res && res.success) {
-          dispatch({
-            type: USER_LOGOUT,
-          });
+          dispatch(userLogout());
           deleteCookie(refreshCookie);
           deleteCookie(accessCookie);
         }
@@ -113,7 +115,6 @@ const ProfilePage: FC = () => {
   };
 
   const { email, password, login } = valueInput;
-  console.log(valueInput);
 
   const getNewValues = (e: React.ChangeEvent<HTMLInputElement>) => {
     setValueInput({
@@ -138,38 +139,43 @@ const ProfilePage: FC = () => {
     dispatch(patchNewData());
   };
 
-  const patchNewData = () => {
-    return function (dispatch: Dispatch) {
-      dispatch({
-        type: UPDATE_USER_REQUEST,
-      });
+  const updateUserRequest = (): TResponseActions => ({
+    type: UPDATE_USER_REQUEST,
+  });
 
-      return requestWidthRefresh(urlProfile, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          Authorization: 'Bearer ' + getCookie(accessCookie),
-        },
-        body: JSON.stringify({ email: email, name: login, password: password }),
-      })
-        .then((res) => {
-          if (res) {
-            dispatch({
-              type: UPDATE_USER_SUCCESS,
-              feed: { email: res.user.email, name: res.user.name },
-            });
-          }
-        })
-        .catch(() => {
-          dispatch({
-            type: UPDATE_USER_FAILED,
-          });
+  const patchNewData = () => {
+    return async function (dispatch: AppDispatch) {
+      dispatch(updateUserRequest());
+
+      try {
+        const res = await requestWidthRefresh(urlProfile, {
+          method: 'PATCH',
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: 'Bearer ' + getCookie(accessCookie),
+          },
+          body: JSON.stringify({
+            email: email,
+            name: login,
+            password: password,
+          }),
         });
+        if (res) {
+          dispatch({
+            type: UPDATE_USER_SUCCESS,
+            feed: { email: res.user.email, name: res.user.name },
+          });
+        }
+      } catch {
+        dispatch({
+          type: UPDATE_USER_FAILED,
+        });
+      }
     };
   };
 
   return (
-    <FormPage>
+    <UserPage>
       <div className={`${styles.form_wrap} ${profile_styles.form_wrap}`}>
         <NavBlock handleExit={handleClick}></NavBlock>
         <form onSubmit={saveNewData}>
@@ -210,8 +216,6 @@ const ProfilePage: FC = () => {
           </div>
         </form>
       </div>
-    </FormPage>
+    </UserPage>
   );
 };
-
-export default ProfilePage;
