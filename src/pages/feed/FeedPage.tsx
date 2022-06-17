@@ -14,7 +14,7 @@ import {
   WS_CONNECTION_ERROR,
   WS_CONNECTION_CLOSED,
   WS_GET_MESSAGE,
-} from '../../services/redux/actions/wsActionTypes';
+} from '../../services/redux/actions/wsAction/wsAction';
 
 interface ICard {
   name: string;

@@ -16,16 +16,16 @@ import {
 } from '../../services/utils/cookie';
 import { AppDispatch } from '../..';
 import { urlLogout, urlProfile } from '../../services/utils/endpoints';
-import { checkResponse } from '../../services/redux/actions/response';
+import { checkResponse } from '../../services/redux/actions/mainActions/response';
 import { requestWidthRefresh } from '../../services/redux/actions/checkUser';
 import { useSelector, useDispatch } from '../../index';
+import { TResponseActions } from '../../services/redux/actions/mainActions/mainActionTypes';
 import {
   USER_LOGOUT,
   UPDATE_USER_REQUEST,
   UPDATE_USER_SUCCESS,
   UPDATE_USER_FAILED,
-  TResponseActions,
-} from '../../services/redux/actions';
+} from '../../services/redux/actions/mainActions/mainActionsConstants';
 
 interface INavBlock {
   handleExit: (e: React.MouseEvent | React.KeyboardEvent) => void;

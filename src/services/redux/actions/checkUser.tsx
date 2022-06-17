@@ -1,18 +1,16 @@
 import { AppDispatch } from '../../..';
-
 import {
-  AUTH_CHECKED,
-  REGISTER_USER_REQUEST,
-  REGISTER_USER_SUCCESS,
-  REGISTER_USER_FAILED,
-  LOGIN_USER_REQUEST,
-  LOGIN_USER_SUCCESS,
-  LOGIN_USER_FAILED,
-  GET_USER_REQUEST,
-  GET_USER_SUCCESS,
-  GET_USER_FAILED,
-  TResponseActions,
-} from '.';
+  registerUserRequest,
+  registerUserSuccess,
+  registerUserFailed,
+  authChecked,
+  getUserRequest,
+  getUserSuccess,
+  getUserFailed,
+  loginUserRequest,
+  loginUserSuccess,
+  loginUserFailed,
+} from './mainActions/mainActions';
 
 import {
   getCookie,
@@ -27,25 +25,9 @@ import {
   urlToken,
   urlRegister,
 } from '../../utils/endpoints';
-import { checkResponse } from './response';
-// import { type } from 'os';
+import { checkResponse } from './mainActions/response';
 
 export const getUser = () => {
-  const getUserSuccess = (feed: {
-    email: string;
-    name: string;
-  }): TResponseActions => ({
-    type: GET_USER_SUCCESS,
-    feed,
-  });
-
-  const getUserRequest = (): TResponseActions => ({
-    type: GET_USER_REQUEST,
-  });
-
-  const getUserFailed = (): TResponseActions => ({
-    type: GET_USER_FAILED,
-  });
   return async function (dispatch: AppDispatch) {
     dispatch(getUserRequest());
 
@@ -69,10 +51,6 @@ export const getUser = () => {
 };
 
 export const checkUser = () => {
-  const authChecked = (): TResponseActions => ({
-    type: AUTH_CHECKED,
-  });
-
   return function (dispatch: any) {
     const accessToken = getCookie(accessCookie);
 
@@ -88,22 +66,6 @@ export const checkUser = () => {
 };
 
 export const loginUser = (value: { email: string; password: string }) => {
-  const loginUserSuccess = (feed: {
-    email: string;
-    name: string;
-  }): TResponseActions => ({
-    type: LOGIN_USER_SUCCESS,
-    feed,
-  });
-
-  const loginUserRequest = (): TResponseActions => ({
-    type: LOGIN_USER_REQUEST,
-  });
-
-  const loginUserFailed = (): TResponseActions => ({
-    type: LOGIN_USER_FAILED,
-  });
-
   return async function (dispatch: AppDispatch) {
     dispatch(loginUserRequest());
 
@@ -135,22 +97,6 @@ export const registerUser = (value: {
   password: string;
   name: string;
 }) => {
-  const registerUserRequest = (): TResponseActions => ({
-    type: REGISTER_USER_REQUEST,
-  });
-
-  const registerUserFailed = (): TResponseActions => ({
-    type: REGISTER_USER_FAILED,
-  });
-
-  const registerUserSuccess = (feed: {
-    email: string;
-    name: string;
-  }): TResponseActions => ({
-    type: REGISTER_USER_SUCCESS,
-    feed,
-  });
-
   return async function (dispatch: AppDispatch) {
     dispatch(registerUserRequest());
 
@@ -164,6 +110,7 @@ export const registerUser = (value: {
       .then((res) => checkResponse(res))
       .then((res) => {
         if (res && res.success) {
+          console.log(res);
           dispatch(
             registerUserSuccess({ email: res.user.email, name: res.user.name }),
           );

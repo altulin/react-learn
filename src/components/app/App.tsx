@@ -15,17 +15,14 @@ import IngredientDetails from '../ingredient-details/IngredientDetails';
 import OrderDetails from '../order-details/OrderDetails';
 import { shallowEqual } from 'react-redux';
 import { useSelector, useDispatch } from '../..';
-import {
-  CURRENT_INGREDIENT,
-  CREATED_ORDER,
-  TResponseActions,
-} from '../../services/redux/actions';
+import { createdOrder } from '../../services/redux/actions/mainActions/mainActions';
+import { currentIngredient } from '../../services/redux/actions/mainActions/mainActions';
 import Modal from '../modal/Modal';
 import { Switch, Route, useLocation, useHistory } from 'react-router-dom';
 import path from '../../services/utils/paths';
 import { ProtectedRoute } from '../protected-route/ProtectedRoute';
-import { getFeed } from '../../services/redux/actions/response';
-import { IFeed } from '../../services/redux/reducers/rootReducer';
+import { getFeed } from '../../services/redux/actions/mainActions/response';
+import { IFeed } from '../../services/redux/reducers/rootReducer/rootReducer';
 import { checkUser } from '../../services/redux/actions/checkUser';
 import Preload from '../preload/Preload';
 import OrderInfo from '../order-info/OrderInfo';
@@ -90,11 +87,6 @@ export interface IStore {
     updateUserRequest: boolean;
   };
 }
-
-export const currentIngredient = (feed: {}): TResponseActions => ({
-  type: CURRENT_INGREDIENT,
-  feed,
-});
 
 const App: FC = () => {
   const {
@@ -165,10 +157,7 @@ const App: FC = () => {
           }),
         })
           .then((data) => {
-            dispatch({
-              type: CREATED_ORDER,
-              feed: data.order.number,
-            });
+            dispatch(createdOrder(data.order.number));
           })
           .catch((e) => console.log(e));
 

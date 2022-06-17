@@ -8,12 +8,9 @@ import {
   DragIcon,
 } from '@ya.praktikum/react-developer-burger-ui-components';
 import { useDispatch, useSelector } from '../../';
-import {
-  LIST_CURRENT_INGREDIENTS,
-  TResponseActions,
-} from '../../services/redux/actions';
 import type { XYCoord } from 'dnd-core';
-import { IFeed } from '../../services/redux/reducers/rootReducer';
+import { listCurrentIngredients } from '../../services/redux/actions/mainActions/mainActions';
+import { IFeed } from '../../services/redux/reducers/rootReducer/rootReducer';
 import { v4 as uuidv4 } from 'uuid';
 
 const BUN = 'bun';
@@ -21,11 +18,6 @@ const BUN = 'bun';
 type TButtonConstructor = {
   position?: boolean;
 };
-
-const listCurrentIngredients = (feed: Array<{}>): TResponseActions => ({
-  type: LIST_CURRENT_INGREDIENTS,
-  feed,
-});
 
 const ButtonConstructor: FC<TButtonConstructor> = ({ position }) => {
   const hidden = styles.constructor_button_hidden;

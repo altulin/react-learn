@@ -11,8 +11,9 @@ import {
   accessCookie,
   refreshCookie,
 } from '../../services/utils/cookie';
-import { checkResponse } from '../../services/redux/actions/response';
-import { USER_LOGOUT, TResponseActions } from '../../services/redux/actions';
+import { checkResponse } from '../../services/redux/actions/mainActions/response';
+import { USER_LOGOUT } from '../../services/redux/actions/mainActions/mainActionsConstants';
+import { TResponseActions } from '../../services/redux/actions/mainActions/mainActionTypes';
 import { orders_user } from '../../services/utils/endpoints';
 import { refreshToken } from '../../services/redux/actions/checkUser';
 import { useSocket } from '../../services/utils/use-socket';
@@ -25,7 +26,7 @@ import {
   WS_CONNECTION_ERROR,
   WS_CONNECTION_CLOSED,
   WS_GET_MESSAGE,
-} from '../../services/redux/actions/wsActionTypes';
+} from '../../services/redux/actions/wsAction/wsAction';
 
 const HistoryPage: FC = () => {
   const dispatch = useDispatch();

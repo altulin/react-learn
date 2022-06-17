@@ -1,3 +1,4 @@
+import { TResponseActions } from '../../actions/mainActions/mainActionTypes';
 import {
   AUTH_CHECKED,
   REGISTER_USER_REQUEST,
@@ -13,9 +14,9 @@ import {
   UPDATE_USER_SUCCESS,
   UPDATE_USER_FAILED,
   USER_LOGOUT,
-} from '../actions';
+} from '../../actions/mainActions/mainActionsConstants';
 
-const stateUser = {
+export const stateUser = {
   isAuthChecked: false,
 
   data: null,
@@ -33,15 +34,7 @@ const stateUser = {
   updateUserRequest: false,
 };
 
-interface IUser {
-  name: string;
-  email: string;
-}
-
-export const userReducer = (
-  state = stateUser,
-  action: { type: string; feed: IUser },
-) => {
+export const userReducer = (state = stateUser, action: TResponseActions) => {
   switch (action.type) {
     case AUTH_CHECKED: {
       return {

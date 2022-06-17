@@ -19,9 +19,9 @@ import {
   Action,
 } from 'redux';
 import thunk, { ThunkAction } from 'redux-thunk';
-import { rootReducer } from './services/redux/reducers/rootReducer';
+import { rootReducer } from './services/redux/reducers/rootReducer/rootReducer';
 import { BrowserRouter as Router } from 'react-router-dom';
-import { TResponseActions } from './services/redux/actions';
+import { TResponseActions } from './services/redux/actions/mainActions/mainActionTypes';
 import { IStore } from './components/app/App';
 
 const composeEnhancers =
@@ -36,7 +36,9 @@ export type AppThunk<TReturn = void> = ActionCreator<
   ThunkAction<TReturn, Action, RootState, TApplicationActions>
 >;
 
-export type AppDispatch = Dispatch<TApplicationActions>;
+// export type AppDispatch = Dispatch<TApplicationActions>;
+// export type AppDispatch = Dispatch<TApplicationActions>;
+export type AppDispatch = typeof store.dispatch;
 export const useSelector: TypedUseSelectorHook<RootState | IStore> =
   selectorHook;
 export const useDispatch = () => dispatchHook<AppDispatch | AppThunk>();
