@@ -15,12 +15,6 @@ import paths from '../../services/utils/paths';
 import { Card } from '../feed/FeedPage';
 import { getDataCard } from '../../services/utils/dataCard';
 import Preload from '../../components/preload/Preload';
-import {
-  WS_CONNECTION_SUCCESS,
-  WS_CONNECTION_ERROR,
-  WS_CONNECTION_CLOSED,
-  WS_GET_MESSAGE,
-} from '../../services/redux/actions/wsAction/wsActionConstants';
 import { userLogout } from '../../services/redux/actions/checkUser';
 
 const HistoryPage: FC = () => {
@@ -43,10 +37,6 @@ const HistoryPage: FC = () => {
           // eslint-disable-next-line
           useSocket(`${orders_user}?token=${refresh.accessToken}`, {
             onMessage: getNormMessage,
-            typeSuccess: WS_CONNECTION_SUCCESS,
-            typeError: WS_CONNECTION_ERROR,
-            typeClosed: WS_CONNECTION_CLOSED,
-            typeMesssage: WS_GET_MESSAGE,
           });
 
           return normalizedMessage.message;
@@ -62,10 +52,6 @@ const HistoryPage: FC = () => {
 
   useSocket(`${orders_user}?token=${accessToken}`, {
     onMessage: getNormMessage,
-    typeSuccess: WS_CONNECTION_SUCCESS,
-    typeError: WS_CONNECTION_ERROR,
-    typeClosed: WS_CONNECTION_CLOSED,
-    typeMesssage: WS_GET_MESSAGE,
   });
 
   const [state, setState] = useState<any>({

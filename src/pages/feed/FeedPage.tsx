@@ -9,12 +9,6 @@ import Preload from '../../components/preload/Preload';
 import { getDate } from '../../services/utils/date';
 import paths from '../../services/utils/paths';
 import { getDataCard } from '../../services/utils/dataCard';
-import {
-  WS_CONNECTION_SUCCESS,
-  WS_CONNECTION_ERROR,
-  WS_CONNECTION_CLOSED,
-  WS_GET_MESSAGE,
-} from '../../services/redux/actions/wsAction/wsActionConstants';
 
 interface ICard {
   name: string;
@@ -207,27 +201,6 @@ export const FeelPage: FC = memo(() => {
     }
   }, [messages]); // eslint-disable-line
 
-  // const getDataCard = (ingredients: Array<string>) => {
-  //   return ingredients.map((id: string) => {
-  //     const object = listIngredients.filter(
-  //       (i: { _id: string }) => i._id === id,
-  //     )[0];
-
-  //     try {
-  //       return {
-  //         image: object.image,
-  //         price: object.price,
-  //       };
-  //     } catch (e) {
-  //       console.log(e);
-  //       return {
-  //         image: 'https://code.s3.yandex.net/react/code/sauce-01.png',
-  //         price: 100500,
-  //       };
-  //     }
-  //   });
-  // };
-
   const getDataInfo = (status: string) => {
     const list = state.orders
       .filter((item: any) => item.status === status)
@@ -247,10 +220,6 @@ export const FeelPage: FC = memo(() => {
 
   useSocket(orders_all, {
     onMessage: getNormMessage,
-    typeSuccess: WS_CONNECTION_SUCCESS,
-    typeError: WS_CONNECTION_ERROR,
-    typeClosed: WS_CONNECTION_CLOSED,
-    typeMesssage: WS_GET_MESSAGE,
   });
 
   return (

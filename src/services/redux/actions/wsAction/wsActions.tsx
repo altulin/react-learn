@@ -7,19 +7,18 @@ export const connectionStart = (): TWsActions => ({
 
 export const connectionSuccess = (): TWsActions => ({
   type: action.WS_CONNECTION_SUCCESS,
-  // error: undefined,
-  // wsConnected: true,
 });
 
-export const connectionError = (): TWsActions => ({
+export const connectionError = (payload: any): TWsActions => ({
   type: action.WS_CONNECTION_ERROR,
-  // error: playload,
+  payload,
 });
 
 export const connectionClosed = (): TWsActions => ({
   type: action.WS_CONNECTION_CLOSED,
 });
 
-export const getMessage = (): TWsActions => ({
+export const getMessage = (payload: any): TWsActions => ({
   type: action.WS_GET_MESSAGE,
+  payload,
 });

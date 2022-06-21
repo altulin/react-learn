@@ -11,8 +11,7 @@ export interface IConnectionSuccessAction {
 
 export interface IConnectionErrorAction {
   readonly type: typeof actions.WS_CONNECTION_ERROR;
-  // readonly error: {playload: {}};
-  // readonly error: { playload: {} };
+  readonly payload: any;
 }
 
 export interface IConnectionClosedAction {
@@ -21,11 +20,21 @@ export interface IConnectionClosedAction {
 
 export interface IGetMessageAction {
   readonly type: typeof actions.WS_GET_MESSAGE;
-  // readonly payload: {};
+  readonly payload: any;
+  // readonly payload: {
+  //   success: boolean;
+  //   orders: Array<{}>;
+  //   total: number;
+  //   totalToday: number;
+  // };
 }
 
 export interface ISendMessageAction {
   readonly type: typeof actions.WS_SEND_MESSAGE;
+}
+
+export interface ITestAction {
+  type: undefined;
 }
 
 export type TWsActions =
@@ -34,4 +43,5 @@ export type TWsActions =
   | IConnectionErrorAction
   | IConnectionClosedAction
   | IGetMessageAction
-  | ISendMessageAction;
+  | ISendMessageAction
+  | ITestAction;

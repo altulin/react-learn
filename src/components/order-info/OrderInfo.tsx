@@ -7,12 +7,6 @@ import Preload from '../preload/Preload';
 import { getDate } from '../../services/utils/date';
 import { orders_all } from '../../services/utils/endpoints';
 import { useSocket } from '../../services/utils/use-socket';
-import {
-  WS_CONNECTION_SUCCESS,
-  WS_CONNECTION_ERROR,
-  WS_CONNECTION_CLOSED,
-  WS_GET_MESSAGE,
-} from '../../services/redux/actions/wsAction/wsActionConstants';
 
 const OrderInfo: FC = () => {
   const location = useLocation();
@@ -26,10 +20,6 @@ const OrderInfo: FC = () => {
 
   useSocket(orders_all, {
     onMessage: getNormMessage,
-    typeSuccess: WS_CONNECTION_SUCCESS,
-    typeError: WS_CONNECTION_ERROR,
-    typeClosed: WS_CONNECTION_CLOSED,
-    typeMesssage: WS_GET_MESSAGE,
   });
 
   const { listIngredients } = useSelector((store) => ({

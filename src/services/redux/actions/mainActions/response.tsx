@@ -9,7 +9,6 @@ import { AppDispatch } from '../../../..';
 import { urlOrder, urlIngredients } from '../../../utils/endpoints';
 
 export const checkResponse = (res: Response) => {
-  console.log(res);
   return res.ok ? res.json() : res.json().then((err) => Promise.reject(err));
 };
 

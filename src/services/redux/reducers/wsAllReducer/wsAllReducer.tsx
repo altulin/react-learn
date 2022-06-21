@@ -8,11 +8,6 @@ import {
   WS_GET_MESSAGE,
 } from '../../actions/wsAction/wsActionConstants';
 
-type TAction = {
-  type: string;
-  payload: {};
-};
-
 export const initialState = {
   wsConnected: false,
   messages: {
@@ -20,7 +15,7 @@ export const initialState = {
   },
 };
 
-export const wsReducer = (state = initialState, action: TAction) => {
+export const wsReducer = (state = initialState, action: TWsActions) => {
   switch (action.type) {
     case WS_CONNECTION_SUCCESS:
       return {
@@ -32,7 +27,7 @@ export const wsReducer = (state = initialState, action: TAction) => {
     case WS_CONNECTION_ERROR:
       return {
         ...state,
-        // error: action.payload,
+        error: action.payload,
         wsConnected: false,
       };
 

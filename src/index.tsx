@@ -14,7 +14,6 @@ import {
   createStore,
   compose,
   applyMiddleware,
-  Dispatch,
   ActionCreator,
   Action,
 } from 'redux';
