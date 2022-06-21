@@ -22,6 +22,7 @@ import thunk, { ThunkAction } from 'redux-thunk';
 import { rootReducer } from './services/redux/reducers/rootReducer/rootReducer';
 import { BrowserRouter as Router } from 'react-router-dom';
 import { TResponseActions } from './services/redux/actions/mainActions/mainActionTypes';
+import { TWsActions } from './services/redux/actions/wsAction/wsActionTypes';
 import { IStore } from './components/app/App';
 
 const composeEnhancers =
@@ -30,7 +31,7 @@ const enhancer = composeEnhancers(applyMiddleware(thunk));
 
 const store = createStore(rootReducer, enhancer);
 export type RootState = ReturnType<typeof store.getState>;
-type TApplicationActions = TResponseActions;
+type TApplicationActions = TResponseActions | TWsActions;
 
 export type AppThunk<TReturn = void> = ActionCreator<
   ThunkAction<TReturn, Action, RootState, TApplicationActions>

@@ -80,3 +80,31 @@ export const getUserRequest = (): TResponseActions => ({
 export const getUserFailed = (): TResponseActions => ({
   type: constants.GET_USER_FAILED,
 });
+
+export const updateUserRequest = (): TResponseActions => ({
+  type: constants.UPDATE_USER_REQUEST,
+});
+
+export const updateUserSuccess = (feed: {
+  email: string;
+  name: string;
+}): TResponseActions => ({
+  type: constants.UPDATE_USER_SUCCESS,
+  feed,
+});
+
+export const updateUserFailed = (): TResponseActions => ({
+  type: constants.UPDATE_USER_FAILED,
+});
+
+export const userLogoutSuccess = (): TResponseActions => ({
+  type: constants.USER_LOGOUT_SUCCESS,
+});
+
+export const userLogoutFailed = (): TResponseActions => ({
+  type: constants.USER_LOGOUT_FAILED,
+});
+
+export const userLogoutRequest = (): TResponseActions => ({
+  type: constants.USER_LOGOUT_REQUEST,
+});

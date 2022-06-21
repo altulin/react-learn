@@ -2,18 +2,12 @@ import styles from './HistoryPage.module.css';
 import { FC, useState, useEffect, useCallback } from 'react';
 import UserPage from '../../components/form/FormPage';
 import { NavBlock } from '../profile/ProfilePage';
-import { urlLogout } from '../../services/utils/endpoints';
 import { useSelector, useDispatch } from '../../index';
 import {
   getCookie,
-  deleteCookie,
   createNewCookie,
   accessCookie,
-  refreshCookie,
 } from '../../services/utils/cookie';
-import { checkResponse } from '../../services/redux/actions/mainActions/response';
-import { USER_LOGOUT } from '../../services/redux/actions/mainActions/mainActionsConstants';
-import { TResponseActions } from '../../services/redux/actions/mainActions/mainActionTypes';
 import { orders_user } from '../../services/utils/endpoints';
 import { refreshToken } from '../../services/redux/actions/checkUser';
 import { useSocket } from '../../services/utils/use-socket';
@@ -26,10 +20,10 @@ import {
   WS_CONNECTION_ERROR,
   WS_CONNECTION_CLOSED,
   WS_GET_MESSAGE,
-} from '../../services/redux/actions/wsAction/wsAction';
+} from '../../services/redux/actions/wsAction/wsActionConstants';
+import { userLogout } from '../../services/redux/actions/checkUser';
 
 const HistoryPage: FC = () => {
-  const dispatch = useDispatch();
   const { profile_orders } = paths;
 
   const { listIngredients } = useSelector((store) => ({
@@ -64,6 +58,7 @@ const HistoryPage: FC = () => {
   }, []);
 
   const accessToken = getCookie(accessCookie);
+  const dispatch = useDispatch();
 
   useSocket(`${orders_user}?token=${accessToken}`, {
     onMessage: getNormMessage,
@@ -90,31 +85,9 @@ const HistoryPage: FC = () => {
     }
   }, [messages]); // eslint-disable-line
 
-  const handleLogout = async () => {
-    const userLogout = (): TResponseActions => ({
-      type: USER_LOGOUT,
-    });
-
-    await fetch(urlLogout, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify({ token: getCookie(refreshCookie) }),
-    })
-      .then((res) => checkResponse(res))
-      .then((res) => {
-        if (res && res.success) {
-          dispatch(userLogout());
-          deleteCookie(refreshCookie);
-          deleteCookie(accessCookie);
-        }
-      });
-  };
-
   const handleClick = async (e: React.MouseEvent | React.KeyboardEvent) => {
     e.preventDefault();
-    handleLogout();
+    dispatch(userLogout());
   };
   return (
     <>

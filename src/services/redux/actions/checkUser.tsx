@@ -1,22 +1,12 @@
 import { AppDispatch } from '../../..';
-import {
-  registerUserRequest,
-  registerUserSuccess,
-  registerUserFailed,
-  authChecked,
-  getUserRequest,
-  getUserSuccess,
-  getUserFailed,
-  loginUserRequest,
-  loginUserSuccess,
-  loginUserFailed,
-} from './mainActions/mainActions';
+import * as actions from './mainActions/mainActions';
 
 import {
   getCookie,
   refreshCookie,
   accessCookie,
   createNewCookie,
+  deleteCookie,
 } from '../../utils/cookie';
 
 import {
@@ -24,12 +14,13 @@ import {
   urlLogin,
   urlToken,
   urlRegister,
+  urlLogout,
 } from '../../utils/endpoints';
 import { checkResponse } from './mainActions/response';
 
 export const getUser = () => {
   return async function (dispatch: AppDispatch) {
-    dispatch(getUserRequest());
+    dispatch(actions.getUserRequest());
 
     try {
       const res = await requestWidthRefresh(urlProfile, {
@@ -41,11 +32,14 @@ export const getUser = () => {
       });
       if (res) {
         dispatch(
-          getUserSuccess({ email: res.user.email, name: res.user.name }),
+          actions.getUserSuccess({
+            email: res.user.email,
+            name: res.user.name,
+          }),
         );
       }
     } catch {
-      dispatch(getUserFailed());
+      dispatch(actions.getUserFailed());
     }
   };
 };
@@ -56,10 +50,10 @@ export const checkUser = () => {
 
     if (accessToken) {
       dispatch(getUser()).finally(() => {
-        dispatch(authChecked());
+        dispatch(actions.authChecked());
       });
     } else {
-      dispatch(authChecked());
+      dispatch(actions.authChecked());
       return accessToken;
     }
   };
@@ -67,7 +61,7 @@ export const checkUser = () => {
 
 export const loginUser = (value: { email: string; password: string }) => {
   return async function (dispatch: AppDispatch) {
-    dispatch(loginUserRequest());
+    dispatch(actions.loginUserRequest());
 
     await fetch(urlLogin, {
       method: 'POST',
@@ -80,7 +74,7 @@ export const loginUser = (value: { email: string; password: string }) => {
       .then((res) => {
         if (res && res.success) {
           dispatch(
-            loginUserSuccess({
+            actions.loginUserSuccess({
               email: res.user.email,
               name: res.user.name,
             }),
@@ -88,7 +82,7 @@ export const loginUser = (value: { email: string; password: string }) => {
           createNewCookie(res);
         }
       })
-      .catch(() => dispatch(loginUserFailed()));
+      .catch(() => dispatch(actions.loginUserFailed()));
   };
 };
 
@@ -98,7 +92,7 @@ export const registerUser = (value: {
   name: string;
 }) => {
   return async function (dispatch: AppDispatch) {
-    dispatch(registerUserRequest());
+    dispatch(actions.registerUserRequest());
 
     await fetch(urlRegister, {
       method: 'POST',
@@ -110,14 +104,16 @@ export const registerUser = (value: {
       .then((res) => checkResponse(res))
       .then((res) => {
         if (res && res.success) {
-          console.log(res);
           dispatch(
-            registerUserSuccess({ email: res.user.email, name: res.user.name }),
+            actions.registerUserSuccess({
+              email: res.user.email,
+              name: res.user.name,
+            }),
           );
           createNewCookie(res);
         }
       })
-      .catch(() => dispatch(registerUserFailed()));
+      .catch(() => dispatch(actions.registerUserFailed()));
   };
 };
 
@@ -162,4 +158,64 @@ export const requestWidthRefresh = async (
       return Promise.reject(err);
     }
   }
+};
+
+export const patchNewData = (value: {
+  email: string;
+  login: string;
+  password: string;
+}) => {
+  return async function (dispatch: AppDispatch) {
+    dispatch(actions.updateUserRequest());
+
+    try {
+      const res = await requestWidthRefresh(urlProfile, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: 'Bearer ' + getCookie(accessCookie),
+        },
+        body: JSON.stringify({
+          email: value.email,
+          name: value.login,
+          password: value.password,
+        }),
+      });
+      if (res) {
+        dispatch(
+          actions.updateUserSuccess({
+            email: res.user.email,
+            name: res.user.name,
+          }),
+        );
+      }
+    } catch {
+      dispatch(actions.updateUserFailed());
+    }
+  };
+};
+
+export const userLogout = () => {
+  return async function (dispatch: AppDispatch) {
+    dispatch(actions.userLogoutRequest());
+    try {
+      await fetch(urlLogout, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ token: getCookie(refreshCookie) }),
+      })
+        .then((res) => checkResponse(res))
+        .then((res) => {
+          if (res && res.success) {
+            dispatch(actions.userLogoutSuccess());
+            deleteCookie(refreshCookie);
+            deleteCookie(accessCookie);
+          }
+        });
+    } catch {
+      dispatch(actions.userLogoutFailed());
+    }
+  };
 };

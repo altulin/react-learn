@@ -1,20 +1,5 @@
 import { TResponseActions } from '../../actions/mainActions/mainActionTypes';
-import {
-  AUTH_CHECKED,
-  REGISTER_USER_REQUEST,
-  REGISTER_USER_SUCCESS,
-  REGISTER_USER_FAILED,
-  LOGIN_USER_REQUEST,
-  LOGIN_USER_SUCCESS,
-  LOGIN_USER_FAILED,
-  GET_USER_REQUEST,
-  GET_USER_SUCCESS,
-  GET_USER_FAILED,
-  UPDATE_USER_REQUEST,
-  UPDATE_USER_SUCCESS,
-  UPDATE_USER_FAILED,
-  USER_LOGOUT,
-} from '../../actions/mainActions/mainActionsConstants';
+import * as constants from '../../actions/mainActions/mainActionsConstants';
 
 export const stateUser = {
   isAuthChecked: false,
@@ -36,14 +21,14 @@ export const stateUser = {
 
 export const userReducer = (state = stateUser, action: TResponseActions) => {
   switch (action.type) {
-    case AUTH_CHECKED: {
+    case constants.AUTH_CHECKED: {
       return {
         ...state,
         isAuthChecked: true,
       };
     }
 
-    case REGISTER_USER_REQUEST: {
+    case constants.REGISTER_USER_REQUEST: {
       return {
         ...state,
         registerUserError: false,
@@ -51,7 +36,7 @@ export const userReducer = (state = stateUser, action: TResponseActions) => {
       };
     }
 
-    case REGISTER_USER_SUCCESS: {
+    case constants.REGISTER_USER_SUCCESS: {
       return {
         ...state,
         data: { name: action.feed.name, email: action.feed.email },
@@ -59,7 +44,7 @@ export const userReducer = (state = stateUser, action: TResponseActions) => {
       };
     }
 
-    case REGISTER_USER_FAILED: {
+    case constants.REGISTER_USER_FAILED: {
       return {
         ...state,
         registerUserError: true,
@@ -67,7 +52,7 @@ export const userReducer = (state = stateUser, action: TResponseActions) => {
       };
     }
 
-    case LOGIN_USER_REQUEST: {
+    case constants.LOGIN_USER_REQUEST: {
       return {
         ...state,
         loginUserError: false,
@@ -75,7 +60,7 @@ export const userReducer = (state = stateUser, action: TResponseActions) => {
       };
     }
 
-    case LOGIN_USER_SUCCESS: {
+    case constants.LOGIN_USER_SUCCESS: {
       return {
         ...state,
         data: { name: action.feed.name, email: action.feed.email },
@@ -83,7 +68,7 @@ export const userReducer = (state = stateUser, action: TResponseActions) => {
       };
     }
 
-    case LOGIN_USER_FAILED: {
+    case constants.LOGIN_USER_FAILED: {
       return {
         ...state,
         loginUserError: true,
@@ -92,7 +77,7 @@ export const userReducer = (state = stateUser, action: TResponseActions) => {
       };
     }
 
-    case GET_USER_REQUEST: {
+    case constants.GET_USER_REQUEST: {
       return {
         ...state,
         getUserError: false,
@@ -100,7 +85,7 @@ export const userReducer = (state = stateUser, action: TResponseActions) => {
       };
     }
 
-    case GET_USER_SUCCESS: {
+    case constants.GET_USER_SUCCESS: {
       return {
         ...state,
         getUserError: false,
@@ -109,7 +94,7 @@ export const userReducer = (state = stateUser, action: TResponseActions) => {
       };
     }
 
-    case GET_USER_FAILED: {
+    case constants.GET_USER_FAILED: {
       return {
         ...state,
         getUserError: true,
@@ -118,7 +103,7 @@ export const userReducer = (state = stateUser, action: TResponseActions) => {
       };
     }
 
-    case UPDATE_USER_REQUEST: {
+    case constants.UPDATE_USER_REQUEST: {
       return {
         ...state,
         updateUserError: false,
@@ -126,7 +111,7 @@ export const userReducer = (state = stateUser, action: TResponseActions) => {
       };
     }
 
-    case UPDATE_USER_SUCCESS: {
+    case constants.UPDATE_USER_SUCCESS: {
       return {
         ...state,
         updateUserError: false,
@@ -135,7 +120,7 @@ export const userReducer = (state = stateUser, action: TResponseActions) => {
       };
     }
 
-    case UPDATE_USER_FAILED: {
+    case constants.UPDATE_USER_FAILED: {
       return {
         ...state,
         updateUserError: true,
@@ -144,10 +129,22 @@ export const userReducer = (state = stateUser, action: TResponseActions) => {
       };
     }
 
-    case USER_LOGOUT: {
+    case constants.USER_LOGOUT_SUCCESS: {
       return {
         ...state,
         data: null,
+      };
+    }
+
+    case constants.USER_LOGOUT_REQUEST: {
+      return {
+        ...state,
+      };
+    }
+
+    case constants.USER_LOGOUT_FAILED: {
+      return {
+        ...state,
       };
     }
 

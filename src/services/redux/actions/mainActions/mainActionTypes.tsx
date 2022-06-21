@@ -32,10 +32,6 @@ export interface IUpdateUserRequestAction {
   readonly type: typeof actions.UPDATE_USER_REQUEST;
 }
 
-export interface IUserLogoutAction {
-  readonly type: typeof actions.USER_LOGOUT;
-}
-
 export interface IUpdateUserSuccessAction {
   readonly type: typeof actions.UPDATE_USER_SUCCESS;
   readonly feed: { email: string; name: string };
@@ -87,6 +83,15 @@ export interface IGetUserFailedAction {
 export interface IGetUserRequestAction {
   readonly type: typeof actions.GET_USER_REQUEST;
 }
+export interface IUserLogoutRequestAction {
+  readonly type: typeof actions.USER_LOGOUT_REQUEST;
+}
+export interface IUserLogoutSuccessAction {
+  readonly type: typeof actions.USER_LOGOUT_SUCCESS;
+}
+export interface IUserLogoutFailedAction {
+  readonly type: typeof actions.USER_LOGOUT_FAILED;
+}
 
 export interface ITestAction {
   type: undefined;
@@ -100,7 +105,6 @@ export type TResponseActions =
   | IListCurrentIngredientsAction
   | ICurrentIngredientAction
   | IUpdateUserRequestAction
-  | IUserLogoutAction
   | IUpdateUserSuccessAction
   | IUpdateUserFailedAction
   | IAuthCheckedAction
@@ -113,4 +117,7 @@ export type TResponseActions =
   | IGetUserSuccessAction
   | IGetUserFailedAction
   | IGetUserRequestAction
-  | ITestAction;
+  | ITestAction
+  | IUserLogoutRequestAction
+  | IUserLogoutSuccessAction
+  | IUserLogoutFailedAction;
