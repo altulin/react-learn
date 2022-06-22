@@ -54,6 +54,7 @@ const OrderInfo: FC = () => {
 
       const { status, name, number, ingredients, createdAt } =
         getIngredient(orders);
+
       setState({ success: true, status, name, number, ingredients, createdAt });
     }
   }, [messages]); // eslint-disable-line

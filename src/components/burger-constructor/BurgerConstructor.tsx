@@ -304,7 +304,7 @@ const BurgerConstructor: FC<IBurgerConstructor> = ({ openModal }) => {
       )}
 
       {getListBun().length > 0 && (
-        <div className={styles.constructor_number}>
+        <div className={`${styles.constructor_number} button_wrap`}>
           <p
             className={`${styles.constructor_price_box} ${styles.constructor_number_box} mr-10`}
           >

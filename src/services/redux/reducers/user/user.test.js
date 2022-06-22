@@ -147,6 +147,7 @@ describe('dataReducer', () => {
 
     return store.dispatch(patchNewData(value)).then(() => {
       expect(store.getActions()).toEqual(expectedActions);
+      expect(fetch).toHaveBeenCalledTimes(1);
     });
   });
 
