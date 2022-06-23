@@ -16,6 +16,7 @@ import { Card } from '../feed/FeedPage';
 import { getDataCard } from '../../services/utils/dataCard';
 import Preload from '../../components/preload/Preload';
 import { userLogout } from '../../services/redux/actions/checkUser';
+import { IOrder } from '../feed/FeedPage';
 
 const HistoryPage: FC = () => {
   const { profile_orders } = paths;
@@ -31,7 +32,6 @@ const HistoryPage: FC = () => {
     } else if (normalizedMessage.message === 'Invalid or missing token') {
       refreshToken()
         .then((refresh) => {
-          console.log(123);
           createNewCookie(refresh);
 
           // eslint-disable-next-line
@@ -85,7 +85,7 @@ const HistoryPage: FC = () => {
             <section
               className={`${styles.list_block} ${styles.list_block_left}`}
             >
-              {state.orders.map((item: any) => (
+              {state.orders.map((item: IOrder) => (
                 <Card
                   key={item._id}
                   name={item.name}

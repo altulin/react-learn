@@ -15,6 +15,7 @@ describe('dataReducer', () => {
   const mockStore = configureMockStore(middlewares);
   const value = { email: 'email', password: 'password', name: 'name' };
   const feed = { email: 'email', name: 'name' };
+  const testToken = '123456ABCD';
 
   const jestSuccess = () => {
     return jest.spyOn(global, 'fetch').mockResolvedValue({
@@ -22,6 +23,8 @@ describe('dataReducer', () => {
       json: jest.fn().mockResolvedValue({
         success: true,
         user: value,
+        refreshToken: testToken,
+        accessToken: testToken,
       }),
     });
   };

@@ -36,7 +36,7 @@ interface IConstructorItem extends IFeed {
   i: number;
 }
 
-type TConstructorItem = Omit<
+export type TConstructorItem = Omit<
   IConstructorItem,
   | 'calories'
   | 'carbohydrates'

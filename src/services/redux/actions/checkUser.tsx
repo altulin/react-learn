@@ -18,7 +18,7 @@ import {
 } from '../../utils/endpoints';
 import { checkResponse } from './mainActions/response';
 
-export const getUser = () => {
+export const getUser: any = () => {
   return async function (dispatch: AppDispatch) {
     dispatch(actions.getUserRequest());
 
@@ -45,7 +45,7 @@ export const getUser = () => {
 };
 
 export const checkUser = () => {
-  return function (dispatch: any) {
+  return function (dispatch: AppDispatch) {
     const accessToken = getCookie(accessCookie);
 
     if (accessToken) {
@@ -134,7 +134,7 @@ type THeaders = {
 
 export const requestWidthRefresh = async (
   url: string,
-  options: { headers: THeaders; method: string; body?: any },
+  options: { headers: THeaders; method: string; body?: {} | any },
 ) => {
   try {
     const res = await fetch(url, options);

@@ -22,6 +22,14 @@ interface ICard {
   pathname: string;
 }
 
+export interface IOrder {
+  _id: string;
+  name: string;
+  number: number;
+  createdAt: string;
+  ingredients: Array<string>;
+}
+
 export const Card: FC<ICard> = memo(
   ({ name, number, dataTime, id, data, pathname }) => {
     const valImg = 6;
@@ -196,15 +204,15 @@ export const FeelPage: FC = memo(() => {
   useEffect(() => {
     if (messages.success) {
       const { orders, total, totalToday } = messages;
-
+      console.log(orders[0]);
       setState({ success: true, orders, total, totalToday });
     }
   }, [messages]); // eslint-disable-line
 
   const getDataInfo = (status: string) => {
     const list = state.orders
-      .filter((item: any) => item.status === status)
-      .map((item: any) => item.number);
+      .filter((item: { status: string }) => item.status === status)
+      .map((item: { number: number }) => item.number);
 
     return new Array(Math.ceil(list.length / 10))
       .fill([])
@@ -238,7 +246,7 @@ export const FeelPage: FC = memo(() => {
             <section
               className={`${styles.list_block} ${styles.list_block_left}`}
             >
-              {state.orders.map((item: any) => (
+              {state.orders.map((item: IOrder) => (
                 <Card
                   key={item._id}
                   name={item.name}

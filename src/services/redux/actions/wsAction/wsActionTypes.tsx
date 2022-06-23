@@ -1,4 +1,5 @@
 import * as actions from './wsActionConstants';
+import { IOrder } from '../../../../pages/feed/FeedPage';
 
 export interface IConnectionStartAction {
   readonly type: typeof actions.WS_CONNECTION_START;
@@ -11,7 +12,7 @@ export interface IConnectionSuccessAction {
 
 export interface IConnectionErrorAction {
   readonly type: typeof actions.WS_CONNECTION_ERROR;
-  readonly payload: any;
+  readonly payload: IOrder;
 }
 
 export interface IConnectionClosedAction {
@@ -20,13 +21,7 @@ export interface IConnectionClosedAction {
 
 export interface IGetMessageAction {
   readonly type: typeof actions.WS_GET_MESSAGE;
-  readonly payload: any;
-  // readonly payload: {
-  //   success: boolean;
-  //   orders: Array<{}>;
-  //   total: number;
-  //   totalToday: number;
-  // };
+  readonly payload: IOrder;
 }
 
 export interface ISendMessageAction {

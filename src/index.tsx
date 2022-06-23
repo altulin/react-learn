@@ -36,8 +36,6 @@ export type AppThunk<TReturn = void> = ActionCreator<
   ThunkAction<TReturn, Action, RootState, TApplicationActions>
 >;
 
-// export type AppDispatch = Dispatch<TApplicationActions>;
-// export type AppDispatch = Dispatch<TApplicationActions>;
 export type AppDispatch = typeof store.dispatch;
 export const useSelector: TypedUseSelectorHook<RootState | IStore> =
   selectorHook;

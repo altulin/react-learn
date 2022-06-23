@@ -1,8 +1,5 @@
 import { wsReducer, initialState } from './wsAllReducer';
-// import thunk from 'redux-thunk';
-// import configureMockStore from 'redux-mock-store';
 import * as actions from '../../actions/wsAction/wsActions';
-// import { useSocket } from '../../../utils/use-socket';
 
 describe('wsReducer', () => {
   // const middlewares = [thunk];
