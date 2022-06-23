@@ -8,7 +8,6 @@ export const getDataCard = (
     price: number;
   }>,
 ) => {
-  console.log(listIngredients);
   return ingredients.map((id: string) => {
     const object = listIngredients.filter(
       (i: { _id: string }) => i._id === id,
