@@ -8,7 +8,11 @@ interface IOrderDetails {
 const OrderDetails: FC<IOrderDetails> = ({ price }) => {
   return (
     <div>
-      <h2 className={`${styles.title} text text_type_digits-large`}>{price}</h2>
+      <h2
+        className={`${styles.title} order_details_number text text_type_digits-large`}
+      >
+        {price}
+      </h2>
       <p className={`${styles.id} text text_type_main-medium mt-8`}>
         идентификатор заказа
       </p>

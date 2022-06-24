@@ -1,25 +1,21 @@
 // rootReducer.ts
+import { TWsActions } from '../../actions/wsAction/wsActionTypes';
 
 import {
   WS_CONNECTION_SUCCESS,
   WS_CONNECTION_ERROR,
   WS_CONNECTION_CLOSED,
   WS_GET_MESSAGE,
-} from '../actions/wsActionTypes';
+} from '../../actions/wsAction/wsActionConstants';
 
-type TAction = {
-  type: string;
-  payload: {};
-};
-
-const initialState = {
+export const initialState = {
   wsConnected: false,
   messages: {
     success: false,
   },
 };
 
-export const wsReducer = (state = initialState, action: TAction) => {
+export const wsReducer = (state = initialState, action: TWsActions) => {
   switch (action.type) {
     case WS_CONNECTION_SUCCESS:
       return {

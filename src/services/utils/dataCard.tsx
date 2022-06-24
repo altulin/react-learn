@@ -1,6 +1,12 @@
 export const getDataCard = (
   ingredients: Array<string>,
-  listIngredients: any,
+  listIngredients: Array<{
+    _id: string;
+    image: string;
+    image_mobile: string;
+    name: string;
+    price: number;
+  }>,
 ) => {
   return ingredients.map((id: string) => {
     const object = listIngredients.filter(

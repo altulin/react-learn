@@ -159,7 +159,7 @@ const BurgerCard: FC<IBurgerCard> = ({
   };
 
   return (
-    <li className={`${styles.burger_item} ${styles.card}`} ref={dragRef}>
+    <li className={`${styles.burger_item} burger_item_card`} ref={dragRef}>
       <Link
         to={{
           pathname: `/ingredients/${id}`,

@@ -37,7 +37,7 @@ const LoginPage: FC = () => {
 
   return (
     <FormPage>
-      <div className={styles.form_wrap}>
+      <div className={`${styles.form_wrap} login_form_wrap`}>
         <form onSubmit={handleClick}>
           <legend
             className={`${styles.legend} text text_type_main-medium mb-6`}
@@ -61,7 +61,7 @@ const LoginPage: FC = () => {
             name={'password'}
           />
 
-          <div className={`${styles.button_wrap} mt-6`}>
+          <div className={`${styles.button_wrap} login_button_wrap mt-6`}>
             <Button type='primary' size='large'>
               Войти
             </Button>

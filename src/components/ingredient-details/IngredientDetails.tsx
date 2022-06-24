@@ -2,6 +2,7 @@ import styles from './IngredientDetails.module.css';
 import { useSelector } from '../../index';
 import { useLocation } from 'react-router-dom';
 import { FC } from 'react';
+import { IFeed } from '../../services/redux/reducers/rootReducer/rootReducer';
 
 const IngredientDetails: FC = () => {
   const { listIngredients } = useSelector((store) => ({
@@ -10,7 +11,7 @@ const IngredientDetails: FC = () => {
 
   const location = useLocation();
 
-  const getIngredient: any = () => {
+  const getIngredient: () => IFeed = () => {
     const id = location.pathname.split('/')[2];
 
     return listIngredients.filter(

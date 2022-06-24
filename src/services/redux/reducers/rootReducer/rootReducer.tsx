@@ -1,5 +1,5 @@
-import { userReducer } from './user';
-import { wsReducer } from './wsAllReducer';
+import { userReducer } from '../user/user';
+import { wsReducer } from '../wsAllReducer/wsAllReducer';
 import { combineReducers } from 'redux';
 
 import {
@@ -9,18 +9,11 @@ import {
   LIST_CURRENT_INGREDIENTS,
   CURRENT_INGREDIENT,
   CREATED_ORDER,
-  TResponseActions,
-} from '../actions';
+} from '../../actions/mainActions/mainActionsConstants';
 
-type TInitialState = {
-  listIngredients: Array<IFeed>;
-  listConstructor: Array<IFeed>;
-  orderNumber: number;
-  feed: boolean;
-  feedError: boolean;
-};
+import { TResponseActions } from '../../actions/mainActions/mainActionTypes';
 
-const initialState = {
+export const initialState = {
   listIngredients: [], //список всех полученных ингредиентов
   listConstructor: [], //список всех ингредиентов в текущем конструкторе бургера
   // currentIngredient: {}, //объект текущего просматриваемого ингредиента

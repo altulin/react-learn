@@ -2,17 +2,19 @@
   "name": "react-burger",
   "version": "0.1.0",
   "private": true,
+  "homepage": "./",
   "dependencies": {
     "@reduxjs/toolkit": "^1.7.2",
     "@testing-library/jest-dom": "^5.16.1",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
-    "@types/jest": "^27.4.0",
+    "@types/jest": "^28.1.1",
     "@types/node": "^16.11.21",
     "@types/react": "^17.0.38",
     "@types/react-dom": "^17.0.11",
     "@types/react-redux": "^7.1.24",
     "@ya.praktikum/react-developer-burger-ui-components": "^1.13.1",
+    "node-fetch": "^3.2.6",
     "react": "^17.0.2",
     "react-dnd": "^15.1.1",
     "react-dnd-html5-backend": "^15.1.2",
@@ -30,12 +32,18 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject"
+    "eject": "react-scripts eject",
+    "cypress": "./node_modules/.bin/cypress open",
+    "test:cypress": "start-server-and-test start http://localhost:3000 cypress",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
+    "deploy-script": "npm run build && scp -r ./build/* dachabot@178.154.193.106:/home/dachabot/stellar-frontend"
   },
   "eslintConfig": {
     "extends": [
       "react-app",
-      "react-app/jest"
+      "react-app/jest",
+      "plugin:cypress/recommended"
     ]
   },
   "browserslist": {
@@ -51,7 +59,20 @@
     ]
   },
   "devDependencies": {
+    "@babel/core": "^7.18.5",
+    "@babel/preset-env": "^7.18.2",
     "@types/react-router-dom": "^5.3.3",
-    "@types/uuid": "^8.3.4"
+    "@types/redux-mock-store": "^1.0.3",
+    "@types/uuid": "^8.3.4",
+    "babel-jest": "^28.1.1",
+    "cypress": "^10.1.0",
+    "eslint-plugin-cypress": "^2.12.1",
+    "fetch-mock": "^9.11.0",
+    "gh-pages": "^4.0.0",
+    "jest": "^28.1.1",
+    "jest-watch-typeahead": "^0.6.5",
+    "redux-mock-store": "^1.5.4",
+    "start-server-and-test": "^1.14.0",
+    "ts-jest": "^28.0.5"
   }
 }

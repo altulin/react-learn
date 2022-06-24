@@ -9,12 +9,6 @@ import Preload from '../../components/preload/Preload';
 import { getDate } from '../../services/utils/date';
 import paths from '../../services/utils/paths';
 import { getDataCard } from '../../services/utils/dataCard';
-import {
-  WS_CONNECTION_SUCCESS,
-  WS_CONNECTION_ERROR,
-  WS_CONNECTION_CLOSED,
-  WS_GET_MESSAGE,
-} from '../../services/redux/actions/wsActionTypes';
 
 interface ICard {
   name: string;
@@ -26,6 +20,14 @@ interface ICard {
     price: number;
   }>;
   pathname: string;
+}
+
+export interface IOrder {
+  _id: string;
+  name: string;
+  number: number;
+  createdAt: string;
+  ingredients: Array<string>;
 }
 
 export const Card: FC<ICard> = memo(
@@ -202,36 +204,15 @@ export const FeelPage: FC = memo(() => {
   useEffect(() => {
     if (messages.success) {
       const { orders, total, totalToday } = messages;
-
+      console.log(orders[0]);
       setState({ success: true, orders, total, totalToday });
     }
   }, [messages]); // eslint-disable-line
 
-  // const getDataCard = (ingredients: Array<string>) => {
-  //   return ingredients.map((id: string) => {
-  //     const object = listIngredients.filter(
-  //       (i: { _id: string }) => i._id === id,
-  //     )[0];
-
-  //     try {
-  //       return {
-  //         image: object.image,
-  //         price: object.price,
-  //       };
-  //     } catch (e) {
-  //       console.log(e);
-  //       return {
-  //         image: 'https://code.s3.yandex.net/react/code/sauce-01.png',
-  //         price: 100500,
-  //       };
-  //     }
-  //   });
-  // };
-
   const getDataInfo = (status: string) => {
     const list = state.orders
-      .filter((item: any) => item.status === status)
-      .map((item: any) => item.number);
+      .filter((item: { status: string }) => item.status === status)
+      .map((item: { number: number }) => item.number);
 
     return new Array(Math.ceil(list.length / 10))
       .fill([])
@@ -247,10 +228,6 @@ export const FeelPage: FC = memo(() => {
 
   useSocket(orders_all, {
     onMessage: getNormMessage,
-    typeSuccess: WS_CONNECTION_SUCCESS,
-    typeError: WS_CONNECTION_ERROR,
-    typeClosed: WS_CONNECTION_CLOSED,
-    typeMesssage: WS_GET_MESSAGE,
   });
 
   return (
@@ -269,7 +246,7 @@ export const FeelPage: FC = memo(() => {
             <section
               className={`${styles.list_block} ${styles.list_block_left}`}
             >
-              {state.orders.map((item: any) => (
+              {state.orders.map((item: IOrder) => (
                 <Card
                   key={item._id}
                   name={item.name}

@@ -8,7 +8,7 @@ import styles from '../login/LoginPage.module.css';
 import { Link, useHistory } from 'react-router-dom';
 import path from '../../services/utils/paths';
 import { urlReset } from '../../services/utils/endpoints';
-import { checkResponse } from '../../services/redux/actions/response';
+import { checkResponse } from '../../services/redux/actions/mainActions/response';
 
 const ResetPage: FC = () => {
   const { login } = path;
