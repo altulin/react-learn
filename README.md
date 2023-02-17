@@ -1,5 +1,3 @@
-# Учебный проект React разработчик.
-
 ## Команды для скачивания и установки
 
 git clone git@github.com:altulin/react-learn.git
